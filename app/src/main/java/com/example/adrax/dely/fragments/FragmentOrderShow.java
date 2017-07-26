@@ -22,9 +22,8 @@ public class FragmentOrderShow extends Fragment {
         // Required empty public constructor
     }
 
-
-    public static TextView face_order_view;
-    public static Button btn_done;
+    public TextView face_order_view;
+    public Button btn_done;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

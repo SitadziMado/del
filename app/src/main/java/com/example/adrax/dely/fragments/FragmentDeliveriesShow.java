@@ -16,18 +16,18 @@ import com.example.adrax.dely.core.Order;
 import static com.example.adrax.dely.LoginActivity.user;
 import static com.example.adrax.dely.MActivity.delyDescription;
 import static com.example.adrax.dely.MActivity.face_delivery;
-import static com.example.adrax.dely.MActivity.orders_update;
+import static com.example.adrax.dely.MActivity.ordersUpdate;
 import static com.example.adrax.dely.MActivity.selected_id;
-import static com.example.adrax.dely.MActivity.update_face;
+import static com.example.adrax.dely.MActivity.updateFace;
 
 
-public class FragmentDelyShow extends Fragment {
+public class FragmentDeliveriesShow extends Fragment {
 
 
     public static TextView text_description;
     public static Button btn_start;
 
-    public FragmentDelyShow() {
+    public FragmentDeliveriesShow() {
         // Required empty public constructor
     }
 
@@ -55,8 +55,8 @@ public class FragmentDelyShow extends Fragment {
                                 @Override
                                 public void call(Boolean result) {
                                     if (result) {
-                                        orders_update();
-                                        update_face();
+                                        ordersUpdate();
+                                        updateFace();
                                         Toast.makeText(getActivity(),"Доставка началась!", Toast.LENGTH_LONG).show();
                                         if (getFragmentManager().getBackStackEntryCount() > 0) {
                                             getFragmentManager().popBackStack();

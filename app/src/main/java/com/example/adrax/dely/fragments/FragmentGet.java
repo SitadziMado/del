@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
 import com.example.adrax.dely.R;
+import com.example.adrax.dely.core.OrderList;
 
 import java.util.ArrayList;
 
@@ -31,7 +32,7 @@ public class FragmentGet extends Fragment {
 
     Context mContext;
 
-    public static Object ordersLock = new Object();
+    public static final Object ordersLock = new Object();
 
     public FragmentGet() {
         // Required empty public constructor
@@ -60,7 +61,7 @@ public class FragmentGet extends Fragment {
                 llm.getOrientation());
         rvMain.addItemDecoration(dividerItemDecoration);
         //Создаём адаптер
-        adapterForGet = new AdapterForGet(mContext,getDelys());
+        adapterForGet = new AdapterForGet(mContext);
         //Применим наш адаптер к RecyclerView
         rvMain.setAdapter(adapterForGet);
         // Inflate the layout for this fragment
@@ -70,28 +71,16 @@ public class FragmentGet extends Fragment {
 
     public void update(Context mycontext) {
         //Создаём адаптер
-        adapterForGet = new AdapterForGet(mycontext, getDelys());
+        adapterForGet = new AdapterForGet(mycontext);
         //Применим наш адаптер к RecyclerView
         rvMain.setAdapter(adapterForGet);
         // Inflate the layout for this fragment
     }
 
-    private ArrayList<Dely> getDelys() {
-        user.syncOrders(new InternetCallback<Order[]>() {
+    private void getDeliveries() {
+        user.syncOrders(new InternetCallback<OrderList>() {
             @Override
-            public void call(Order[] result) {
-                synchronized (ordersLock) {
-                    orders = result;
-                }
-            }
-        });
-
-        ArrayList<Dely> delys = new ArrayList<>();
-        Dely del;
-
-        user.syncOrders(new InternetCallback<Order[]>() {
-            @Override
-            public void call(Order[] result) {
+            public void call(OrderList result) {
                 synchronized (ordersLock) {
                     orders = result;
                 }
@@ -100,7 +89,7 @@ public class FragmentGet extends Fragment {
 
         // orders = user.orderList();
 
-        if (null != orders) {
+        /*if (null != orders) {
             for (Integer i = 0; i < orders.length; ++i) {
                 // DeliveryOrder cur = orders[i];
                 Order cur = orders[i];
@@ -154,6 +143,6 @@ public class FragmentGet extends Fragment {
             del.payment = "новый заказ!";
             delys.add(del);
         }
-        return delys;
+        return delys;*/
     }
 }

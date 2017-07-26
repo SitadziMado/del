@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.adrax.dely.MActivity;
 import com.example.adrax.dely.R;
+import com.example.adrax.dely.core.Order;
 
 import static com.example.adrax.dely.MActivity.delyDescription;
 import static com.example.adrax.dely.MActivity.orders;
@@ -47,8 +48,8 @@ public final class LVHolderForGet extends RecyclerView.ViewHolder {
                     int id = Integer.parseInt(tvId);
                     //id = 0;
 
-                    selected_id = Integer.parseInt(orders[id].getProp("Id"));
-                    delyDescription = orders[id].toString();
+                    selected_id = Integer.parseInt(orders.get(id).getProp(Order.ID));
+                    delyDescription = orders.get(id).toString();
 
                     switchFragment();
                 }
@@ -62,7 +63,7 @@ public final class LVHolderForGet extends RecyclerView.ViewHolder {
         }
         if (mContext instanceof MActivity) {
             MActivity feeds = (MActivity) mContext;
-            feeds.DelyShowFragment();
+            feeds.deliveryShowFragment();
         }
     }
 }

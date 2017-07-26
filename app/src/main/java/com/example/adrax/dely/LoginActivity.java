@@ -101,26 +101,11 @@ public class LoginActivity extends AppCompatActivity {
             // Уже залогинен.
             throw new RuntimeException("Пользователь уже вошел в систему.");
         }
-
-        /*new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-
-                        if (user.login(email,password))
-                        {
-                            onLoginSuccess();
-                        }
-                        else onLoginFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);*/
     }
-
 
     @Override
     public void onBackPressed() {
-        // Disable going back to the MainActivity
+        // disable going back to the MainActivity
         moveTaskToBack(true);
     }
 

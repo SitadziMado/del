@@ -136,50 +136,12 @@ public class User {
         task.execute();
     }
 
-    public void order(Order order, final InternetCallback<Boolean> callback) {
-        InternetTask task = new InternetTask(ORDER_URL, new InternetCallback<String>() {
-            @Override
-            public void call(String s) {
-                Boolean result = Boolean.FALSE;
-
-                switch (requestStatusFromString(s.toLowerCase())) {
-                    case ORDER_ERROR:
-                        break;
-
-                    case ORDER_LOADED:
-                        result = Boolean.TRUE;
-                        break;
-                }
-
-                callback.call(result);
-            }
-        });
-
-        task.execute(
-                Order.CUSTOMER, order.getProp(Order.CUSTOMER),
-                Order.FROM, order.getProp(Order.FROM),
-                Order.TO, order.getProp(Order.TO),
-                Order.COST, order.getProp(Order.COST),
-                Order.PAYMENT, order.getProp(Order.PAYMENT),
-                Order.ENTRANCE, order.getProp(Order.ENTRANCE),
-                Order.CODE, order.getProp(Order.CODE),
-                Order.FLOOR, order.getProp(Order.FLOOR),
-                Order.ROOM, order.getProp(Order.ROOM),
-                Order.PHONE, order.getProp(Order.PHONE),
-                Order.WEIGHT, order.getProp(Order.WEIGHT),
-                Order.SIZE, order.getProp(Order.SIZE),
-                HASH, m_hash,
-                Order.DESCRIPTION, order.getProp(Order.DESCRIPTION)
-        );
-    }
-
-    public void syncOrders(final InternetCallback<Order[]> callback) {
+    public void syncOrders(final InternetCallback<OrderList> callback) {
         final User user = this;
         InternetTask task = new InternetTask(SYNC_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
-                // Order[] orders = null;
-                Order[] orders = new Order[0];
+                OrderList orders = new OrderList();
                 if (!s.equals("404")) {
                     orders = Order.fromString(s, user);
                 }
@@ -191,12 +153,12 @@ public class User {
         task.execute(REFRESH, DELIVERIES);
     }
 
-    public void currentOrder(final InternetCallback<Order[]> callback) {
+    public void currentOrder(final InternetCallback<OrderList> callback) {
         final User user = this;
         InternetTask task = new InternetTask(CURRENT_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
-                Order[] orders = null;
+                OrderList orders = new OrderList();
                 if (!s.equals(ERROR)) {
                     orders = Order.fromString(s, user);
                 }
@@ -241,7 +203,6 @@ public class User {
     private static final String REGISTER_URL = "http://adrax.pythonanywhere.com/register";
     private static final String LOGIN_URL = "http://adrax.pythonanywhere.com/login";
     private static final String LOGOUT_URL = "http://adrax.pythonanywhere.com/login";
-    private static final String ORDER_URL = "http://adrax.pythonanywhere.com/load_delys";
     private static final String SYNC_URL = "http://adrax.pythonanywhere.com/send_delys";
     private static final String PEEK_URL = null; // "http://adrax.pythonanywhere.com/send_delys";
     private static final String CURRENT_URL = "http://adrax.pythonanywhere.com/current_delivery";

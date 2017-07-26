@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.adrax.dely.MActivity;
 import com.example.adrax.dely.R;
+import com.example.adrax.dely.core.Order;
 
 import static com.example.adrax.dely.MActivity.face_cur_order_text;
 import static com.example.adrax.dely.MActivity.face_orders;
@@ -51,8 +52,8 @@ public final class LVHolderForFace extends RecyclerView.ViewHolder {
                     //face_tab.getTabWidget().getChildAt(3).setVisibility(View.VISIBLE);
                     //face_tab.setCurrentTabByTag("ftab4");
 
-                    selected_id = Integer.parseInt(face_orders[id].getProp("Id"));
-                    face_cur_order_text = face_orders[id].toString();
+                    selected_id = Integer.parseInt(face_orders.get(id).getProp(Order.ID));
+                    face_cur_order_text = face_orders.get(id).toString();
                     switchFragment();
                 }
             }
@@ -64,7 +65,7 @@ public final class LVHolderForFace extends RecyclerView.ViewHolder {
             return;
         if (mContext instanceof MActivity) {
             MActivity feeds = (MActivity) mContext;
-            feeds.OrderShowFragment();
+            feeds.orderShowFragment();
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.example.adrax.dely.core;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,17 +31,17 @@ public class Order {
         }
     }
 
-    public static Order[] fromString(String jsonString, User parent) {
+    public static OrderList fromString(String jsonString, User parent) {
         if (parent == null) {
             throw new IllegalArgumentException(
                     "Пользователь не может быть null."
             );
         }
 
-        Order[] ret;
+        OrderList ret = new OrderList();
+
         try {
             /// Список текущих заказов
-            ArrayList<Order> orders = new ArrayList<>();
             JSONObject list = new JSONObject(jsonString);
 
             for (Integer i = 1; list.has(i.toString()); ++i) {
@@ -57,11 +59,8 @@ public class Order {
                     order.setProp(key, cur.getString(key));
                 }
 
-                orders.add(order);
+                ret.add(order);
             }
-
-            ret = new Order[orders.size()];
-            ret = orders.toArray(ret);
         } catch (JSONException ex) {
             ret = null;
         }
@@ -72,13 +71,17 @@ public class Order {
         m_props.put(fieldName.toLowerCase(), fieldValue.toLowerCase());
     }
 
-    public String getProp(String fieldName) {
-        String name = fieldName.toLowerCase();
+    public String getProp(String propName) {
+        String name = propName.toLowerCase();
 
         if (m_props.containsKey(name)) {
             return m_props.get(name);
         } else {
-            return "undefined";
+            Log.d(
+                    getClass().getName(),
+                    "Свойства `" + propName + "` не существует."
+            );
+            return null;
         }
     }
 
@@ -132,6 +135,44 @@ public class Order {
 
         return sb.toString();
     }
+
+    public void post(final InternetCallback<Boolean> callback) {
+        InternetTask task = new InternetTask(ORDER_URL, new InternetCallback<String>() {
+            @Override
+            public void call(String s) {
+                Boolean result = Boolean.FALSE;
+
+                switch (User.requestStatusFromString(s.toLowerCase())) {
+                    case ORDER_ERROR:
+                        break;
+
+                    case ORDER_LOADED:
+                        result = Boolean.TRUE;
+                        break;
+                }
+
+                callback.call(result);
+            }
+        });
+
+        task.execute(
+                Order.CUSTOMER, getProp(Order.CUSTOMER),
+                Order.FROM, getProp(Order.FROM),
+                Order.TO, getProp(Order.TO),
+                Order.COST, getProp(Order.COST),
+                Order.PAYMENT, getProp(Order.PAYMENT),
+                Order.ENTRANCE, getProp(Order.ENTRANCE),
+                Order.CODE, getProp(Order.CODE),
+                Order.FLOOR, getProp(Order.FLOOR),
+                Order.ROOM, getProp(Order.ROOM),
+                Order.PHONE, getProp(Order.PHONE),
+                Order.WEIGHT, getProp(Order.WEIGHT),
+                Order.SIZE, getProp(Order.SIZE),
+                HASH, m_parent.getHash(),
+                Order.DESCRIPTION, getProp(Order.DESCRIPTION)
+        );
+    }
+
     public void cancel(final InternetCallback<Boolean> callback) {
         InternetTask task = new InternetTask(CANCEL_URL, new InternetCallback<String>() {
             @Override
@@ -272,6 +313,7 @@ public class Order {
         sb.append("\n");
     }
 
+    private static final String ORDER_URL = "http://adrax.pythonanywhere.com/load_delys";
     private static final String CANCEL_URL = null; // "http://adrax.pythonanywhere.com/send_delys";
     private static final String START_URL = "http://adrax.pythonanywhere.com/ch_dely";
     private static final String FINISH_URL = "http://adrax.pythonanywhere.com/delivered";

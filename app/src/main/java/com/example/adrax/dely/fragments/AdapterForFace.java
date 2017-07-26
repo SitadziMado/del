@@ -7,22 +7,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.adrax.dely.R;
+import com.example.adrax.dely.core.Order;
+import com.example.adrax.dely.core.OrderList;
 
 import java.util.ArrayList;
+
+import static com.example.adrax.dely.MActivity.face_orders;
+import static com.example.adrax.dely.MActivity.orders;
 
 /**
  * Created by adrax on 30.10.16.
  */
 
 public class AdapterForFace extends RecyclerView.Adapter<LVHolderForFace> {
-    //Здесь мы будем хранить набор наших данных
-    private ArrayList<Dely> delys;
-
     private  Context mContext;
 
     //Простенький конструктор
-    public AdapterForFace(Context context, ArrayList<Dely> delivery){
-        this.delys = delivery;
+    public AdapterForFace(Context context){
         mContext = context;
     }
 
@@ -30,21 +31,33 @@ public class AdapterForFace extends RecyclerView.Adapter<LVHolderForFace> {
     @Override
     public void onBindViewHolder(LVHolderForFace newViewHolder, int i){
         newViewHolder.setIsRecyclable(false);
-        //Получаем элемент набора данных для заполнения
-        Dely currentDely = delys.get(i);
-        //Заполняем поля viewHolder'а данными из элемента набора данных
-        newViewHolder.tvDescription.setText(currentDely.description);
-        newViewHolder.tvFrom.setText(currentDely.from);
-        newViewHolder.tvId = currentDely.id;
-        newViewHolder.tvTo.setText(currentDely.to);
-        newViewHolder.tvCustomer.setText(currentDely.customer);
-        newViewHolder.tvPhoneNumber.setText(currentDely.phonenumber);
-        newViewHolder.tvCost.setText(currentDely.cost);
-        newViewHolder.tvPayment.setText(currentDely.payment);
+
+        try {
+            //Получаем элемент набора данных для заполнения
+            Order cur = face_orders.get(i);
+
+            //Заполняем поля viewHolder'а данными из элемента набора данных
+            newViewHolder.tvDescription.setText("Название: " + cur.getProp(Order.DESCRIPTION));
+            newViewHolder.tvFrom.setText(cur.getProp("Откуда: " + Order.FROM));
+            newViewHolder.tvId = cur.getProp(Order.ID);
+            newViewHolder.tvTo.setText("Куда: " + cur.getProp(Order.TO));
+            newViewHolder.tvCustomer.setText("Заказчик: " + cur.getProp(Order.CUSTOMER));
+            newViewHolder.tvPhoneNumber.setText("Номер телефона: " + cur.getProp(Order.PHONE));
+            newViewHolder.tvCost.setText("Аванс: " + cur.getProp(Order.COST));
+            newViewHolder.tvPayment.setText("Оплата: " + cur.getProp(Order.PAYMENT));
+        } catch (IndexOutOfBoundsException e) {
+            newViewHolder.tvDescription.setText("На данный момент");
+            newViewHolder.tvFrom.setText("");
+            newViewHolder.tvId = "заказов нет, ";
+            newViewHolder.tvTo.setText("");
+            newViewHolder.tvCustomer.setText("но Вы всегда");
+            newViewHolder.tvPhoneNumber.setText("");
+            newViewHolder.tvCost.setText("можете оформить новый!");
+            newViewHolder.tvPayment.setText("");
+        }
     }
 
     //Этот метод вызывается при создании нового ViewHolder'а
-
     @Override
     public LVHolderForFace onCreateViewHolder(ViewGroup viewGroup, int i){
         //Создаём новый view при помощи LayoutInflater
@@ -56,6 +69,6 @@ public class AdapterForFace extends RecyclerView.Adapter<LVHolderForFace> {
     //количество элементов списка
     @Override
     public int getItemCount(){
-        return delys.size();
+        return face_orders.size();
     }
 }

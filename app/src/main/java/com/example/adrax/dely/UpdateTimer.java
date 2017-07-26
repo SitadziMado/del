@@ -44,33 +44,33 @@ public class UpdateTimer extends CountDownTimer
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
         // User touched the dialog's positive button
-        Enable();
+        enable();
     }
 
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
         // User touched the dialog's negative button
         is_update = false;
-        activity.StopWaiting();
+        activity.stopWaiting();
     }
 
-    public void Disable()
+    public void disable()
     {
         is_update = false;
         counter = 0;
     }
 
-    public void Enable()
+    public void enable()
     {
         is_update = true;
         this.start();
     }
 
-    public void SetUpdateInterval(long updateInterval){
+    public void setUpdateInterval(long updateInterval){
         this.updateInterval = updateInterval;
     }
 
-    public void SetTime(long time){
+    public void setTime(long time){
         this.time = time;
     }
 

@@ -1,15 +1,9 @@
 package com.example.adrax.dely;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -25,19 +19,14 @@ import android.widget.Toast;
 
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
+import com.example.adrax.dely.core.OrderList;
 import com.example.adrax.dely.core.OrderStatus;
-import com.example.adrax.dely.delivery.DeliveryOrder;
-import com.example.adrax.dely.delivery.DeliveryOrderStatus;
 import com.example.adrax.dely.fragments.FragmentAbout;
-import com.example.adrax.dely.fragments.FragmentDelyShow;
+import com.example.adrax.dely.fragments.FragmentDeliveriesShow;
 import com.example.adrax.dely.fragments.FragmentFace;
 import com.example.adrax.dely.fragments.FragmentGet;
 import com.example.adrax.dely.fragments.FragmentOrder;
 import com.example.adrax.dely.fragments.FragmentOrderShow;
-import com.example.adrax.dely.fragments.WaitingDialog;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static com.example.adrax.dely.LoginActivity.user;
 
@@ -49,7 +38,7 @@ public class MActivity extends AppCompatActivity
     FragmentGet fget;           // Заказы
     // FragmentTools ftools;       // Настройки
     FragmentAbout fabout;       // О нас
-    FragmentDelyShow fdelyshow; // Показ выбранной доставки
+    FragmentDeliveriesShow fdelyshow; // Показ выбранной доставки
     FragmentOrderShow fordershow; // Показ выбранного заказа
 
     // Fragments keeper
@@ -66,8 +55,8 @@ public class MActivity extends AppCompatActivity
     // public static DeliveryOrder[] orders;
     // public static DeliveryOrder[] face_orders;
     // public static DeliveryOrder face_delivery = null;
-    public static Order[] orders;
-    public static Order[] face_orders;
+    public static OrderList orders;
+    public static OrderList face_orders;
     public static Order face_delivery = null;
 
     public static final Object faceOrdersLock = new Object();
@@ -140,10 +129,10 @@ public class MActivity extends AppCompatActivity
         forder = new FragmentOrder();
         fget = new FragmentGet();
         fabout = new FragmentAbout();
-        fdelyshow = new FragmentDelyShow();
+        fdelyshow = new FragmentDeliveriesShow();
         fordershow = new FragmentOrderShow();
         // загружаем заказы/доставки
-        orders_update();
+        ordersUpdate();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fface);
@@ -151,26 +140,26 @@ public class MActivity extends AppCompatActivity
         // Timer
         //5min, 1min / update every 1min
         //updateTimer = new UpdateTimer(300000, 15000, this);
-        //updateTimer.Disable(); // Turn off for now
+        //updateTimer.disable(); // Turn off for now
         this_context = getApplicationContext();
     }
     //загрузка заказов/доставок
-    public static void orders_update()
+    public static void ordersUpdate()
     {
-        user.syncOrders(new InternetCallback<Order[]>() {
+        user.syncOrders(new InternetCallback<OrderList>() {
             @Override
-            public void call(Order[] orders) {
+            public void call(OrderList orders) {
                 synchronized (faceOrdersLock) {
                     face_orders = orders;
                 }
             }
         });
 
-        user.currentOrder(new InternetCallback<Order[]>() {
+        user.currentOrder(new InternetCallback<OrderList>() {
             @Override
-            public void call(Order[] orders) {
+            public void call(OrderList orders) {
                 synchronized (faceDeliveryLock) {
-                    face_delivery = orders[0]; // ToDo: заказов может быть > 1.
+                    face_delivery = orders.firstOrDefault(); // ToDo: заказов может быть > 1.
                 }
             }
         });
@@ -183,15 +172,15 @@ public class MActivity extends AppCompatActivity
      * Запрос обновлений с сервера
      * @return
      */
-    public boolean UpdateData()
+    public boolean updateData()
     {
         //#ServerRequest
         //if (курьер появился)
-        //updateTime.Disable();
+        //updateTime.disable();
         return false;
     }
 
-    public boolean UpdateUserData()
+    public boolean updateUserData()
     {
         //#ServerRequest
 
@@ -201,19 +190,18 @@ public class MActivity extends AppCompatActivity
     /**
      * Запускает процесс ожидания начала доставки
      */
-    public static void WaitingForCourier()
+    public static void waitingForCourier()
     {
     }
 
-    public static void StopWaiting()
+    public static void stopWaiting()
     {
     }
-
 
     /**
      * Обновляет face
      */
-    public static void update_face(){
+    public static void updateFace(){
         if (face_delivery != null) {
             face_delivery.status(new InternetCallback<OrderStatus>() {
                 @Override
@@ -228,14 +216,6 @@ public class MActivity extends AppCompatActivity
             });
         }
     }
-
-    /**
-     * Toast notification
-     */
-    public void Tostic() {
-        Toast.makeText(getBaseContext(), "Hi", Toast.LENGTH_LONG).show();
-    }
-
 
     /**
      * Обработка нажатия "назад"
@@ -283,7 +263,7 @@ public class MActivity extends AppCompatActivity
 
             case R.id.action_refresh:
                 if (fragment_id == R.id.frag_get_id) fget.update(this);
-                else if (fragment_id == R.id.frag_face_id) update_face();
+                else if (fragment_id == R.id.frag_face_id) updateFace();
                 Toast.makeText(getApplicationContext(),"Информация обновлена!", Toast.LENGTH_LONG)
                         .show();
                 return true;
@@ -300,40 +280,40 @@ public class MActivity extends AppCompatActivity
     /**
      * Для вызова фрагмента списка доставок из других фрагментов
      */
-    public void ShowFragmenGet(){
+    public void showFragmentGet(){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fget);
         transaction.addToBackStack(null);
         transaction.commit();
 
         //fragment_id = 1050;
-        //UpdateData(); //#UpdateData
+        //updateData(); //#updateData
     }
 
     /**
      * Для вызова фрагмента доставки из других фрагментов
      */
-    public void DelyShowFragment(){
+    public void deliveryShowFragment(){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fdelyshow);
         transaction.addToBackStack(null);
         transaction.commit();
 
         fragment_id = 1050;
-        UpdateData(); //#UpdateData
+        updateData(); //#updateData
     }
 
     /**
      * Для вызова фрагмента заказа из других фрагментов
      */
-    public void OrderShowFragment(){
+    public void orderShowFragment(){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fordershow);
         transaction.addToBackStack(null);
         transaction.commit();
 
         fragment_id = 5010;
-        UpdateData(); //#UpdateData
+        updateData(); //#updateData
     }
 
     /**
@@ -366,7 +346,7 @@ public class MActivity extends AppCompatActivity
             mFragmentToSet = forder;
         } else if (id == R.id.frag_get_id) {
             mFragmentToSet = fget;
-            UpdateData(); //#UpdateData
+            updateData(); //#updateData
         } else if (id == R.id.frag_tools_id) {
             //mFragmentToSet = ftools;
             Intent i = new Intent(MActivity.this, ProfileActivity.class);

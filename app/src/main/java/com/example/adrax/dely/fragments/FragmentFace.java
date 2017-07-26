@@ -18,16 +18,14 @@ import android.widget.Toast;
 import com.example.adrax.dely.MActivity;
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.InternetCallback;
-import com.example.adrax.dely.core.Order;
+import com.example.adrax.dely.core.OrderList;
 import com.example.adrax.dely.core.OrderStatus;
-
-import java.util.ArrayList;
 
 import static com.example.adrax.dely.LoginActivity.user;
 import static com.example.adrax.dely.MActivity.face_deliver_text;
 import static com.example.adrax.dely.MActivity.face_delivery;
 import static com.example.adrax.dely.MActivity.face_orders;
-import static com.example.adrax.dely.MActivity.update_face;
+import static com.example.adrax.dely.MActivity.updateFace;
 
 
 public class FragmentFace extends Fragment {
@@ -36,19 +34,19 @@ public class FragmentFace extends Fragment {
     public TextView face_deliver_text_view;
     public Button btn_finish;
     public EditText text_code;
+
     //Объявляем RecyclerView
     RecyclerView rvMain;
+
     //Объявляем адаптер
     AdapterForFace adapterForFace;
-
-
     Context mContext;
 
+    private static final Object faceOrdersLock = new Object();
 
     public FragmentFace() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,7 +83,7 @@ public class FragmentFace extends Fragment {
         // Inflate the layout for this fragment
 
         //обновляем заказы/доставки
-        // update_face();
+        // updateFace();
 
         //окончание доставки
         btn_finish = (Button) root.findViewById(R.id.btn_finish);
@@ -140,20 +138,24 @@ public class FragmentFace extends Fragment {
 
         //Привязываем RecyclerView к элементу
         rvMain = (RecyclerView)root.findViewById(R.id.face_orders_list);
+
         //И установим LayoutManager
         rvMain.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         //свистелки-перделки
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvMain.getContext(),
                 llm.getOrientation());
         rvMain.addItemDecoration(dividerItemDecoration);
+
         //Создаём адаптер
-        adapterForFace = new AdapterForFace(mContext,getOrders());
+        adapterForFace = new AdapterForFace(mContext);
+
         //Применим наш адаптер к RecyclerView
         rvMain.setAdapter(adapterForFace);
-        // Inflate the layout for this fragment
 
-        UpdateUserInfo();
+        // Inflate the layout for this fragment
+        updateUserInfo();
 
         face_deliver_text_view.setOnClickListener(new View.OnClickListener() {
 
@@ -177,12 +179,21 @@ public class FragmentFace extends Fragment {
             return;
         if (mContext instanceof MActivity) {
             MActivity feeds = (MActivity) mContext;
-            feeds.ShowFragmenGet();
+            feeds.showFragmentGet();
         }
     }
 
-    private ArrayList<Dely> getOrders() {
-        ArrayList<Dely> delys = new ArrayList<>();
+    private void getOrders() {
+        user.syncOrders(new InternetCallback<OrderList>() {
+            @Override
+            public void call(OrderList result) {
+                synchronized (faceOrdersLock) {
+                    face_orders = result;
+                }
+            }
+        });
+
+        /* ArrayList<Dely> delys = new ArrayList<>();
         Dely del;
         if (face_orders != null) {
             for (Integer i = 0; i < face_orders.length; i++) {
@@ -234,13 +245,13 @@ public class FragmentFace extends Fragment {
             del.payment = "новый!";
             delys.add(del);
         }
-        return delys;
+        return delys; */
     }
 
-    private void UpdateUserInfo()
+    private void updateUserInfo()
     {
         //обновляем заказы/доставки
-        update_face();
+        updateFace();
 
         if (face_delivery != null)
         {
@@ -257,7 +268,7 @@ public class FragmentFace extends Fragment {
                         default:
                             text_code.setVisibility(View.VISIBLE);
                             btn_finish.setVisibility(View.VISIBLE);
-                            Kostyl_GetUpdateText();
+                            kostylGetUpdateText();
                             break;
                     }
                 }
@@ -269,8 +280,8 @@ public class FragmentFace extends Fragment {
 
     }
 
-    //обновление доставки
-    public void Kostyl_GetUpdateText()
+    // обновление доставки
+    public void kostylGetUpdateText()
     {
         face_deliver_text_view.setText(face_deliver_text);
     }

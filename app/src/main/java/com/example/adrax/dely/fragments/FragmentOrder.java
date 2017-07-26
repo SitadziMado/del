@@ -16,9 +16,9 @@ import com.example.adrax.dely.core.Order;
 import com.example.adrax.dely.delivery.DeliveryFormula;
 
 import static com.example.adrax.dely.LoginActivity.user;
-import static com.example.adrax.dely.MActivity.orders_update;
-import static com.example.adrax.dely.MActivity.update_face;
-import static com.example.adrax.dely.MActivity.WaitingForCourier;
+import static com.example.adrax.dely.MActivity.ordersUpdate;
+import static com.example.adrax.dely.MActivity.updateFace;
+import static com.example.adrax.dely.MActivity.waitingForCourier;
 
 
 public class FragmentOrder extends Fragment {
@@ -141,8 +141,6 @@ public class FragmentOrder extends Fragment {
         final String description = _descriptionText.getText().toString();
         final String payment = formula.calculate(Integer.parseInt(_distanceText.getText().toString())).toString();
 
-
-
         if (validate(description,from,to,num, ko)) {
             Order order = new Order(
                     user,
@@ -174,13 +172,13 @@ public class FragmentOrder extends Fragment {
                     "",
                     description); */
 
-            user.order(order, new InternetCallback<Boolean>() {
+            order.post(new InternetCallback<Boolean>() {
                 @Override
                 public void call(Boolean result) {
                     if (result) {
-                        orders_update();
-                        WaitingForCourier(); //#UpdateTimerRun
-                        update_face();
+                        ordersUpdate();
+                        waitingForCourier(); //#UpdateTimerRun
+                        updateFace();
 
                         Toast.makeText(
                                 getActivity(),
