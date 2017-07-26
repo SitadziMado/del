@@ -1,5 +1,6 @@
 package com.example.adrax.dely.core;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -8,11 +9,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class Order {
+public class Order implements Comparable<Order> {
     public Order(User parent, Object... params) {
         if ((params.length & 1) == 0 && parent != null) {
-            setProp(PARENT, parent);
-
             for (int i = 0; i < params.length; i += 2) {
                 String key = (String)params[i];
                 Object value = params[i + 1];
@@ -25,6 +24,9 @@ public class Order {
 
                 setProp(key, value);
             }
+
+            // Установить значения хэша, статуса, родителя. Не трогать!
+            setupSpecialProps(parent);
         } else {
             String m = "Требуется четное количество аргументов для составления пар.";
             LogHelper.log(m);
@@ -49,10 +51,8 @@ public class Order {
                 // По порядку выгружаем доступные заказы
                 JSONObject cur = list.getJSONObject(i.toString());
 
-                Order order = new Order(parent);
+                Order order = new Order();
 
-                order.setProp(PARENT, parent);
-                order.setStringProp(HASH, parent.getHash());
                 Iterator<String> it = cur.keys();
 
                 while (it.hasNext()) {
@@ -60,6 +60,8 @@ public class Order {
                     order.setStringProp(key, cur.getString(key));
                 }
 
+                // Установить значения хэша, статуса, родителя. Не трогать!
+                order.setupSpecialProps(parent);
                 ret.add(order);
             }
         } catch (JSONException ex) {
@@ -68,6 +70,10 @@ public class Order {
             ret = null;
         }
         return ret;
+    }
+
+    private Order() {
+
     }
 
     public void setProp(String propName, Object value) {
@@ -282,35 +288,7 @@ public class Order {
         InternetTask task = new InternetTask(STATUS_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
-                OrderStatus result;
-                switch (s.toLowerCase()) {
-                    case User.WAITING:
-                        result = OrderStatus.WAITING;
-                        break;
-
-                    case User.DELIVERING:
-                        result = OrderStatus.DELIVERING;
-                        break;
-
-                    case User.DELIVERED:
-                        result = OrderStatus.DELIVERED;
-                        break;
-
-                    case User.DELIVERY_DONE:
-                        result = OrderStatus.DELIVERY_DONE;
-                        break;
-
-                    case User.ERROR:
-                        result = OrderStatus.ERROR;
-                        break;
-
-                    default:
-                        LogHelper.log("Неизвестный статус заказа.");
-                        result = OrderStatus.ERROR;
-                        break;
-                }
-
-                callback.call(result);
+                callback.call(statusFromString(s));
             }
         });
 
@@ -318,6 +296,35 @@ public class Order {
                 HASH, getStringProp(HASH),
                 ID, getStringProp(ID)
         );
+    }
+
+    @Override
+    public int compareTo(@NonNull Order o) {
+        // ToDo: написать сортировку по дате.
+        return 0;
+    }
+
+    private static OrderStatus statusFromString(String statusString) {
+        switch (statusString.toLowerCase()) {
+            case User.WAITING:
+                return OrderStatus.WAITING;
+
+            case User.DELIVERING:
+                return OrderStatus.DELIVERING;
+
+            case User.DELIVERED:
+                return OrderStatus.DELIVERED;
+
+            case User.DELIVERY_DONE:
+                return OrderStatus.DELIVERY_DONE;
+
+            case User.ERROR:
+                return OrderStatus.ERROR;
+
+            default:
+                LogHelper.log("Неизвестный статус заказа.");
+                return OrderStatus.ERROR;
+        }
     }
 
     private void appendFieldValue(
@@ -329,8 +336,18 @@ public class Order {
         sb.append("\n");
     }
 
+    /**
+     * Установка специальных свойств объекта.
+     * @param parent User, чьим заказом является данный.
+     */
+    private void setupSpecialProps(User parent) {
+        setProp(PARENT, parent);
+        setStringProp(HASH, parent.getHash());
+        setProp(STATUS, statusFromString(getStringProp(STATUS)));
+    }
+
     private static final String ORDER_URL = "http://adrax.pythonanywhere.com/load_delys";
-    private static final String CANCEL_URL = null; // "http://adrax.pythonanywhere.com/send_delys";
+    private static final String CANCEL_URL = null; // "http://adrax.pythonanywhere.com/cancel";
     private static final String START_URL = "http://adrax.pythonanywhere.com/ch_dely";
     private static final String FINISH_URL = "http://adrax.pythonanywhere.com/delivered";
     private static final String ACCEPT_URL = "http://adrax.pythonanywhere.com/delivery_done";

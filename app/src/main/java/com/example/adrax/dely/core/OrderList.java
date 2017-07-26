@@ -7,6 +7,8 @@ import com.android.internal.util.Predicate;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class OrderList extends AbstractList<Order> {
     public OrderList() {
@@ -68,6 +70,14 @@ public class OrderList extends AbstractList<Order> {
         } else {
             return null;
         }
+    }
+
+    public void sortBy() {
+        Collections.sort(m_orders);
+    }
+
+    public void sortBy(Comparator<Order> cmp) {
+        Collections.sort(m_orders, cmp);
     }
 
     /**
