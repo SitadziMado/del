@@ -8,9 +8,6 @@ import android.view.ViewGroup;
 
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.Order;
-import com.example.adrax.dely.core.OrderList;
-
-import java.util.ArrayList;
 
 import static com.example.adrax.dely.MActivity.orders;
 
@@ -37,14 +34,14 @@ public class AdapterForGet extends RecyclerView.Adapter<LVHolderForGet> {
 
         //Заполняем поля viewHolder'а данными из элемента набора данных
         try {
-            newViewHolder.tvDescription.setText("Название: " + cur.getProp(Order.DESCRIPTION));
-            newViewHolder.tvFrom.setText(cur.getProp("Откуда: " + Order.FROM));
-            newViewHolder.tvId = cur.getProp(Order.ID);
-            newViewHolder.tvTo.setText("Куда: " + cur.getProp(Order.TO));
-            newViewHolder.tvCustomer.setText("Заказчик: " + cur.getProp(Order.CUSTOMER));
-            newViewHolder.tvPhoneNumber.setText("Номер телефона: " + cur.getProp(Order.PHONE));
-            newViewHolder.tvCost.setText("Аванс: " + cur.getProp(Order.COST));
-            newViewHolder.tvPayment.setText("Оплата: " + cur.getProp(Order.PAYMENT));
+            newViewHolder.tvDescription.setText("Название: " + cur.getStringProp(Order.DESCRIPTION));
+            newViewHolder.tvFrom.setText(cur.getStringProp("Откуда: " + Order.FROM));
+            newViewHolder.tvId = cur.getStringProp(Order.ID);
+            newViewHolder.tvTo.setText("Куда: " + cur.getStringProp(Order.TO));
+            newViewHolder.tvCustomer.setText("Заказчик: " + cur.getStringProp(Order.CUSTOMER));
+            newViewHolder.tvPhoneNumber.setText("Номер телефона: " + cur.getStringProp(Order.PHONE));
+            newViewHolder.tvCost.setText("Аванс: " + cur.getStringProp(Order.COST));
+            newViewHolder.tvPayment.setText("Оплата: " + cur.getStringProp(Order.PAYMENT));
         } catch (IndexOutOfBoundsException e) {
             newViewHolder.tvDescription.setText("На данный момент");
             newViewHolder.tvFrom.setText("");

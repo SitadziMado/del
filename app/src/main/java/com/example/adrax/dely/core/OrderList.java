@@ -15,8 +15,9 @@ public class OrderList extends AbstractList<Order> {
 
     public OrderList(Order[] orders) {
         if (orders == null) {
-            Log.d(getClass().getName(), "Список заказов не может быть null");
-            throw new NullPointerException();
+            String m = "Список заказов не может быть null";
+            LogHelper.log(m);
+            throw new NullPointerException(m);
         }
 
         m_orders = new ArrayList<Order>(Arrays.asList(orders));
@@ -24,8 +25,9 @@ public class OrderList extends AbstractList<Order> {
 
     private OrderList(ArrayList<Order> init) {
         if (init == null) {
-            Log.d(getClass().getName(), "Внутренний массив не может быть null");
-            throw new NullPointerException();
+            String m = "Внутренний массив не может быть null";
+            LogHelper.log(m);
+            throw new NullPointerException(m);
         }
 
         m_orders = new ArrayList<Order>();
@@ -44,8 +46,9 @@ public class OrderList extends AbstractList<Order> {
     public Order get(int index)
             throws IndexOutOfBoundsException {
         if (index < 0 || index >= m_orders.size()) {
-            Log.d(getClass().getName(), "Индекс вне границ.");
-            throw new IndexOutOfBoundsException();
+            String m = "Индекс вне границ.";
+            LogHelper.log(m);
+            throw new IndexOutOfBoundsException(m);
         }
         return m_orders.get(index);
     }
@@ -55,9 +58,13 @@ public class OrderList extends AbstractList<Order> {
         return m_orders.size();
     }
 
+    /**
+     * Первый элемент или значение по умолчанию.
+     * @return возвращает первый элемент или null, если его нет.
+     */
     public Order firstOrDefault() {
         if (size() > 0) {
-            return m_orders.get(0);
+            return get(0);
         } else {
             return null;
         }
@@ -71,8 +78,9 @@ public class OrderList extends AbstractList<Order> {
     public OrderList where(Predicate<Order> predicate) {
         ArrayList<Order> list = new ArrayList<>();
         if (predicate == null) {
-            Log.d(getClass().getName(), "Предикат не может быть null.");
-            throw new IllegalArgumentException();
+            String m = "Предикат не может быть null.";
+            LogHelper.log(m);
+            throw new IllegalArgumentException(m);
         }
 
         for (Order order : m_orders) {

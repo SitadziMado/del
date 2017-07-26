@@ -27,8 +27,9 @@ import java.util.logging.Logger;
 class InternetTask extends AsyncTask<String, Void, String> {
     public InternetTask(String address, InternetCallback<String> callable) {
         if (callable == null || address == null || address.equals("")) {
-            Log.d(getClass().getName(), "Адрес, callback-функция не могут быть пустыми");
-            throw new NullPointerException();
+            String m = "Адрес, callback-функция не могут быть пустыми.";
+            LogHelper.log(m);
+            throw new NullPointerException(m);
         }
 
         m_address = address;
@@ -61,10 +62,10 @@ class InternetTask extends AsyncTask<String, Void, String> {
 
             Log.d(getClass().getName(), "Запрос " + m_address + " успешен.");
         } catch (MalformedURLException e) {
-            Log.d(getClass().getName(), m_address + " некорректен.");
+            LogHelper.log(m_address + " некорректен.");
             result = null;
         } catch (IOException e) {
-            Log.d(getClass().getName(), "Ошибка соединения с " + m_address + ".");
+            LogHelper.log("Ошибка соединения с " + m_address + ".");
             result = null;
         } finally {
             if (urlConnection != null) {
@@ -91,7 +92,7 @@ class InternetTask extends AsyncTask<String, Void, String> {
                 result.write(buffer, 0, length);
             return result.toString("UTF-8");
         } catch (IOException e) {
-            Log.d(getClass().getName(), "Ошибка при чтении потока.");
+            LogHelper.log("Ошибка при чтении потока");
             throw e;
         }
     }
@@ -124,7 +125,7 @@ class InternetTask extends AsyncTask<String, Void, String> {
                     }
                 }
             } catch (UnsupportedEncodingException e) {
-                Log.d(InternetTask.class.getName(), "Неподдерживаемая кодировка.");
+                LogHelper.log("Неподдерживаемая кодировка");
                 throw e;
             }
         }

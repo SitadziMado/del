@@ -94,18 +94,18 @@ public class FragmentGet extends Fragment {
                 // DeliveryOrder cur = orders[i];
                 Order cur = orders[i];
 
-                String name = cur.getProp("Name");
-                String from = cur.getProp("From");
-                String to = cur.getProp("To");
-                String customer = cur.getProp("Customer");
-                String phone = cur.getProp("Num");
-                String payment = cur.getProp("Payment");
-                String cost = cur.getProp("Cost");
-                String weight = cur.getProp("Wt");
-                String size = cur.getProp("Size");
-                String code = cur.getProp("Code");
-                String entrance = cur.getProp("Padik");
-                String floor = cur.getProp("Floor");
+                String name = cur.getStringProp("Name");
+                String from = cur.getStringProp("From");
+                String to = cur.getStringProp("To");
+                String customer = cur.getStringProp("Customer");
+                String phone = cur.getStringProp("Num");
+                String payment = cur.getStringProp("Payment");
+                String cost = cur.getStringProp("Cost");
+                String weight = cur.getStringProp("Wt");
+                String size = cur.getStringProp("Size");
+                String code = cur.getStringProp("Code");
+                String entrance = cur.getStringProp("Padik");
+                String floor = cur.getStringProp("Floor");
 
                 del = new Dely();
                 del.id = i.toString();

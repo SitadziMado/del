@@ -5,37 +5,38 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
 public class Order {
-    public Order(User parent, String... params) {
+    public Order(User parent, Object... params) {
         if ((params.length & 1) == 0 && parent != null) {
-            m_parent = parent;
+            setProp(PARENT, parent);
 
             for (int i = 0; i < params.length; i += 2) {
-                String key = params[i];
-                String value = params[i + 1];
+                String key = (String)params[i];
+                Object value = params[i + 1];
 
                 if (key == null || value == null || key.equals("")) { // || value.equals("")
-                    throw new IllegalArgumentException("Параметры не могут быть пустыми.");
+                    String m = "Параметры не могут быть пустыми.";
+                    LogHelper.log(m);
+                    throw new IllegalArgumentException(m);
                 }
 
                 setProp(key, value);
             }
         } else {
-            throw new IllegalArgumentException(
-                    "Требуется четное количество аргументов для составления пар."
-            );
+            String m = "Требуется четное количество аргументов для составления пар.";
+            LogHelper.log(m);
+            throw new IllegalArgumentException(m);
         }
     }
 
     public static OrderList fromString(String jsonString, User parent) {
         if (parent == null) {
-            throw new IllegalArgumentException(
-                    "Пользователь не может быть null."
-            );
+            String m = "Пользователь не может быть null.";
+            LogHelper.log(m);
+            throw new IllegalArgumentException(m);
         }
 
         OrderList ret = new OrderList();
@@ -50,39 +51,48 @@ public class Order {
 
                 Order order = new Order(parent);
 
-                order.m_parent = parent;
-                order.setProp(HASH, parent.getHash());
+                order.setProp(PARENT, parent);
+                order.setStringProp(HASH, parent.getHash());
                 Iterator<String> it = cur.keys();
 
                 while (it.hasNext()) {
                     String key = it.next();
-                    order.setProp(key, cur.getString(key));
+                    order.setStringProp(key, cur.getString(key));
                 }
 
                 ret.add(order);
             }
         } catch (JSONException ex) {
+            String m = "Исключение при чтении JSON.";
+            LogHelper.log(m);
             ret = null;
         }
         return ret;
     }
 
-    public void setProp(String fieldName, String fieldValue) {
-        m_props.put(fieldName.toLowerCase(), fieldValue.toLowerCase());
+    public void setProp(String propName, Object value) {
+        m_props.put(propName.toLowerCase(), value);
     }
 
-    public String getProp(String propName) {
+    public Object getProp(String propName) {
         String name = propName.toLowerCase();
 
         if (m_props.containsKey(name)) {
             return m_props.get(name);
         } else {
-            Log.d(
-                    getClass().getName(),
+            LogHelper.log(
                     "Свойства `" + propName + "` не существует."
             );
             return null;
         }
+    }
+
+    public void setStringProp(String propName, String value) {
+        setProp(propName.toLowerCase(), value.toLowerCase());
+    }
+
+    public String getStringProp(String propName) {
+        return (String)getProp(propName);
     }
 
     @Override
@@ -95,12 +105,12 @@ public class Order {
         appendFieldValue(sb, "Номер телефона: ", PHONE);
         appendFieldValue(sb, "Оплата: ", PAYMENT);
 
-        String cost = getProp(COST);
-        String weight = getProp(WEIGHT);
-        String size = getProp(SIZE);
-        String code = getProp(CODE);
-        String entrance = getProp(ENTRANCE);
-        String floor = getProp(FLOOR);
+        String cost = getStringProp(COST);
+        String weight = getStringProp(WEIGHT);
+        String size = getStringProp(SIZE);
+        String code = getStringProp(CODE);
+        String entrance = getStringProp(ENTRANCE);
+        String floor = getStringProp(FLOOR);
 
         if (cost != null && !cost.equals("")) {
             sb.append("Аванс: ")
@@ -144,6 +154,7 @@ public class Order {
 
                 switch (User.requestStatusFromString(s.toLowerCase())) {
                     case ORDER_ERROR:
+                        LogHelper.log("Ошибка при отправлении заказа на сервер.");
                         break;
 
                     case ORDER_LOADED:
@@ -156,20 +167,20 @@ public class Order {
         });
 
         task.execute(
-                Order.CUSTOMER, getProp(Order.CUSTOMER),
-                Order.FROM, getProp(Order.FROM),
-                Order.TO, getProp(Order.TO),
-                Order.COST, getProp(Order.COST),
-                Order.PAYMENT, getProp(Order.PAYMENT),
-                Order.ENTRANCE, getProp(Order.ENTRANCE),
-                Order.CODE, getProp(Order.CODE),
-                Order.FLOOR, getProp(Order.FLOOR),
-                Order.ROOM, getProp(Order.ROOM),
-                Order.PHONE, getProp(Order.PHONE),
-                Order.WEIGHT, getProp(Order.WEIGHT),
-                Order.SIZE, getProp(Order.SIZE),
-                HASH, m_parent.getHash(),
-                Order.DESCRIPTION, getProp(Order.DESCRIPTION)
+                Order.CUSTOMER, getStringProp(Order.CUSTOMER),
+                Order.FROM, getStringProp(Order.FROM),
+                Order.TO, getStringProp(Order.TO),
+                Order.COST, getStringProp(Order.COST),
+                Order.PAYMENT, getStringProp(Order.PAYMENT),
+                Order.ENTRANCE, getStringProp(Order.ENTRANCE),
+                Order.CODE, getStringProp(Order.CODE),
+                Order.FLOOR, getStringProp(Order.FLOOR),
+                // Order.ROOM, getStringProp(Order.ROOM),
+                Order.PHONE, getStringProp(Order.PHONE),
+                Order.WEIGHT, getStringProp(Order.WEIGHT),
+                Order.SIZE, getStringProp(Order.SIZE),
+                HASH, ((User)getProp(PARENT)).getHash(),
+                Order.DESCRIPTION, getStringProp(Order.DESCRIPTION)
         );
     }
 
@@ -191,9 +202,11 @@ public class Order {
                 Boolean result = Boolean.FALSE;
                 switch (User.requestStatusFromString(s.toLowerCase())) {
                     case ORDER_BUSY:
+                        LogHelper.log("Заказ уже начат.");
                         break;
 
                     case ORDER_TOO_MANY:
+                        LogHelper.log("Слишком много начатых заказов.");
                         break;
 
                     case ORDER_STARTED:
@@ -208,9 +221,9 @@ public class Order {
         // assert m_parent != null;
 
         task.execute(
-                HASH, getProp(HASH),
-                ID, getProp(ID),
-                User.COURIER, m_parent.getLogin()
+                HASH, getStringProp(HASH),
+                ID, getStringProp(ID),
+                User.COURIER, ((User)getProp(PARENT)).getLogin()
         );
     }
 
@@ -221,6 +234,7 @@ public class Order {
                 Boolean result = Boolean.FALSE;
                 switch (User.requestStatusFromString(s.toLowerCase())) {
                     case ORDER_BUSY:
+                        LogHelper.log("Заказ уже начат.");
                         break;
 
                     case ORDER_STARTED:
@@ -233,8 +247,8 @@ public class Order {
         });
 
         task.execute(
-                HASH, getProp(HASH),
-                ID, getProp(ID),
+                HASH, getStringProp(HASH),
+                ID, getStringProp(ID),
                 User.SMS_CODE, "0000"
         );
     }
@@ -246,6 +260,7 @@ public class Order {
                 Boolean result = Boolean.FALSE;
                 switch (User.requestStatusFromString(s.toLowerCase())) {
                     case ORDER_ERROR:
+                        LogHelper.log("Ошибка при подтверждении заказа.");
                         break;
 
                     case ORDER_OK:
@@ -258,8 +273,8 @@ public class Order {
         });
 
         task.execute(
-                HASH, getProp(HASH),
-                ID, getProp(ID)
+                HASH, getStringProp(HASH),
+                ID, getStringProp(ID)
         );
     }
 
@@ -290,6 +305,7 @@ public class Order {
                         break;
 
                     default:
+                        LogHelper.log("Неизвестный статус заказа.");
                         result = OrderStatus.ERROR;
                         break;
                 }
@@ -299,8 +315,8 @@ public class Order {
         });
 
         task.execute(
-                HASH, getProp(HASH),
-                ID, getProp(ID)
+                HASH, getStringProp(HASH),
+                ID, getStringProp(ID)
         );
     }
 
@@ -309,7 +325,7 @@ public class Order {
             String header,
             String fieldName) {
         sb.append(header);
-        sb.append(getProp(fieldName));
+        sb.append(getStringProp(fieldName));
         sb.append("\n");
     }
 
@@ -327,19 +343,20 @@ public class Order {
     public static final String TO = "to";
     public static final String CUSTOMER = "customer";
     public static final String PAYMENT = "payment";
-    public static final String ENTRANCE = "padik";
+    public static final String ENTRANCE = "entrance";
     public static final String CODE = "code";
     public static final String FLOOR = "floor";
-    public static final String ROOM = "ko";
+    // public static final String ROOM = "room";
     public static final String PHONE = "num";
     public static final String WEIGHT = "wt";
     public static final String SIZE = "size";
     public static final String COST = "cost";
-    public static final String DESCRIPTION = "dayoff";
+    public static final String DESCRIPTION = "description";
+    public static final String STATUS = "status";
+    public static final String PARENT = "parent";
 
     private OrderStatus m_orderStatus;
-    private HashMap<String, String> m_props = new HashMap<>();
-    private User m_parent = null;
+    private HashMap<String, Object> m_props = new HashMap<>();
 
     // private int m_id = -1;
     // private String m_customer;

@@ -1,5 +1,7 @@
 package com.example.adrax.dely.core;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,15 +16,16 @@ public class User {
         User user = new User();
         try {
             JSONObject userData = new JSONObject(jsonString);
-            user.m_about = userData.getString("About");
-            user.m_hash = userData.getString("Hash");
-            user.m_mail = userData.getString("Mail");
-            user.m_middleName = userData.getString("Midname");
+            user.m_about = userData.getString(ABOUT);
+            user.m_hash = userData.getString(HASH);
+            user.m_mail = userData.getString(MAIL);
+            user.m_middleName = userData.getString(MIDDLE_NAME);
             user.m_money = String.valueOf(userData.getDouble("Money"));
-            user.m_name = userData.getString("Name");
-            user.m_phone = userData.getString("Selnum");
-            user.m_surname = userData.getString("Surname");
+            user.m_name = userData.getString(NAME);
+            user.m_phone = userData.getString(PHONE);
+            user.m_surname = userData.getString(SURNAME);
         } catch (JSONException ex) {
+            LogHelper.log("Ошибка при чтении JSON.");
             user = null;
         }
 
@@ -68,10 +71,12 @@ public class User {
                         break;
 
                     case LOGIN_ALREADY_TAKEN:
+                        LogHelper.log("Логин занят.");
                         // result = Boolean.FALSE;
                         break;
 
                     default:
+                        LogHelper.log("Неизветсный код возврата при регистрации.");
                         // result = Boolean.FALSE;
                         break;
                 }
@@ -102,12 +107,15 @@ public class User {
                 User user = null;
                 switch (requestStatusFromString(s.toLowerCase())) {
                     case INCORRECT_AUTHORIZATION_DATA:
+                        LogHelper.log("Некорректные данные авторизации.");
                         break;
 
                     case SERVER_PROBLEMS:
+                        LogHelper.log("Проблемы с сервером.");
                         break;
 
                     case REQUEST_INCORRECT:
+                        LogHelper.log("Некорректный запрос.");
                         break;
 
                     case OTHER:
@@ -144,6 +152,8 @@ public class User {
                 OrderList orders = new OrderList();
                 if (!s.equals("404")) {
                     orders = Order.fromString(s, user);
+                } else {
+                    LogHelper.log("При синхронизации заказов произошла ошибка.");
                 }
 
                 callback.call(orders);
@@ -161,6 +171,8 @@ public class User {
                 OrderList orders = new OrderList();
                 if (!s.equals(ERROR)) {
                     orders = Order.fromString(s, user);
+                } else {
+                    LogHelper.log("При запросе текущего заказа произошла ошибка.");
                 }
 
                 callback.call(orders);
@@ -196,6 +208,7 @@ public class User {
             case OK:
                 return RequestStatus.ORDER_OK;
             default:
+                LogHelper.log("Неизвестный код возврата с сервера.");
                 return RequestStatus.OTHER;
         }
     }

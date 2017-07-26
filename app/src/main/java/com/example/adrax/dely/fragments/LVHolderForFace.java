@@ -52,7 +52,7 @@ public final class LVHolderForFace extends RecyclerView.ViewHolder {
                     //face_tab.getTabWidget().getChildAt(3).setVisibility(View.VISIBLE);
                     //face_tab.setCurrentTabByTag("ftab4");
 
-                    selected_id = Integer.parseInt(face_orders.get(id).getProp(Order.ID));
+                    selected_id = Integer.parseInt(face_orders.get(id).getStringProp(Order.ID));
                     face_cur_order_text = face_orders.get(id).toString();
                     switchFragment();
                 }
