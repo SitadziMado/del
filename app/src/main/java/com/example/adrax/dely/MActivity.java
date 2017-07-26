@@ -34,7 +34,6 @@ import com.example.adrax.dely.fragments.FragmentFace;
 import com.example.adrax.dely.fragments.FragmentGet;
 import com.example.adrax.dely.fragments.FragmentOrder;
 import com.example.adrax.dely.fragments.FragmentOrderShow;
-import com.example.adrax.dely.fragments.FragmentTools;
 import com.example.adrax.dely.fragments.WaitingDialog;
 
 import java.util.Timer;
@@ -48,7 +47,7 @@ public class MActivity extends AppCompatActivity
     FragmentFace fface;         // Страница ккаунта
     FragmentOrder forder;       // Страница заказа
     FragmentGet fget;           // Заказы
-    FragmentTools ftools;       // Настройки
+    // FragmentTools ftools;       // Настройки
     FragmentAbout fabout;       // О нас
     FragmentDelyShow fdelyshow; // Показ выбранной доставки
     FragmentOrderShow fordershow; // Показ выбранного заказа
@@ -141,7 +140,6 @@ public class MActivity extends AppCompatActivity
         forder = new FragmentOrder();
         fget = new FragmentGet();
         fabout = new FragmentAbout();
-        ftools = new FragmentTools();
         fdelyshow = new FragmentDelyShow();
         fordershow = new FragmentOrderShow();
         // загружаем заказы/доставки
@@ -297,6 +295,19 @@ public class MActivity extends AppCompatActivity
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * Для вызова фрагмента списка доставок из других фрагментов
+     */
+    public void ShowFragmenGet(){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fget);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+        //fragment_id = 1050;
+        //UpdateData(); //#UpdateData
     }
 
     /**

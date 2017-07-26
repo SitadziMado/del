@@ -15,6 +15,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.adrax.dely.MActivity;
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
@@ -86,7 +87,7 @@ public class FragmentFace extends Fragment {
         // Inflate the layout for this fragment
 
         //обновляем заказы/доставки
-        update_face();
+        // update_face();
 
         //окончание доставки
         btn_finish = (Button) root.findViewById(R.id.btn_finish);
@@ -139,8 +140,6 @@ public class FragmentFace extends Fragment {
         // Code
         text_code = (EditText) root.findViewById(R.id.text_code);
 
-        UpdateUserInfo();
-
         //Привязываем RecyclerView к элементу
         rvMain = (RecyclerView)root.findViewById(R.id.face_orders_list);
         //И установим LayoutManager
@@ -156,7 +155,32 @@ public class FragmentFace extends Fragment {
         rvMain.setAdapter(adapterForFace);
         // Inflate the layout for this fragment
 
+        UpdateUserInfo();
+
+        face_deliver_text_view.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // Start the Signup activity
+                //Intent intent = new Intent(getActivity(), SignupActivity.class);
+                //startActivityForResult(intent, REQUEST_SIGNUP);
+                if (face_deliver_text_view.getText() == "Начните новую доставку!")
+                {
+                    switchFragment();
+                }
+            }
+        });
+
         return root;
+    }
+
+    private void switchFragment() {
+        if (mContext == null)
+            return;
+        if (mContext instanceof MActivity) {
+            MActivity feeds = (MActivity) mContext;
+            feeds.ShowFragmenGet();
+        }
     }
 
     private ArrayList<Dely> getOrders() {
