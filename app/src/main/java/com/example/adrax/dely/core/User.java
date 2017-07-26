@@ -156,31 +156,32 @@ public class User {
         });
 
         task.execute(
-                Order.CUSTOMER, order.getField(Order.CUSTOMER),
-                Order.FROM, order.getField(Order.FROM),
-                Order.TO, order.getField(Order.TO),
-                Order.COST, order.getField(Order.COST),
-                Order.PAYMENT, order.getField(Order.PAYMENT),
-                Order.ENTRANCE, order.getField(Order.ENTRANCE),
-                Order.CODE, order.getField(Order.CODE),
-                Order.FLOOR, order.getField(Order.FLOOR),
-                Order.ROOM, order.getField(Order.ROOM),
-                Order.PHONE, order.getField(Order.PHONE),
-                Order.WEIGHT, order.getField(Order.WEIGHT),
-                Order.SIZE, order.getField(Order.SIZE),
+                Order.CUSTOMER, order.getProp(Order.CUSTOMER),
+                Order.FROM, order.getProp(Order.FROM),
+                Order.TO, order.getProp(Order.TO),
+                Order.COST, order.getProp(Order.COST),
+                Order.PAYMENT, order.getProp(Order.PAYMENT),
+                Order.ENTRANCE, order.getProp(Order.ENTRANCE),
+                Order.CODE, order.getProp(Order.CODE),
+                Order.FLOOR, order.getProp(Order.FLOOR),
+                Order.ROOM, order.getProp(Order.ROOM),
+                Order.PHONE, order.getProp(Order.PHONE),
+                Order.WEIGHT, order.getProp(Order.WEIGHT),
+                Order.SIZE, order.getProp(Order.SIZE),
                 HASH, m_hash,
-                Order.DESCRIPTION, order.getField(Order.DESCRIPTION)
+                Order.DESCRIPTION, order.getProp(Order.DESCRIPTION)
         );
     }
 
     public void syncOrders(final InternetCallback<Order[]> callback) {
+        final User user = this;
         InternetTask task = new InternetTask(SYNC_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 // Order[] orders = null;
                 Order[] orders = new Order[0];
                 if (!s.equals("404")) {
-                    orders = Order.fromString(s);
+                    orders = Order.fromString(s, user);
                 }
 
                 callback.call(orders);
@@ -190,168 +191,24 @@ public class User {
         task.execute(REFRESH, DELIVERIES);
     }
 
-    public void currentOrder(final InternetCallback<Order> callback) {
+    public void currentOrder(final InternetCallback<Order[]> callback) {
+        final User user = this;
         InternetTask task = new InternetTask(CURRENT_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
-                Order order = null;
+                Order[] orders = null;
                 if (!s.equals(ERROR)) {
-                    order = Order.fromString(s)[0];
+                    orders = Order.fromString(s, user);
                 }
 
-                callback.call(order);
+                callback.call(orders);
             }
         });
 
         task.execute(HASH, m_hash);
     }
 
-    public void cancel(final InternetCallback<Boolean> callback) {
-        InternetTask task = new InternetTask(CANCEL_URL, new InternetCallback<String>() {
-            @Override
-            public void call(String s) {
-                callback.call(Boolean.FALSE);
-            }
-        });
-
-        task.execute();
-    }
-
-    public void start(Order order, final InternetCallback<Boolean> callback) {
-        InternetTask task = new InternetTask(START_URL, new InternetCallback<String>() {
-            @Override
-            public void call(String s) {
-                Boolean result = Boolean.FALSE;
-                switch (requestStatusFromString(s.toLowerCase())) {
-                    case ORDER_BUSY:
-                        break;
-
-                    case ORDER_TOO_MANY:
-                        break;
-
-                    case ORDER_STARTED:
-                        result = Boolean.TRUE;
-                        break;
-                }
-
-                callback.call(result);
-            }
-        });
-
-        if (order == null) {
-            throw new NullPointerException();
-        }
-
-        task.execute(
-                HASH, m_hash,
-                ID, order.getField("id"),
-                COURIER, getLogin()
-        );
-    }
-
-    public void finish(Order order, final InternetCallback<Boolean> callback) {
-        InternetTask task = new InternetTask(FINISH_URL, new InternetCallback<String>() {
-            @Override
-            public void call(String s) {
-                Boolean result = Boolean.FALSE;
-                switch (requestStatusFromString(s.toLowerCase())) {
-                    case ORDER_BUSY:
-                        break;
-
-                    case ORDER_STARTED:
-                        result = Boolean.TRUE;
-                        break;
-                }
-
-                callback.call(result);
-            }
-        });
-
-        if (order == null) {
-            throw new NullPointerException();
-        }
-
-        task.execute(
-                HASH, m_hash,
-                ID, order.getField(Order.ID),
-                SMS_CODE, "0000"
-        );
-    }
-
-    public void accept(Order order, final InternetCallback<Boolean> callback) {
-        InternetTask task = new InternetTask(ACCEPT_URL, new InternetCallback<String>() {
-            @Override
-            public void call(String s) {
-                Boolean result = Boolean.FALSE;
-                switch (requestStatusFromString(s.toLowerCase())) {
-                    case ORDER_ERROR:
-                        break;
-
-                    case ORDER_OK:
-                        result = Boolean.TRUE;
-                        break;
-                }
-
-                callback.call(result);
-            }
-        });
-
-        if (order == null) {
-            throw new NullPointerException();
-        }
-
-        task.execute(
-                HASH, m_hash,
-                ID, order.getField(Order.ID)
-        );
-    }
-
-    public void getOrderStatus(Order order, final InternetCallback<OrderStatus> callback) {
-        InternetTask task = new InternetTask(STATUS_URL, new InternetCallback<String>() {
-            @Override
-            public void call(String s) {
-                OrderStatus result;
-                switch (s.toLowerCase()) {
-                    case WAITING:
-                        result = OrderStatus.WAITING;
-                        break;
-
-                    case DELIVERING:
-                        result = OrderStatus.DELIVERING;
-                        break;
-
-                    case DELIVERED:
-                        result = OrderStatus.DELIVERED;
-                        break;
-
-                    case DELIVERY_DONE:
-                        result = OrderStatus.DELIVERY_DONE;
-                        break;
-
-                    case ERROR:
-                        result = OrderStatus.ERROR;
-                        break;
-
-                    default:
-                        result = OrderStatus.ERROR;
-                        break;
-                }
-
-                callback.call(result);
-            }
-        });
-
-        if (order == null) {
-            throw new NullPointerException();
-        }
-
-        task.execute(
-                HASH, m_hash,
-                ID, order.getField(Order.ID)
-        );
-    }
-
-    private static RequestStatus requestStatusFromString(String status) {
+    static RequestStatus requestStatusFromString(String status) {
         switch (status.toLowerCase())
         {
             case INCORRECT_AUTHORIZATION_DATA:
@@ -389,12 +246,6 @@ public class User {
     private static final String PEEK_URL = null; // "http://adrax.pythonanywhere.com/send_delys";
     private static final String CURRENT_URL = "http://adrax.pythonanywhere.com/current_delivery";
 
-    private static final String CANCEL_URL = null; // "http://adrax.pythonanywhere.com/send_delys";
-    private static final String START_URL = "http://adrax.pythonanywhere.com/ch_dely";
-    private static final String FINISH_URL = "http://adrax.pythonanywhere.com/delivered";
-    private static final String ACCEPT_URL = "http://adrax.pythonanywhere.com/delivery_done";
-    private static final String STATUS_URL = "http://adrax.pythonanywhere.com/chosen";
-
     /// Константы авторизации
     private static final String INCORRECT_AUTHORIZATION_DATA = "incorrect_auth";    /** Некорректная инфа для авторизации */
     private static final String INCORRECT_REQUEST = "405";                          /** Тоже какая-то ошибка */
@@ -405,31 +256,31 @@ public class User {
     private static final String LOGIN_ALREADY_TAKEN = "already_taken";      /** Логин занят */
 
     /// Константы заказов
-    private static final String LOADED = "loaded";		          /** Новый заказ успешно создан */
-    private static final String ERROR = "error";                  /** Ошибка отправки нового заказа на сервер */
-    private static final String WAITING = "waiting";              /** Статусы заказов ниже */
-    private static final String DELIVERING = "delivering";        /** В процессе... */
-    private static final String DELIVERED = "delivered";          /** Вроде бы доставлено */
-    private static final String DELIVERY_DONE = "delivery_done";  /** Абсолютный суккесс */
-    private static final String STARTED = "delivery_started";     /** Всё хорошо, доставка началась */
-    private static final String BUSY = "delivery_busy";           /** Пользователь - слоупок, рекомендуем обновиться до 10-ки */
-    private static final String OK = "ok";                        /** Заказ успешно подтверждён (обеими сторонами) */
-    private static final String TOO_MANY = "already_enough";      /** Только 1 заказ можно доставлять */
+    static final String LOADED = "loaded";		          /** Новый заказ успешно создан */
+    static final String ERROR = "error";                  /** Ошибка отправки нового заказа на сервер */
+    static final String WAITING = "waiting";              /** Статусы заказов ниже */
+    static final String DELIVERING = "delivering";        /** В процессе... */
+    static final String DELIVERED = "delivered";          /** Вроде бы доставлено */
+    static final String DELIVERY_DONE = "delivery_done";  /** Абсолютный суккесс */
+    static final String STARTED = "delivery_started";     /** Всё хорошо, доставка началась */
+    static final String BUSY = "delivery_busy";           /** Пользователь - слоупок, рекомендуем обновиться до 10-ки */
+    static final String OK = "ok";                        /** Заказ успешно подтверждён (обеими сторонами) */
+    static final String TOO_MANY = "already_enough";      /** Только 1 заказ можно доставлять */
 
-    private static final String HASH = "hash";
-    private static final String ID = "dely_id";
-    private static final String SMS_CODE = "sms_code";
-    private static final String COURIER = "couriers";
-    private static final String REFRESH = "refr";
-    private static final String DELIVERIES = "delys";
-    private static final String USERNAME = "username";
-    private static final String PASSWORD = "password";
-    private static final String MAIL = "mail";
-    private static final String NAME = "name";
-    private static final String SURNAME = "surname;";
-    private static final String MIDDLE_NAME = "midname";
-    private static final String PHONE = "selnum";
-    private static final String ABOUT = "about";
+    static final String HASH = "hash";
+    static final String ID = "dely_id";
+    static final String SMS_CODE = "sms_code";
+    static final String COURIER = "couriers";
+    static final String REFRESH = "refr";
+    static final String DELIVERIES = "delys";
+    static final String USERNAME = "username";
+    static final String PASSWORD = "password";
+    static final String MAIL = "mail";
+    static final String NAME = "name";
+    static final String SURNAME = "surname;";
+    static final String MIDDLE_NAME = "midname";
+    static final String PHONE = "selnum";
+    static final String ABOUT = "about";
 
     private ArrayList<Order> m_orders = new ArrayList<>();
     private String m_about;         /** Информация о юзвере  */
@@ -479,5 +330,10 @@ public class User {
     /** Текущий логин */
     public String getLogin() {
         return m_login;
+    }
+
+    /** Выданный хэш */
+    String getHash() {
+        return m_hash;
     }
 }

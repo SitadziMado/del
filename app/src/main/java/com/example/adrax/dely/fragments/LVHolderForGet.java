@@ -47,7 +47,7 @@ public final class LVHolderForGet extends RecyclerView.ViewHolder {
                     int id = Integer.parseInt(tvId);
                     //id = 0;
 
-                    selected_id = Integer.parseInt(orders[id].getField("Id"));
+                    selected_id = Integer.parseInt(orders[id].getProp("Id"));
                     delyDescription = orders[id].toString();
 
                     switchFragment();

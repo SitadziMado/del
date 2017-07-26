@@ -50,8 +50,7 @@ public class FragmentDelyShow extends Fragment {
             {
                 //if(user.orderStart(selected_id))
                 if (face_delivery == null) {
-                    user.start(
-                            new Order("Id", selected_id.toString()),
+                    new Order(user, Order.ID, selected_id.toString()).start(
                             new InternetCallback<Boolean>() {
                                 @Override
                                 public void call(Boolean result) {

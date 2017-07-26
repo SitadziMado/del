@@ -20,8 +20,6 @@ import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
 import com.example.adrax.dely.core.OrderStatus;
-import com.example.adrax.dely.delivery.DeliveryOrder;
-import com.example.adrax.dely.delivery.DeliveryOrderStatus;
 
 import java.util.ArrayList;
 
@@ -97,7 +95,7 @@ public class FragmentFace extends Fragment {
             {
                 //if(user.orderStart(selected_id))
                 // user.orderFinish(Integer.parseInt(face_delivery.getId()));
-                user.finish(face_delivery, new InternetCallback<Boolean>() {
+                face_delivery.finish(new InternetCallback<Boolean>() {
                     @Override
                     public void call(Boolean result) {
                         if (result) {
@@ -116,7 +114,7 @@ public class FragmentFace extends Fragment {
                             ).show();
                         }
 
-                        user.getOrderStatus(face_delivery, new InternetCallback<OrderStatus>() {
+                        face_delivery.status(new InternetCallback<OrderStatus>() {
                             @Override
                             public void call(OrderStatus orderStatus) {
                                 switch (orderStatus) {
@@ -188,57 +186,41 @@ public class FragmentFace extends Fragment {
         Dely del;
         if (face_orders != null) {
             for (Integer i = 0; i < face_orders.length; i++) {
-                if (true) {// (user.orderStatus(face_orders[i]) != DeliveryOrderStatus.DELIVERY_DONE) {
-                    // DeliveryOrder cur = face_orders[i];
-                    Order cur = face_orders[i];
+                Order cur = face_orders[i];
 
-                    String name = cur.getField("Name");
-                    String from = cur.getField("From");
-                    String to = cur.getField("To");
-                    String customer = cur.getField("Customer");
-                    String phone = cur.getField("Num");
-                    String payment = cur.getField("Payment");
-                    String cost = cur.getField("Cost");
-                    String weight = cur.getField("Wt");
-                    String size = cur.getField("Size");
-                    String code = cur.getField("Code");
-                    String entrance = cur.getField("Padik");
-                    String floor = cur.getField("Floor");
+                String name = cur.getProp("Name");
+                String from = cur.getProp("From");
+                String to = cur.getProp("To");
+                String customer = cur.getProp("Customer");
+                String phone = cur.getProp("Num");
+                String payment = cur.getProp("Payment");
+                String cost = cur.getProp("Cost");
+                String weight = cur.getProp("Wt");
+                String size = cur.getProp("Size");
+                String code = cur.getProp("Code");
+                String entrance = cur.getProp("Padik");
+                String floor = cur.getProp("Floor");
 
-                    del = new Dely();
-                    del.id = i.toString();
-                    del.description = "Название: " + name;
-                    del.from = "Откуда: " + from;
-                    del.to = "Куда: " + to;
-                    del.customer = "Заказчик: " + customer;
-                    del.phonenumber = "Номер телефона: " + phone;
-                    if (cost.equals("")) {
-                        del.cost = "Аванс: 0 руб.";
-                    }
-                    else {
-                        del.cost = "Аванс: " + cost + " руб.";
-                    }
-
-                    if (payment.equals("")) {
-                        del.payment = "Оплата: 0 руб.";
-                    }
-                    else {
-                        del.payment = "Оплата: " + payment + " руб.";
-                    }
-
-                    delys.add(del);
+                del = new Dely();
+                del.id = i.toString();
+                del.description = "Название: " + name;
+                del.from = "Откуда: " + from;
+                del.to = "Куда: " + to;
+                del.customer = "Заказчик: " + customer;
+                del.phonenumber = "Номер телефона: " + phone;
+                if (cost.equals("")) {
+                    del.cost = "Аванс: 0 руб.";
                 } else {
-                    del = new Dely();
-                    del.description = "на данный момент";
-                    del.from = "заказов нет.";
-                    del.to = "";
-                    del.id = "Увы,";
-                    del.customer = "Но вы всегда";
-                    del.phonenumber = "можете оформить";
-                    del.cost = "";
-                    del.payment = "новый!";
-                    delys.add(del);
+                    del.cost = "Аванс: " + cost + " руб.";
                 }
+
+                if (payment.equals("")) {
+                    del.payment = "Оплата: 0 руб.";
+                } else {
+                    del.payment = "Оплата: " + payment + " руб.";
+                }
+
+                delys.add(del);
             }
         } else {
             del = new Dely();
@@ -262,7 +244,7 @@ public class FragmentFace extends Fragment {
 
         if (face_delivery != null)
         {
-            user.getOrderStatus(face_delivery, new InternetCallback<OrderStatus>() {
+            face_delivery.status(new InternetCallback<OrderStatus>() {
                 @Override
                 public void call(OrderStatus orderStatus) {
                     switch (orderStatus) {

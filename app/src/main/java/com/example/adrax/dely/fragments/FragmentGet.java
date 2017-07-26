@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
-import com.example.adrax.dely.delivery.DeliveryOrder;
 import com.example.adrax.dely.R;
 
 import java.util.ArrayList;
@@ -106,18 +105,18 @@ public class FragmentGet extends Fragment {
                 // DeliveryOrder cur = orders[i];
                 Order cur = orders[i];
 
-                String name = cur.getField("Name");
-                String from = cur.getField("From");
-                String to = cur.getField("To");
-                String customer = cur.getField("Customer");
-                String phone = cur.getField("Num");
-                String payment = cur.getField("Payment");
-                String cost = cur.getField("Cost");
-                String weight = cur.getField("Wt");
-                String size = cur.getField("Size");
-                String code = cur.getField("Code");
-                String entrance = cur.getField("Padik");
-                String floor = cur.getField("Floor");
+                String name = cur.getProp("Name");
+                String from = cur.getProp("From");
+                String to = cur.getProp("To");
+                String customer = cur.getProp("Customer");
+                String phone = cur.getProp("Num");
+                String payment = cur.getProp("Payment");
+                String cost = cur.getProp("Cost");
+                String weight = cur.getProp("Wt");
+                String size = cur.getProp("Size");
+                String code = cur.getProp("Code");
+                String entrance = cur.getProp("Padik");
+                String floor = cur.getProp("Floor");
 
                 del = new Dely();
                 del.id = i.toString();

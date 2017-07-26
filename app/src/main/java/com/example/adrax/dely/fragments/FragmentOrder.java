@@ -145,6 +145,7 @@ public class FragmentOrder extends Fragment {
 
         if (validate(description,from,to,num, ko)) {
             Order order = new Order(
+                    user,
                     "From", from,
                     "To", to,
                     "Cost", cost,

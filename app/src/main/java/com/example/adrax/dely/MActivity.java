@@ -70,8 +70,8 @@ public class MActivity extends AppCompatActivity
     public static Order[] face_orders;
     public static Order face_delivery = null;
 
-    public static Object faceOrdersLock = new Object();
-    public static Object faceDeliveryLock = new Object();
+    public static final Object faceOrdersLock = new Object();
+    public static final Object faceDeliveryLock = new Object();
 
     public static Integer selected_id = 0;
     public static String delyDescription = "Тест";
@@ -166,11 +166,11 @@ public class MActivity extends AppCompatActivity
             }
         });
 
-        user.currentOrder(new InternetCallback<Order>() {
+        user.currentOrder(new InternetCallback<Order[]>() {
             @Override
-            public void call(Order order) {
+            public void call(Order[] orders) {
                 synchronized (faceDeliveryLock) {
-                    face_delivery = order;
+                    face_delivery = orders[0]; // ToDo: заказов может быть > 1.
                 }
             }
         });
@@ -215,7 +215,7 @@ public class MActivity extends AppCompatActivity
      */
     public static void update_face(){
         if (face_delivery != null) {
-            user.getOrderStatus(face_delivery, new InternetCallback<OrderStatus>() {
+            face_delivery.status(new InternetCallback<OrderStatus>() {
                 @Override
                 public void call(OrderStatus orderStatus) {
                     if (orderStatus != OrderStatus.DELIVERED &&
