@@ -1,0 +1,47 @@
+<resources>
+
+    <string name="app_name">Del</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="tools_item">Аккаунт</string>
+    <string name="communicate_item">Контакты</string>
+    <string name="accaunt_item"></string>
+    <string name="about_item">О нас</string>
+    <string name="face_item">Заказы и доставки</string>
+    <string name="order_item">Создать заказ</string>
+    <string name="get_item">Доставить заказ</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="text_about_fragment">Копырин Максим Викторович\n
+Должность: Генеральный деректор\n
+Телефон: 89194709810\n
+Личный E-mail: kopyrin.mak@yandex.ru\n
+\nСимакова Алина Робертовна\n
+Должность: Глава отдела IT-разработок, главный бухгалтер\n
+Телефон: 89091149414\n
+Личный E-mail: jjmaectro@yandex.ru\n
+\nПолыгалов Денис Андреевич\n
+Должность: Глава PR-отдела\n
+Телефон: 89523296810\n
+\nТерлыч Никита Андреевич\n
+Должность: IT-разработчик (front-end)\n
+Телефон: 89617544428\n
+Личный E-mail: terlychnikita@gmail.com\n
+\nСунцев Максим Александрович\n
+Должность: IT-разработчик (back-end)\n
+Телефон: 89617544428</string>
+    <string name="title_activity_login">Del</string>
+
+    <!-- Strings related to login -->
+    <string name="title_activity_signup">Регистрация</string>
+    <string name="menu_refresh">Обновить</string>
+    <string name="action_settings">Обновить</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cancel">Отменить заказ</string>
+    <string name="fire">Подождать ещё</string>
+    <string name="dialog_waiting">Мы пока что не подобрали курьера</string>
+</resources>

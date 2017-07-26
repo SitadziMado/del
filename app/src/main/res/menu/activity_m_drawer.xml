@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:title="@string/accaunt_item">
+            <menu>
+            <item
+                android:id="@+id/frag_face_id"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/face_item" />
+            <item
+                android:id="@+id/frag_order_id"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/order_item" />
+            <item
+                android:id="@+id/frag_get_id"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/get_item" />
+            <item
+                android:id="@+id/frag_tools_id"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="@string/tools_item" />
+            </menu>
+        </item>
+    </group>
+
+    <item android:title="@string/communicate_item">
+        <menu>
+            <item
+                android:id="@+id/frag_about_id"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/about_item" />
+        </menu>
+    </item>
+
+</menu>

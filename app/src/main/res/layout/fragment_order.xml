@@ -1,0 +1,201 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:mask="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true">
+
+    <!--FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.adrax.dely.fragments.FragmentOrder"-->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="24dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp">
+
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Оформление заказа"
+            android:textSize="25sp"
+            android:textAlignment="center" />
+
+        <!-- Description Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="*Примерное содержимое" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- From Labedi -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_from"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="*Начальный пункт" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!--  To Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_to"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="*Конечный пункт" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!--  Distance Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="Примерное расстояние" />
+        </android.support.design.widget.TextInputLayout>
+        <!-- Cost Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_cost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text|number"
+                android:hint="Стоимость содержимого"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- padik Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_padik"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="Подъезд"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- code Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Код домофона"
+                android:inputType="text|number"
+                android:fontFamily="sans-serif"
+                android:textSize="18sp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- floor Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_floor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Этаж"
+                android:inputType="text|number" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- ko Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_ko"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="*Квартира/офис"
+                android:inputType="text" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- num Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_num"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="*Номер телефона"
+                android:inputType="text|phone" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- recnum Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_recnum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Запасной номер"
+                android:inputType="text|phone" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!--payment Label -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="8dp"
+            android:id = "@+id/view_pay"
+            android:text = "Стоимость заказа: "
+            android:fontFamily="sans-serif"
+            android:textSize="22sp"
+            android:textAlignment="center">
+        </TextView>
+
+        <!-- order Button -->
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_order"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:padding="12dp"
+            android:text="Оформить заказ"
+            android:textSize="24sp"
+            android:fontFamily="sans-serif"
+            android:textAllCaps="false"
+            style="@style/Widget.AppCompat.Button.Colored" />
+
+    </LinearLayout>
+</ScrollView>
