@@ -144,17 +144,17 @@ public class FragmentOrder extends Fragment {
         if (validate(description,from,to,num, ko)) {
             Order order = new Order(
                     user,
-                    "From", from,
-                    "To", to,
-                    "Cost", cost,
-                    "Payment", payment,
-                    "Padik", padik,
-                    "Code", code,
-                    "Floor", floor,
-                    "Ko", ko,
-                    "Nom", num,
-                    "Recnum", rec,
-                    "Dayoff", description
+                    Order.FROM, from,
+                    Order.TO, to,
+                    Order.CODE, cost,
+                    Order.PAYMENT, payment,
+                    Order.ENTRANCE, padik,
+                    Order.CODE, code,
+                    Order.FLOOR, floor,
+                    Order.ROOM, ko,
+                    Order.PHONE, num,
+                    "recnum", rec,
+                    Order.DESCRIPTION, description
             );
 
             /* user.order(user.getLogin(),

@@ -1,7 +1,6 @@
 package com.example.adrax.dely.core;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +17,7 @@ public class Order implements Comparable<Order> {
 
                 if (key == null || value == null || key.equals("")) { // || value.equals("")
                     String m = "Параметры не могут быть пустыми.";
-                    LogHelper.log(m);
+                    LogHelper.error(m);
                     throw new IllegalArgumentException(m);
                 }
 
@@ -29,15 +28,21 @@ public class Order implements Comparable<Order> {
             setupSpecialProps(parent);
         } else {
             String m = "Требуется четное количество аргументов для составления пар.";
-            LogHelper.log(m);
+            LogHelper.error(m);
             throw new IllegalArgumentException(m);
         }
     }
 
+    /**
+     * Создать массив доставок из JSON'а.
+     * @param jsonString JSON-объект.
+     * @param parent пользователь, кому принадлежат заказы.
+     * @return список заказов, null при ошибке.
+     */
     public static OrderList fromString(String jsonString, User parent) {
         if (parent == null) {
             String m = "Пользователь не может быть null.";
-            LogHelper.log(m);
+            LogHelper.error(m);
             throw new IllegalArgumentException(m);
         }
 
@@ -66,7 +71,7 @@ public class Order implements Comparable<Order> {
             }
         } catch (JSONException ex) {
             String m = "Исключение при чтении JSON.";
-            LogHelper.log(m);
+            LogHelper.error(m);
             ret = null;
         }
         return ret;
@@ -86,7 +91,7 @@ public class Order implements Comparable<Order> {
         if (m_props.containsKey(name)) {
             return m_props.get(name);
         } else {
-            LogHelper.log(
+            LogHelper.error(
                     "Свойства `" + propName + "` не существует."
             );
             return null;
@@ -98,7 +103,11 @@ public class Order implements Comparable<Order> {
     }
 
     public String getStringProp(String propName) {
-        return (String)getProp(propName);
+        String result = (String)getProp(propName);
+        if (result == null) {
+            result = "";
+        }
+        return result;
     }
 
     @Override
@@ -158,9 +167,9 @@ public class Order implements Comparable<Order> {
             public void call(String s) {
                 Boolean result = Boolean.FALSE;
 
-                switch (User.requestStatusFromString(s.toLowerCase())) {
+                switch (User.requestStatusFromString(s)) {
                     case ORDER_ERROR:
-                        LogHelper.log("Ошибка при отправлении заказа на сервер.");
+                        LogHelper.error("Ошибка при отправлении заказа на сервер.");
                         break;
 
                     case ORDER_LOADED:
@@ -181,12 +190,13 @@ public class Order implements Comparable<Order> {
                 Order.ENTRANCE, getStringProp(Order.ENTRANCE),
                 Order.CODE, getStringProp(Order.CODE),
                 Order.FLOOR, getStringProp(Order.FLOOR),
-                // Order.ROOM, getStringProp(Order.ROOM),
                 Order.PHONE, getStringProp(Order.PHONE),
                 Order.WEIGHT, getStringProp(Order.WEIGHT),
                 Order.SIZE, getStringProp(Order.SIZE),
                 HASH, ((User)getProp(PARENT)).getHash(),
-                Order.DESCRIPTION, getStringProp(Order.DESCRIPTION)
+                Order.DESCRIPTION, getStringProp(Order.DESCRIPTION),
+                // Order.ROOM, getStringProp(Order.ROOM),
+                "recnum", "undefined"
         );
     }
 
@@ -206,13 +216,13 @@ public class Order implements Comparable<Order> {
             @Override
             public void call(String s) {
                 Boolean result = Boolean.FALSE;
-                switch (User.requestStatusFromString(s.toLowerCase())) {
+                switch (User.requestStatusFromString(s)) {
                     case ORDER_BUSY:
-                        LogHelper.log("Заказ уже начат.");
+                        LogHelper.error("Заказ уже начат.");
                         break;
 
                     case ORDER_TOO_MANY:
-                        LogHelper.log("Слишком много начатых заказов.");
+                        LogHelper.error("Слишком много начатых заказов.");
                         break;
 
                     case ORDER_STARTED:
@@ -238,9 +248,9 @@ public class Order implements Comparable<Order> {
             @Override
             public void call(String s) {
                 Boolean result = Boolean.FALSE;
-                switch (User.requestStatusFromString(s.toLowerCase())) {
+                switch (User.requestStatusFromString(s)) {
                     case ORDER_BUSY:
-                        LogHelper.log("Заказ уже начат.");
+                        LogHelper.error("Заказ уже начат.");
                         break;
 
                     case ORDER_STARTED:
@@ -264,9 +274,9 @@ public class Order implements Comparable<Order> {
             @Override
             public void call(String s) {
                 Boolean result = Boolean.FALSE;
-                switch (User.requestStatusFromString(s.toLowerCase())) {
+                switch (User.requestStatusFromString(s)) {
                     case ORDER_ERROR:
-                        LogHelper.log("Ошибка при подтверждении заказа.");
+                        LogHelper.error("Ошибка при подтверждении заказа.");
                         break;
 
                     case ORDER_OK:
@@ -305,6 +315,10 @@ public class Order implements Comparable<Order> {
     }
 
     private static OrderStatus statusFromString(String statusString) {
+        if (statusString == null) {
+            statusString = "";
+        }
+
         switch (statusString.toLowerCase()) {
             case User.WAITING:
                 return OrderStatus.WAITING;
@@ -322,7 +336,7 @@ public class Order implements Comparable<Order> {
                 return OrderStatus.ERROR;
 
             default:
-                LogHelper.log("Неизвестный статус заказа.");
+                LogHelper.error("Неизвестный статус заказа.");
                 return OrderStatus.ERROR;
         }
     }
@@ -363,7 +377,7 @@ public class Order implements Comparable<Order> {
     public static final String ENTRANCE = "entrance";
     public static final String CODE = "code";
     public static final String FLOOR = "floor";
-    // public static final String ROOM = "room";
+    public static final String ROOM = "ko";
     public static final String PHONE = "num";
     public static final String WEIGHT = "wt";
     public static final String SIZE = "size";

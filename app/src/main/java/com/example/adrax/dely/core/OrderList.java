@@ -1,7 +1,5 @@
 package com.example.adrax.dely.core;
 
-import android.util.Log;
-
 import com.android.internal.util.Predicate;
 
 import java.util.AbstractList;
@@ -18,7 +16,7 @@ public class OrderList extends AbstractList<Order> {
     public OrderList(Order[] orders) {
         if (orders == null) {
             String m = "Список заказов не может быть null";
-            LogHelper.log(m);
+            LogHelper.error(m);
             throw new NullPointerException(m);
         }
 
@@ -28,7 +26,7 @@ public class OrderList extends AbstractList<Order> {
     private OrderList(ArrayList<Order> init) {
         if (init == null) {
             String m = "Внутренний массив не может быть null";
-            LogHelper.log(m);
+            LogHelper.error(m);
             throw new NullPointerException(m);
         }
 
@@ -44,20 +42,24 @@ public class OrderList extends AbstractList<Order> {
         return true;
     }
 
+    public boolean isEmpty() {
+        return m_orders.size() == 0;
+    }
+
     @Override
     public Order get(int index)
             throws IndexOutOfBoundsException {
         if (index < 0 || index >= m_orders.size()) {
-            String m = "Индекс вне границ.";
-            LogHelper.log(m);
+            String m =
+                    "Индекс вне границ: `" +
+                    Integer.toString(index) +
+                    "/[0; " +
+                    Integer.toString(m_orders.size()) +
+                    ")`.";
+            LogHelper.error(m);
             throw new IndexOutOfBoundsException(m);
         }
         return m_orders.get(index);
-    }
-
-    @Override
-    public int size() {
-        return m_orders.size();
     }
 
     /**
@@ -70,6 +72,11 @@ public class OrderList extends AbstractList<Order> {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public int size() {
+        return m_orders.size();
     }
 
     public void sortBy() {
@@ -89,7 +96,7 @@ public class OrderList extends AbstractList<Order> {
         ArrayList<Order> list = new ArrayList<>();
         if (predicate == null) {
             String m = "Предикат не может быть null.";
-            LogHelper.log(m);
+            LogHelper.error(m);
             throw new IllegalArgumentException(m);
         }
 

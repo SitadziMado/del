@@ -47,7 +47,8 @@ public final class LVHolderForFace extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 if (face_orders != null) {
-                    int id = Integer.parseInt(tvId);
+                    // ToDo: id оказывается на единицу больше.
+                    int id = Integer.parseInt(tvId) - 1;
 
                     //face_tab.getTabWidget().getChildAt(3).setVisibility(View.VISIBLE);
                     //face_tab.setCurrentTabByTag("ftab4");

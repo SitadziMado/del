@@ -29,11 +29,11 @@ public class AdapterForGet extends RecyclerView.Adapter<LVHolderForGet> {
     public void onBindViewHolder(LVHolderForGet newViewHolder, int i){
         newViewHolder.setIsRecyclable(false);
 
-        //Получаем элемент набора данных для заполнения
-        Order cur = orders.get(i);
-
         //Заполняем поля viewHolder'а данными из элемента набора данных
-        try {
+        if (!orders.isEmpty()) {
+            //Получаем элемент набора данных для заполнения
+            Order cur = orders.get(i);
+
             newViewHolder.tvDescription.setText("Название: " + cur.getStringProp(Order.DESCRIPTION));
             newViewHolder.tvFrom.setText(cur.getStringProp("Откуда: " + Order.FROM));
             newViewHolder.tvId = cur.getStringProp(Order.ID);
@@ -42,7 +42,7 @@ public class AdapterForGet extends RecyclerView.Adapter<LVHolderForGet> {
             newViewHolder.tvPhoneNumber.setText("Номер телефона: " + cur.getStringProp(Order.PHONE));
             newViewHolder.tvCost.setText("Аванс: " + cur.getStringProp(Order.COST));
             newViewHolder.tvPayment.setText("Оплата: " + cur.getStringProp(Order.PAYMENT));
-        } catch (IndexOutOfBoundsException e) {
+        } else {
             newViewHolder.tvDescription.setText("На данный момент");
             newViewHolder.tvFrom.setText("");
             newViewHolder.tvId = "заказов нет, ";

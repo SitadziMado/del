@@ -52,11 +52,8 @@ public class MActivity extends AppCompatActivity
     //static FragmentTransaction fTrans;
     public static int fragment_id=-1;
 
-    // public static DeliveryOrder[] orders;
-    // public static DeliveryOrder[] face_orders;
-    // public static DeliveryOrder face_delivery = null;
-    public static OrderList orders;
-    public static OrderList face_orders;
+    public static OrderList orders = new OrderList();
+    public static OrderList face_orders = new OrderList();
     public static Order face_delivery = null;
 
     public static final Object faceOrdersLock = new Object();
@@ -67,7 +64,7 @@ public class MActivity extends AppCompatActivity
     public static String face_cur_order_text = "Тест";
     public static String face_deliver_text = "На данный момент нет активных заказов"; // Текст окна заказчика в щачле
 
-    public static Context this_context;
+    Context this_context;
 
     ActionBar actBar;
 
@@ -131,12 +128,14 @@ public class MActivity extends AppCompatActivity
         fabout = new FragmentAbout();
         fdelyshow = new FragmentDeliveriesShow();
         fordershow = new FragmentOrderShow();
+
         // загружаем заказы/доставки
         ordersUpdate();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fface);
         transaction.commit();
+
         // Timer
         //5min, 1min / update every 1min
         //updateTimer = new UpdateTimer(300000, 15000, this);
@@ -155,14 +154,16 @@ public class MActivity extends AppCompatActivity
             }
         });
 
-        user.currentOrder(new InternetCallback<OrderList>() {
-            @Override
-            public void call(OrderList orders) {
-                synchronized (faceDeliveryLock) {
-                    face_delivery = orders.firstOrDefault(); // ToDo: заказов может быть > 1.
+        if (orders != null) {
+            user.currentOrder(new InternetCallback<OrderList>() {
+                @Override
+                public void call(OrderList orders) {
+                    synchronized (faceDeliveryLock) {
+                        face_delivery = orders.firstOrDefault(); // ToDo: заказов может быть > 1.
+                    }
                 }
-            }
-        });
+            });
+        }
 
         // face_orders = user.currentOrders();
         // face_delivery = user.currentDelivery();
@@ -223,11 +224,14 @@ public class MActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {                                                 // Close NavBar if it opened
             drawer.closeDrawer(GravityCompat.START);
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {                                 // Clean stack of fragments
             getSupportFragmentManager().popBackStack();
-        } else if (!drawer.isDrawerOpen(GravityCompat.START)) drawer.openDrawer(GravityCompat.START);   // Open NavBar if it closed
+        } else if (!drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.openDrawer(GravityCompat.START);   // Open NavBar if it closed
+        }
         // super.onBackPressed();
     }
 
@@ -325,7 +329,6 @@ public class MActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here
-
         int id = item.getItemId();
         // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         // ActionBar bar = getActionBar()

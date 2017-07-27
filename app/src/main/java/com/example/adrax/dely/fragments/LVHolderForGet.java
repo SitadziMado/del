@@ -45,7 +45,8 @@ public final class LVHolderForGet extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 if (null != orders) {
-                    int id = Integer.parseInt(tvId);
+                    // ToDo: (возможно) id оказывается на единицу больше.
+                    int id = Integer.parseInt(tvId) - 1;
                     //id = 0;
 
                     selected_id = Integer.parseInt(orders.get(id).getStringProp(Order.ID));

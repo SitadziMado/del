@@ -16,19 +16,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 class InternetTask extends AsyncTask<String, Void, String> {
     public InternetTask(String address, InternetCallback<String> callable) {
         if (callable == null || address == null || address.equals("")) {
             String m = "Адрес, callback-функция не могут быть пустыми.";
-            LogHelper.log(m);
+            LogHelper.error(m);
             throw new NullPointerException(m);
         }
 
@@ -60,13 +53,19 @@ class InternetTask extends AsyncTask<String, Void, String> {
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             result = readStream(in);
 
-            Log.d(getClass().getName(), "Запрос " + m_address + " успешен.");
+            if (result.length() < 32) {
+                LogHelper.verbose("Запрос " + m_address + " успешен: `" + result + "`.");
+            } else {
+                LogHelper.verbose(
+                        "Запрос " + m_address + " успешен: `" + result.subSequence(0, 28) + "...`."
+                );
+            }
         } catch (MalformedURLException e) {
-            LogHelper.log(m_address + " некорректен.");
-            result = null;
+            LogHelper.error(m_address + " некорректен.");
+            result = User.SERVER_PROBLEMS;
         } catch (IOException e) {
-            LogHelper.log("Ошибка соединения с " + m_address + ".");
-            result = null;
+            LogHelper.error("Ошибка соединения с " + m_address + ".");
+            result = User.SERVER_PROBLEMS;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -92,7 +91,7 @@ class InternetTask extends AsyncTask<String, Void, String> {
                 result.write(buffer, 0, length);
             return result.toString("UTF-8");
         } catch (IOException e) {
-            LogHelper.log("Ошибка при чтении потока");
+            LogHelper.error("Ошибка при чтении потока");
             throw e;
         }
     }
@@ -113,8 +112,8 @@ class InternetTask extends AsyncTask<String, Void, String> {
 
                     if ((key != null) &&
                         (value != null) &&
-                        !key.equals("") &&
-                        !value.equals("")) {
+                        !key.equals("") /*&&
+                        !value.equals("") */ ) {
                         if (!first) {
                             sb.append("&");
                         }
@@ -125,7 +124,7 @@ class InternetTask extends AsyncTask<String, Void, String> {
                     }
                 }
             } catch (UnsupportedEncodingException e) {
-                LogHelper.log("Неподдерживаемая кодировка");
+                LogHelper.error("Неподдерживаемая кодировка");
                 throw e;
             }
         }

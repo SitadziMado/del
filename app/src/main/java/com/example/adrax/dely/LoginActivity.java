@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.adrax.dely.core.InternetCallback;
+import com.example.adrax.dely.core.LogHelper;
 import com.example.adrax.dely.core.User;
 import com.example.adrax.dely.delivery.DeliveryUser;
 
@@ -67,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login() {
-        Log.d(TAG, "Login");
+        LogHelper.verbose("Login");
 
         if (!validate()) {
             onLoginFailed();

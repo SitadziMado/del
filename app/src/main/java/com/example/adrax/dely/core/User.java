@@ -1,7 +1,5 @@
 package com.example.adrax.dely.core;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,7 +23,7 @@ public class User {
             user.m_phone = userData.getString(PHONE);
             user.m_surname = userData.getString(SURNAME);
         } catch (JSONException ex) {
-            LogHelper.log("Ошибка при чтении JSON.");
+            LogHelper.error("Ошибка при чтении JSON.");
             user = null;
         }
 
@@ -65,18 +63,18 @@ public class User {
             public void call(String s) {
                 Boolean result = Boolean.FALSE;
 
-                switch (requestStatusFromString(s.toLowerCase())) {
+                switch (requestStatusFromString(s)) {
                     case LOGIN_REGISTERED:
                         result = Boolean.TRUE;
                         break;
 
                     case LOGIN_ALREADY_TAKEN:
-                        LogHelper.log("Логин занят.");
+                        LogHelper.error("Логин занят.");
                         // result = Boolean.FALSE;
                         break;
 
                     default:
-                        LogHelper.log("Неизветсный код возврата при регистрации.");
+                        LogHelper.error("Неизвестный код возврата при регистрации.");
                         // result = Boolean.FALSE;
                         break;
                 }
@@ -105,17 +103,17 @@ public class User {
             @Override
             public void call(String s) {
                 User user = null;
-                switch (requestStatusFromString(s.toLowerCase())) {
+                switch (requestStatusFromString(s)) {
                     case INCORRECT_AUTHORIZATION_DATA:
-                        LogHelper.log("Некорректные данные авторизации.");
+                        LogHelper.error("Некорректные данные авторизации.");
                         break;
 
                     case SERVER_PROBLEMS:
-                        LogHelper.log("Проблемы с сервером.");
+                        LogHelper.error("Проблемы с сервером.");
                         break;
 
                     case REQUEST_INCORRECT:
-                        LogHelper.log("Некорректный запрос.");
+                        LogHelper.error("Некорректный запрос.");
                         break;
 
                     case OTHER:
@@ -149,11 +147,14 @@ public class User {
         InternetTask task = new InternetTask(SYNC_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
-                OrderList orders = new OrderList();
+                OrderList orders = null;
                 if (!s.equals("404")) {
                     orders = Order.fromString(s, user);
+                    if (orders == null) {
+                        orders = new OrderList();
+                    }
                 } else {
-                    LogHelper.log("При синхронизации заказов произошла ошибка.");
+                    LogHelper.error("При синхронизации заказов произошла ошибка.");
                 }
 
                 callback.call(orders);
@@ -168,21 +169,28 @@ public class User {
         InternetTask task = new InternetTask(CURRENT_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
-                OrderList orders = new OrderList();
+                OrderList orders = null;
                 if (!s.equals(ERROR)) {
                     orders = Order.fromString(s, user);
+                    if (orders == null) {
+                        orders = new OrderList();
+                    }
                 } else {
-                    LogHelper.log("При запросе текущего заказа произошла ошибка.");
+                    LogHelper.error("При запросе текущего заказа произошла ошибка.");
                 }
 
                 callback.call(orders);
             }
         });
 
-        task.execute(HASH, m_hash);
+        task.execute(HASH.toLowerCase(), m_hash);
     }
 
     static RequestStatus requestStatusFromString(String status) {
+        if (status == null) {
+            status = "";
+        }
+
         switch (status.toLowerCase())
         {
             case INCORRECT_AUTHORIZATION_DATA:
@@ -208,22 +216,22 @@ public class User {
             case OK:
                 return RequestStatus.ORDER_OK;
             default:
-                LogHelper.log("Неизвестный код возврата с сервера.");
+                LogHelper.error("Неизвестный код возврата с сервера.");
                 return RequestStatus.OTHER;
         }
     }
 
     private static final String REGISTER_URL = "http://adrax.pythonanywhere.com/register";
     private static final String LOGIN_URL = "http://adrax.pythonanywhere.com/login";
-    private static final String LOGOUT_URL = "http://adrax.pythonanywhere.com/login";
+    private static final String LOGOUT_URL = "http://adrax.pythonanywhere.com/logout";
     private static final String SYNC_URL = "http://adrax.pythonanywhere.com/send_delys";
     private static final String PEEK_URL = null; // "http://adrax.pythonanywhere.com/send_delys";
     private static final String CURRENT_URL = "http://adrax.pythonanywhere.com/current_delivery";
 
     /// Константы авторизации
-    private static final String INCORRECT_AUTHORIZATION_DATA = "incorrect_auth";    /** Некорректная инфа для авторизации */
-    private static final String INCORRECT_REQUEST = "405";                          /** Тоже какая-то ошибка */
-    private static final String SERVER_PROBLEMS = "login_error";                    /** Сервак гуфнулся... */
+    static final String INCORRECT_AUTHORIZATION_DATA = "incorrect_auth";    /** Некорректная инфа для авторизации */
+    static final String INCORRECT_REQUEST = "405";                          /** Тоже какая-то ошибка */
+    static final String SERVER_PROBLEMS = "login_error";                    /** Сервак гуфнулся... */
 
     /// Константы регистрации
     private static final String LOGIN_REGISTERED = "registered";            /** Регистрация прошла успешно */
@@ -241,20 +249,20 @@ public class User {
     static final String OK = "ok";                        /** Заказ успешно подтверждён (обеими сторонами) */
     static final String TOO_MANY = "already_enough";      /** Только 1 заказ можно доставлять */
 
-    static final String HASH = "hash";
     static final String ID = "dely_id";
     static final String SMS_CODE = "sms_code";
     static final String COURIER = "couriers";
     static final String REFRESH = "refr";
     static final String DELIVERIES = "delys";
-    static final String USERNAME = "username";
-    static final String PASSWORD = "password";
-    static final String MAIL = "mail";
-    static final String NAME = "name";
-    static final String SURNAME = "surname;";
-    static final String MIDDLE_NAME = "midname";
-    static final String PHONE = "selnum";
-    static final String ABOUT = "about";
+    static final String HASH = "Hash";
+    static final String USERNAME = "Username";
+    static final String PASSWORD = "Password";
+    static final String MAIL = "Mail";
+    static final String NAME = "Name";
+    static final String SURNAME = "Surname";
+    static final String MIDDLE_NAME = "Midname";
+    static final String PHONE = "Selnum";
+    static final String ABOUT = "About";
 
     private ArrayList<Order> m_orders = new ArrayList<>();
     private String m_about;         /** Информация о юзвере  */

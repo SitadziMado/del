@@ -266,7 +266,8 @@ public class DeliveryUser {
                 "Surname", surname,
                 "Midname", midname,
                 "Selnum", number,
-                "About", about);
+                "About", about
+        );
 
         if (rc.equalsIgnoreCase(LOGIN_REGISTERED))
             return Boolean.TRUE;

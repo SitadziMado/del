@@ -28,7 +28,7 @@ public class AdapterForFace extends RecyclerView.Adapter<LVHolderForFace> {
     public void onBindViewHolder(LVHolderForFace newViewHolder, int i){
         newViewHolder.setIsRecyclable(false);
 
-        try {
+        if (!face_orders.isEmpty()) {
             //Получаем элемент набора данных для заполнения
             Order cur = face_orders.get(i);
 
@@ -41,7 +41,7 @@ public class AdapterForFace extends RecyclerView.Adapter<LVHolderForFace> {
             newViewHolder.tvPhoneNumber.setText("Номер телефона: " + cur.getStringProp(Order.PHONE));
             newViewHolder.tvCost.setText("Аванс: " + cur.getStringProp(Order.COST));
             newViewHolder.tvPayment.setText("Оплата: " + cur.getStringProp(Order.PAYMENT));
-        } catch (IndexOutOfBoundsException e) {
+        } else {
             newViewHolder.tvDescription.setText("На данный момент");
             newViewHolder.tvFrom.setText("");
             newViewHolder.tvId = "заказов нет, ";

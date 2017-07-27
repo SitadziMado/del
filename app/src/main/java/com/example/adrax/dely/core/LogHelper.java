@@ -7,8 +7,12 @@ import android.util.Log;
  */
 
 public class LogHelper {
-    static void log(String message) {
-        Log.d(getDebugInfo(), message);
+    public static void verbose(String message) {
+        Log.v(getDebugInfo(), message);
+    }
+
+    public static void error(String message) {
+        Log.e(getDebugInfo(), message);
     }
 
     /** Получить номер строки
@@ -16,8 +20,8 @@ public class LogHelper {
      */
     private static String getDebugInfo() {
         StackTraceElement[] ste = Thread.currentThread().getStackTrace();
-        return ste[2].getClassName() + ", "
-                + ste[2].getFileName() + ", "
-                + ste[2].getLineNumber() + ": ";
+        return ste[3].getClassName() + ", "
+                + ste[3].getFileName() + ", "
+                + ste[3].getLineNumber() + ": ";
     }
 }
