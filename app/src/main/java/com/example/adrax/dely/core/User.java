@@ -254,15 +254,15 @@ public class User {
     static final String COURIER = "couriers";
     static final String REFRESH = "refr";
     static final String DELIVERIES = "delys";
-    static final String HASH = "Hash";
-    static final String USERNAME = "Username";
-    static final String PASSWORD = "Password";
-    static final String MAIL = "Mail";
-    static final String NAME = "Name";
-    static final String SURNAME = "Surname";
-    static final String MIDDLE_NAME = "Midname";
-    static final String PHONE = "Selnum";
-    static final String ABOUT = "About";
+    static final String HASH = "hash";
+    static final String USERNAME = "username";
+    static final String PASSWORD = "password";
+    static final String MAIL = "mail";
+    static final String NAME = "name";
+    static final String SURNAME = "surname";
+    static final String MIDDLE_NAME = "midname";
+    static final String PHONE = "selnum";
+    static final String ABOUT = "about";
 
     private ArrayList<Order> m_orders = new ArrayList<>();
     private String m_about;         /** Информация о юзвере  */
