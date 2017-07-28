@@ -14,14 +14,14 @@ public class User {
         User user = new User();
         try {
             JSONObject userData = new JSONObject(jsonString);
-            user.m_about = userData.getString(ABOUT);
+            user.setAbout(userData.getString(ABOUT));
             user.m_hash = userData.getString(HASH);
-            user.m_mail = userData.getString(MAIL);
-            user.m_middleName = userData.getString(MIDDLE_NAME);
-            user.m_money = String.valueOf(userData.getDouble(MONEY));
-            user.m_name = userData.getString(NAME);
-            user.m_phone = userData.getString(PHONE);
-            user.m_surname = userData.getString(SURNAME);
+            user.setMail(userData.getString(MAIL));
+            user.setMiddleName(userData.getString(MIDDLE_NAME));
+            user.setMoney(String.valueOf(userData.getDouble(MONEY)));
+            user.setName(userData.getString(NAME));
+            user.setPhone(userData.getString(PHONE));
+            user.setSurname(userData.getString(SURNAME));
         } catch (JSONException ex) {
             LogHelper.error("Ошибка при чтении JSON.");
             user = null;
@@ -221,6 +221,82 @@ public class User {
         }
     }
 
+    public String getAbout() {
+        return m_about;
+    }
+
+    /** Мыло пользователя */
+    public String getMail() {
+        return m_mail;
+    }
+
+    /** Его отчество */
+    public String getMiddleName() {
+        return m_middleName;
+    }
+
+    /** Его капуста (не используется) */
+    public String getMoney() {
+        return m_money;
+    }
+
+    /** Его имя */
+    public String getName() {
+        return m_name;
+    }
+
+    /** Телефонный номер */
+    public String getPhone() {
+        return m_phone;
+    }
+
+    /** Фамилия */
+    public String getSurname() {
+        return m_surname;
+    }
+
+    /** Текущий логин */
+    public String getLogin() {
+        return m_login;
+    }
+
+    /** Выданный хэш */
+    String getHash() {
+        return m_hash;
+    }
+
+    public void setAbout(String about) {
+        m_about = about;
+    }
+
+    public void setMail(String mail) {
+        m_mail = mail;
+    }
+
+    public void setMiddleName(String middleName) {
+        m_middleName = middleName;
+    }
+
+    public void setMoney(String money) {
+        m_money = money;
+    }
+
+    public void setName(String name) {
+        m_name = name;
+    }
+
+    public void setPhone(String phone) {
+        m_phone = phone;
+    }
+
+    public void setSurname(String surname) {
+        m_surname = surname;
+    }
+
+    public void setLogin(String login) {
+        m_login = login;
+    }
+
     private static final String REGISTER_URL = "http://adrax.pythonanywhere.com/register";
     private static final String LOGIN_URL = "http://adrax.pythonanywhere.com/login";
     private static final String LOGOUT_URL = "http://adrax.pythonanywhere.com/logout";
@@ -275,48 +351,4 @@ public class User {
     private String m_phone;         /** Телефонный номер */
     private String m_surname;       /** Фамилия */
     private String m_login;
-
-    public String getAbout() {
-        return m_about;
-    }
-
-    /** Мыло пользователя */
-    public String getMail() {
-        return m_mail;
-    }
-
-    /** Его отчество */
-    public String getMiddleName() {
-        return m_middleName;
-    }
-
-    /** Его капуста (не используется) */
-    public String getMoney() {
-        return m_money;
-    }
-
-    /** Его имя */
-    public String getName() {
-        return m_name;
-    }
-
-    /** Телефонный номер */
-    public String getPhone() {
-        return m_phone;
-    }
-
-    /** Фамилия */
-    public String getSurname() {
-        return m_surname;
-    }
-
-    /** Текущий логин */
-    public String getLogin() {
-        return m_login;
-    }
-
-    /** Выданный хэш */
-    String getHash() {
-        return m_hash;
-    }
 }

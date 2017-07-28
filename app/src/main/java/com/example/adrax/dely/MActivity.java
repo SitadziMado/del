@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.adrax.dely.core.InternetCallback;
+import com.example.adrax.dely.core.LogHelper;
 import com.example.adrax.dely.core.Order;
 import com.example.adrax.dely.core.OrderList;
 import com.example.adrax.dely.core.OrderStatus;
@@ -266,9 +267,17 @@ public class MActivity extends AppCompatActivity
             //    return true;
 
             case R.id.action_refresh:
-                if (fragment_id == R.id.frag_get_id) fget.update(this);
-                else if (fragment_id == R.id.frag_face_id) updateFace();
-                Toast.makeText(getApplicationContext(),"Информация обновлена!", Toast.LENGTH_LONG)
+                if (fragment_id == R.id.frag_get_id) {
+                    fget.update(this);
+                } else if (fragment_id == R.id.frag_face_id) {
+                    updateFace();
+                } else {
+                    LogHelper.warn("При обновлении не были загружены данные с сервера.");
+                }
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Информация обновлена!",
+                        Toast.LENGTH_LONG)
                         .show();
                 return true;
             case android.R.id.home: // we get back here
