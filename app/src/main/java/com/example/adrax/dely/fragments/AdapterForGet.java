@@ -35,7 +35,7 @@ public class AdapterForGet extends RecyclerView.Adapter<LVHolderForGet> {
             Order cur = orders.get(i);
 
             newViewHolder.tvDescription.setText("Название: " + cur.getStringProp(Order.DESCRIPTION));
-            newViewHolder.tvFrom.setText(cur.getStringProp("Откуда: " + Order.FROM));
+            newViewHolder.tvFrom.setText("Откуда: " + cur.getStringProp(Order.FROM));
             newViewHolder.tvId = cur.getStringProp(Order.ID);
             newViewHolder.tvTo.setText("Куда: " + cur.getStringProp(Order.TO));
             newViewHolder.tvCustomer.setText("Заказчик: " + cur.getStringProp(Order.CUSTOMER));

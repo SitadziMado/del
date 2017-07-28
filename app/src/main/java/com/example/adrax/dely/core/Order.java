@@ -99,7 +99,7 @@ public class Order implements Comparable<Order> {
     }
 
     public void setStringProp(String propName, String value) {
-        setProp(propName.toLowerCase(), value.toLowerCase());
+        setProp(propName.toLowerCase(), value);
     }
 
     public String getStringProp(String propName) {
