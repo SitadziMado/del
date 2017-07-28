@@ -16,7 +16,7 @@ public class LogHelper {
         Log.w("WARN", getLocation() + msg);
     }
 
-    private static String getLocation() {
+    /*private static String getLocation() {
         final String className = Log.class.getName();
         final StackTraceElement[] traces = Thread.currentThread().getStackTrace();
         boolean found = false;
@@ -41,7 +41,7 @@ public class LogHelper {
         }
 
         return "[]: ";
-    }
+    }*/
 
     private static String getClassName(Class<?> clazz) {
         if (clazz != null) {
@@ -58,10 +58,15 @@ public class LogHelper {
     /** Получить номер строки
      * @return возвращает текущую строку кода
      */
-    private static String getDebugInfo() {
+    private static String getLocation() {
         StackTraceElement[] ste = Thread.currentThread().getStackTrace();
-        return ste[3].getClassName() + ", "
-                + ste[3].getFileName() + ", "
-                + ste[3].getLineNumber() + ": ";
+        StackTraceElement tr = ste[4];
+
+        try {
+            Class<?> clazz = Class.forName(tr.getClassName());
+            return "[" + getClassName(clazz) + ":" + tr.getMethodName() + ":" + tr.getLineNumber() + "]: ";
+        } catch (ClassNotFoundException e) {
+            return "[]: ";
+        }
     }
 }
