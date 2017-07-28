@@ -306,7 +306,7 @@ public class MActivity extends AppCompatActivity
         transaction.addToBackStack(null);
         transaction.commit();
 
-        fragment_id = 1050;
+        //fragment_id = 1050;
         updateData(); //#updateData
     }
 
@@ -319,7 +319,7 @@ public class MActivity extends AppCompatActivity
         transaction.addToBackStack(null);
         transaction.commit();
 
-        fragment_id = 5010;
+        //fragment_id = 5010;
         updateData(); //#updateData
     }
 
