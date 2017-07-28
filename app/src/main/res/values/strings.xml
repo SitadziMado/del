@@ -44,4 +44,6 @@
     <string name="cancel">Отменить заказ</string>
     <string name="fire">Подождать ещё</string>
     <string name="dialog_waiting">Мы пока что не подобрали курьера</string>
+    <string name="title_activity_account">Account</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>
