@@ -266,11 +266,8 @@ public class MActivity extends AppCompatActivity
             //    return true;
 
             case R.id.action_refresh:
-                if (fragment_id == R.id.frag_get_id) {
-                    fget.update(this);
-                } else if (fragment_id == R.id.frag_face_id) {
-                    updateFace();
-                }
+                if (fragment_id == R.id.frag_get_id) fget.update(this);
+                else if (fragment_id == R.id.frag_face_id) updateFace();
                 Toast.makeText(getApplicationContext(),"Информация обновлена!", Toast.LENGTH_LONG)
                         .show();
                 return true;

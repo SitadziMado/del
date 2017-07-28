@@ -18,7 +18,7 @@ public class User {
             user.m_hash = userData.getString(HASH);
             user.m_mail = userData.getString(MAIL);
             user.m_middleName = userData.getString(MIDDLE_NAME);
-            user.m_money = String.valueOf(userData.getDouble("Money"));
+            user.m_money = String.valueOf(userData.getDouble(MONEY));
             user.m_name = userData.getString(NAME);
             user.m_phone = userData.getString(PHONE);
             user.m_surname = userData.getString(SURNAME);
@@ -263,6 +263,7 @@ public class User {
     static final String MIDDLE_NAME = "midname";
     static final String PHONE = "selnum";
     static final String ABOUT = "about";
+    static final String MONEY = "money";
 
     private ArrayList<Order> m_orders = new ArrayList<>();
     private String m_about;         /** Информация о юзвере  */
