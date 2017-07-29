@@ -1,5 +1,7 @@
 package com.example.adrax.dely.core;
 
+import android.support.annotation.NonNull;
+
 import com.android.internal.util.Predicate;
 
 import java.util.AbstractList;
@@ -13,22 +15,22 @@ public class OrderList extends AbstractList<Order> {
         m_orders = new ArrayList<Order>();
     }
 
-    public OrderList(Order[] orders) {
-        if (orders == null) {
+    public OrderList(@NonNull Order[] orders) {
+        /*if (orders == null) {
             String m = "Список заказов не может быть null";
             LogHelper.error(m);
             throw new NullPointerException(m);
-        }
+        }*/
 
         m_orders = new ArrayList<Order>(Arrays.asList(orders));
     }
 
-    private OrderList(ArrayList<Order> init) {
-        if (init == null) {
+    private OrderList(@NonNull ArrayList<Order> init) {
+        /*if (init == null) {
             String m = "Внутренний массив не может быть null";
             LogHelper.error(m);
             throw new NullPointerException(m);
-        }
+        }*/
 
         m_orders = new ArrayList<Order>();
 
@@ -83,7 +85,7 @@ public class OrderList extends AbstractList<Order> {
         Collections.sort(m_orders);
     }
 
-    public void sortBy(Comparator<Order> cmp) {
+    public void sortBy(@NonNull Comparator<Order> cmp) {
         Collections.sort(m_orders, cmp);
     }
 
@@ -92,7 +94,7 @@ public class OrderList extends AbstractList<Order> {
      * @param predicate предикат, по которому осуществляется выборка.
      * @return выборка элементов по предикату.
      */
-    public OrderList where(Predicate<Order> predicate) {
+    public OrderList where(@NonNull Predicate<Order> predicate) {
         ArrayList<Order> list = new ArrayList<>();
         if (predicate == null) {
             String m = "Предикат не может быть null.";

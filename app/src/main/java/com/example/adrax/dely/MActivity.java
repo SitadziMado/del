@@ -166,6 +166,8 @@ public class MActivity extends AppCompatActivity
             });
         }
 
+        user.syncInfo(null);
+
         // face_orders = user.currentOrders();
         // face_delivery = user.currentDelivery();
     }

@@ -1,5 +1,8 @@
 package com.example.adrax.dely.core;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,33 +34,35 @@ public class User {
     }
 
     public static void register(
-            String username,
-            String password,
-            String mail,
-            final InternetCallback<Boolean> callback) {
+            @NonNull String username,
+            @NonNull String password,
+            @NonNull String mail,
+            @NonNull final InternetCallback<Boolean> callback
+    ) {
         register(
                 username,
                 password,
                 mail,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
+                "",
+                "",
+                "",
+                "",
+                "",
+                callback
         );
     }
 
     public static void register(
-            String username,
-            String password,
-            String mail,
-            String name,
-            String surname,
-            String middleName,
-            String number,
-            String about,
-            final InternetCallback<Boolean> callback) {
+            @NonNull String username,
+            @NonNull String password,
+            @NonNull String mail,
+            @NonNull String name,
+            @NonNull String surname,
+            @NonNull String middleName,
+            @NonNull String number,
+            @NonNull String about,
+            @NonNull final InternetCallback<Boolean> callback
+    ) {
         InternetTask task = new InternetTask(REGISTER_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
@@ -96,9 +101,10 @@ public class User {
     }
 
     public static void login(
-            String username,
-            String password,
-            final InternetCallback<User> callback) {
+            @NonNull String username,
+            @NonNull String password,
+            @NonNull final InternetCallback<User> callback
+    ) {
         InternetTask task = new InternetTask(LOGIN_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
@@ -131,7 +137,7 @@ public class User {
         );
     }
 
-    public void logout(final InternetCallback<Boolean> callback) {
+    public void logout(@NonNull final InternetCallback<Boolean> callback) {
         InternetTask task = new InternetTask(LOGOUT_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
@@ -142,7 +148,7 @@ public class User {
         task.execute();
     }
 
-    public void syncOrders(final InternetCallback<OrderList> callback) {
+    public void syncOrders(@NonNull final InternetCallback<OrderList> callback) {
         final User user = this;
         InternetTask task = new InternetTask(SYNC_URL, new InternetCallback<String>() {
             @Override
@@ -164,7 +170,7 @@ public class User {
         task.execute(REFRESH, DELIVERIES);
     }
 
-    public void currentOrder(final InternetCallback<OrderList> callback) {
+    public void currentOrder(@NonNull final InternetCallback<OrderList> callback) {
         final User user = this;
         InternetTask task = new InternetTask(CURRENT_URL, new InternetCallback<String>() {
             @Override
@@ -183,10 +189,104 @@ public class User {
             }
         });
 
-        task.execute(HASH.toLowerCase(), m_hash);
+        task.execute(HASH, m_hash);
     }
 
-    static RequestStatus requestStatusFromString(String status) {
+    public void addPassport(
+            @NonNull String serial,
+            @NonNull String number,
+            @NonNull String given,
+            @NonNull String date,
+            Boolean isMale,
+            @NonNull final InternetCallback<Boolean> callback
+    ) {
+        InternetTask task = new InternetTask(ADD_PASSPORT_URL, new InternetCallback<String>() {
+            @Override
+            public void call(String s) {
+                Boolean result = Boolean.FALSE;
+
+                switch (requestStatusFromString(s)) {
+                    case ORDER_OK:
+                        result = Boolean.TRUE;
+                        break;
+
+                    default:
+                        LogHelper.error("При загрузке паспорта произошла ошибка.");
+                        break;
+                }
+
+                callback.call(result);
+            }
+        });
+
+        task.execute(
+                HASH, m_hash,
+                PASSPORT_SERIAL, serial,
+                PASSPORT_NUMBER, number,
+                PASSPORT_GIVEN, given,
+                PASSPORT_DATE, date,
+                PASSPORT_GENDER, isMale ? "male" : "female"
+        );
+    }
+
+    public void addCreditCard(
+            @NonNull String cardNumber,
+            @NonNull String cardValid,
+            @NonNull String cardOwner,
+            @NonNull final InternetCallback<Boolean> callback) {
+        InternetTask task = new InternetTask(ADD_CARD_URL, new InternetCallback<String>() {
+            @Override
+            public void call(String s) {
+                Boolean result = Boolean.FALSE;
+
+                switch (requestStatusFromString(s)) {
+                    case ORDER_OK:
+                        result = Boolean.TRUE;
+                        break;
+
+                    default:
+                        LogHelper.error("При загрузке данных кредитной карточки произошла ошибка.");
+                        break;
+                }
+
+                callback.call(result);
+            }
+        });
+
+        task.execute(
+                HASH, m_hash,
+                CARD_NUMBER, cardNumber,
+                CARD_VALID, cardValid,
+                CARD_OWNER, cardOwner
+        );
+    }
+
+    public void syncInfo(@Nullable final InternetCallback<Boolean> callback) {
+        InternetTask task = new InternetTask(USER_INFO_URL, new InternetCallback<String>() {
+            @Override
+            public void call(String s) {
+                Boolean result = Boolean.TRUE;
+
+                switch (requestStatusFromString(s)) {
+                    case ORDER_ERROR:
+                        result = Boolean.FALSE;
+                        break;
+
+                    default:
+                        DynamicObject obj = new DynamicObject(s);
+                        break;
+                }
+
+                if (callback != null) {
+                    callback.call(result);
+                }
+            }
+        });
+
+        task.execute(HASH, m_hash);
+    }
+
+    static RequestStatus requestStatusFromString(@Nullable String status) {
         if (status == null) {
             status = "";
         }
@@ -216,7 +316,7 @@ public class User {
             case OK:
                 return RequestStatus.ORDER_OK;
             default:
-                LogHelper.error("Неизвестный код возврата с сервера.");
+                LogHelper.warn("Неизвестный код возврата с сервера.");
                 return RequestStatus.OTHER;
         }
     }
@@ -303,6 +403,9 @@ public class User {
     private static final String SYNC_URL = "http://adrax.pythonanywhere.com/send_delys";
     private static final String PEEK_URL = null; // "http://adrax.pythonanywhere.com/send_delys";
     private static final String CURRENT_URL = "http://adrax.pythonanywhere.com/current_delivery";
+    private static final String ADD_PASSPORT_URL = "http://adrax.pythonanywhere.com/add_passport";
+    private static final String ADD_CARD_URL = "http://adrax.pythonanywhere.com/add_card";
+    private static final String USER_INFO_URL = "http://adrax.pythonanywhere.com/user_info";
 
     /// Константы авторизации
     static final String INCORRECT_AUTHORIZATION_DATA = "incorrect_auth";    /** Некорректная инфа для авторизации */
@@ -315,7 +418,7 @@ public class User {
 
     /// Константы заказов
     static final String LOADED = "loaded";		          /** Новый заказ успешно создан */
-    static final String ERROR = "error";                  /** Ошибка отправки нового заказа на сервер */
+    static final String ERROR = "server_error";           /** Ошибка отправки нового заказа на сервер */
     static final String WAITING = "waiting";              /** Статусы заказов ниже */
     static final String DELIVERING = "delivering";        /** В процессе... */
     static final String DELIVERED = "delivered";          /** Вроде бы доставлено */
@@ -340,6 +443,15 @@ public class User {
     static final String PHONE = "selnum";
     static final String ABOUT = "about";
     static final String MONEY = "money";
+
+    private static final String PASSPORT_SERIAL = "passport_serial";
+    private static final String PASSPORT_NUMBER = "passport_number";
+    private static final String PASSPORT_GIVEN = "passport_given";
+    private static final String PASSPORT_DATE = "passport_date";
+    private static final String PASSPORT_GENDER = "passport_gender";
+    private static final String CARD_NUMBER = "card_number";
+    private static final String CARD_VALID = "card_valid";
+    private static final String CARD_OWNER = "card_owner";
 
     private ArrayList<Order> m_orders = new ArrayList<>();
     private String m_about;         /** Информация о юзвере  */

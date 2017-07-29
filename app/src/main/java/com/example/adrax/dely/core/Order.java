@@ -5,12 +5,13 @@ import android.support.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class Order implements Comparable<Order> {
-    public Order(User parent, Object... params) {
-        if ((params.length & 1) == 0 && parent != null) {
+public class Order extends DynamicObject implements Comparable<Order> {
+    public Order(@NonNull User parent, Object... params) {
+        if ((params.length & 1) == 0) {
             for (int i = 0; i < params.length; i += 2) {
                 String key = (String)params[i];
                 Object value = params[i + 1];
@@ -33,81 +34,27 @@ public class Order implements Comparable<Order> {
         }
     }
 
-    /**
-     * Создать массив доставок из JSON'а.
-     * @param jsonString JSON-объект.
-     * @param parent пользователь, кому принадлежат заказы.
-     * @return список заказов, null при ошибке.
-     */
-    public static OrderList fromString(String jsonString, User parent) {
-        if (parent == null) {
-            String m = "Пользователь не может быть null.";
-            LogHelper.error(m);
-            throw new IllegalArgumentException(m);
-        }
-
-        OrderList ret = new OrderList();
-
-        try {
-            /// Список текущих заказов
-            JSONObject list = new JSONObject(jsonString);
-
-            for (Integer i = 1; list.has(i.toString()); ++i) {
-                // По порядку выгружаем доступные заказы
-                JSONObject cur = list.getJSONObject(i.toString());
-
-                Order order = new Order();
-
-                Iterator<String> it = cur.keys();
-
-                while (it.hasNext()) {
-                    String key = it.next();
-                    order.setStringProp(key, cur.getString(key));
-                }
-
-                // Установить значения хэша, статуса, родителя. Не трогать!
-                order.setupSpecialProps(parent);
-                ret.add(order);
-            }
-        } catch (JSONException ex) {
-            String m = "Исключение при чтении JSON.";
-            LogHelper.error(m);
-            ret = null;
-        }
-        return ret;
+    private Order(@NonNull DynamicObject obj) {
+        m_props = obj.m_props;
     }
 
     private Order() {
 
     }
 
-    public void setProp(String propName, Object value) {
-        m_props.put(propName.toLowerCase(), value);
-    }
+    public static OrderList fromString(String jsonString, @NonNull User parent) {
+        OrderList list = new OrderList();
+        ArrayList<DynamicObject> objects = DynamicObject.fromString(jsonString);
 
-    public Object getProp(String propName) {
-        String name = propName.toLowerCase();
+        for (DynamicObject obj : objects) {
+            Order order = new Order(obj);
 
-        if (m_props.containsKey(name)) {
-            return m_props.get(name);
-        } else {
-            LogHelper.error(
-                    "Свойства `" + propName + "` не существует."
-            );
-            return null;
+            // Установить значения хэша, статуса, родителя. Не трогать!
+            order.setupSpecialProps(parent);
+            list.add(order);
         }
-    }
 
-    public void setStringProp(String propName, String value) {
-        setProp(propName.toLowerCase(), value);
-    }
-
-    public String getStringProp(String propName) {
-        String result = (String)getProp(propName);
-        if (result == null) {
-            result = "";
-        }
-        return result;
+        return list;
     }
 
     @Override
@@ -161,7 +108,7 @@ public class Order implements Comparable<Order> {
         return sb.toString();
     }
 
-    public void post(final InternetCallback<Boolean> callback) {
+    public void post(@NonNull final InternetCallback<Boolean> callback) {
         InternetTask task = new InternetTask(ORDER_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
@@ -200,7 +147,7 @@ public class Order implements Comparable<Order> {
         );
     }
 
-    public void cancel(final InternetCallback<Boolean> callback) {
+    public void cancel(@NonNull final InternetCallback<Boolean> callback) {
         InternetTask task = new InternetTask(CANCEL_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
@@ -211,7 +158,7 @@ public class Order implements Comparable<Order> {
         task.execute();
     }
 
-    public void start(final InternetCallback<Boolean> callback) {
+    public void start(@NonNull final InternetCallback<Boolean> callback) {
         InternetTask task = new InternetTask(START_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
@@ -243,7 +190,7 @@ public class Order implements Comparable<Order> {
         );
     }
 
-    public void finish(final InternetCallback<Boolean> callback) {
+    public void finish(@NonNull final InternetCallback<Boolean> callback) {
         InternetTask task = new InternetTask(FINISH_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
@@ -269,7 +216,7 @@ public class Order implements Comparable<Order> {
         );
     }
 
-    public void accept(final InternetCallback<Boolean> callback) {
+    public void accept(@NonNull final InternetCallback<Boolean> callback) {
         InternetTask task = new InternetTask(ACCEPT_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
@@ -294,7 +241,7 @@ public class Order implements Comparable<Order> {
         );
     }
 
-    public void status(final InternetCallback<OrderStatus> callback) {
+    public void status(@NonNull final InternetCallback<OrderStatus> callback) {
         InternetTask task = new InternetTask(STATUS_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
@@ -342,9 +289,9 @@ public class Order implements Comparable<Order> {
     }
 
     private void appendFieldValue(
-            StringBuilder sb,
-            String header,
-            String fieldName) {
+            @NonNull StringBuilder sb,
+            @NonNull String header,
+            @NonNull String fieldName) {
         sb.append(header);
         sb.append(getStringProp(fieldName));
         sb.append("\n");
@@ -354,7 +301,7 @@ public class Order implements Comparable<Order> {
      * Установка специальных свойств объекта.
      * @param parent User, чьим заказом является данный.
      */
-    private void setupSpecialProps(User parent) {
+    private void setupSpecialProps(@NonNull User parent) {
         setProp(PARENT, parent);
         setStringProp(HASH, parent.getHash());
         setProp(STATUS, statusFromString(getStringProp(STATUS)));
@@ -387,24 +334,4 @@ public class Order implements Comparable<Order> {
     public static final String PARENT = "parent";
 
     private OrderStatus m_orderStatus;
-    private HashMap<String, Object> m_props = new HashMap<>();
-
-    // private int m_id = -1;
-    // private String m_customer;
-    // private String m_from;
-    // private String m_to;
-    // private String m_cost;
-    // private String m_payment;
-    // private String m_entrance;
-    // private String m_code;
-    // private String m_floor;
-    // private String m_room;
-    // private String m_telephoneNumber;
-    // private String m_weight;
-    // private String m_size;
-    // private String m_time;
-    // private String m_widthHeightLength;
-    // private String m_name;
-
-    // private String m_additionalTelephoneNumber;
 }
