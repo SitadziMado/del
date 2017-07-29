@@ -19,6 +19,14 @@ public class ProfileActivity extends AppCompatActivity {
     TextView lvNumber;
     TextView lvName;
     TextView lvLogin;
+    TextView card_owner;
+    TextView card_number;
+    TextView card_valid;
+    TextView cvv;
+    TextView passport_serial;
+    TextView passport_number;
+    TextView passport_given;
+    TextView passport_date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +58,16 @@ public class ProfileActivity extends AppCompatActivity {
         lvMoney = (TextView) findViewById(R.id.userMoney);
         lvMail = (TextView) findViewById(R.id.userMail);
         lvName = (TextView) findViewById(R.id.userName);
+
+        card_owner      = (TextView) findViewById(R.id.card_owner);
+        card_number     = (TextView) findViewById(R.id.card_number);
+        card_valid      = (TextView) findViewById(R.id.card_valid);
+        cvv             = (TextView) findViewById(R.id.cvv);
+        passport_serial = (TextView) findViewById(R.id.passport_serial);
+        passport_number = (TextView) findViewById(R.id.passport_number);
+        passport_given  = (TextView) findViewById(R.id.passport_given);
+        passport_date   = (TextView) findViewById(R.id.passport_date);
+
         WriteUserInfo();
     }
 
@@ -60,6 +78,17 @@ public class ProfileActivity extends AppCompatActivity {
         lvMoney.setText(user.getMoney() + " руб.");
         lvNumber.setText(user.getPhone());
         lvLogin.setText(user.getLogin());
+
+        /*
+        card_owner.setText(user.getSomeShit());
+        card_number.setText(user.getSomeShit());
+        card_valid.setText(user.getSomeShit());
+        //cvv.setText(user.getLogin());
+        passport_serial.setText(user.getSomeShit());
+        passport_number.setText(user.getSomeShit());
+        passport_given.setText(user.getSomeShit());
+        passport_date.setText(user.getSomeShit());
+        */
     }
 
     @Override
