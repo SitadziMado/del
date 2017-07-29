@@ -85,7 +85,20 @@ public class OrderList extends AbstractList<Order> {
         Collections.sort(m_orders);
     }
 
-    public void sortBy(@NonNull Comparator<Order> cmp) {
+    /**
+     * Сортировка заказов по выбранному свойству.
+     * @param propToSortBy свойство, по которому следует сортировать.
+     */
+    public void sortBy(@NonNull final String propToSortBy) {
+        Comparator<Order> cmp = new Comparator<Order>() {
+            @Override
+            public int compare(Order lhs, Order rhs) {
+                String lhsDate = lhs.getStringProp(propToSortBy);
+                String rhsDate = rhs.getStringProp(propToSortBy);
+                return lhsDate.compareTo(rhsDate);
+            }
+        };
+
         Collections.sort(m_orders, cmp);
     }
 

@@ -2,12 +2,7 @@ package com.example.adrax.dely.core;
 
 import android.support.annotation.NonNull;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 
 public class Order extends DynamicObject implements Comparable<Order> {
     public Order(@NonNull User parent, Object... params) {
@@ -257,9 +252,10 @@ public class Order extends DynamicObject implements Comparable<Order> {
     }
 
     @Override
-    public int compareTo(@NonNull Order o) {
-        // ToDo: написать сортировку по дате.
-        return 0;
+    public int compareTo(@NonNull Order rhs) {
+        String thisDate = getStringProp(TAKE_TIME);
+        String rhsDate = rhs.getStringProp(TAKE_TIME);
+        return thisDate.compareTo(rhsDate);
     }
 
     private static OrderStatus statusFromString(String statusString) {
@@ -333,6 +329,8 @@ public class Order extends DynamicObject implements Comparable<Order> {
     public static final String DESCRIPTION = "description";
     public static final String STATUS = "status";
     public static final String PARENT = "parent";
+    public static final String TAKE_TIME = "take_time";
+    public static final String BRING_TIME = "bring_time";
 
     private OrderStatus m_orderStatus;
 }

@@ -109,5 +109,9 @@ class DynamicObject {
         setProp(propName.toLowerCase(), value);
     }
 
+    public boolean hasProp(@NonNull String propName) {
+        return m_props.containsKey(propName);
+    }
+
     protected HashMap<String, Object> m_props = new HashMap<>();
 }
