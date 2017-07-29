@@ -66,7 +66,7 @@ class DynamicObject {
         } catch (JSONException ex) {
             String m = "Исключение при чтении JSON.";
             LogHelper.error(m);
-            ret = null;
+            ret.clear();
         }
         return ret;
     }
@@ -89,9 +89,18 @@ class DynamicObject {
     }
 
     public String getStringProp(@NonNull String propName) {
-        String result = (String)getProp(propName);
-        if (result == null) {
-            result = "";
+        Object prop = getProp(propName);
+        String result;
+
+        try {
+            result = (String)prop;
+            if (result == null) {
+                result = "";
+            }
+        } catch (ClassCastException e) {
+            LogHelper.error("Ошибка преобразования в строку.");
+            result = prop.toString();
+            LogHelper.error("Возвращаю: " + result + ".");
         }
         return result;
     }

@@ -185,7 +185,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
 
         task.execute(
                 HASH, getStringProp(HASH),
-                ID, getStringProp(ID),
+                User.ID, getStringProp(ID),
                 User.COURIER, ((User)getProp(PARENT)).getLogin()
         );
     }
@@ -211,11 +211,12 @@ public class Order extends DynamicObject implements Comparable<Order> {
 
         task.execute(
                 HASH, getStringProp(HASH),
-                ID, getStringProp(ID),
+                User.ID, getStringProp(ID),
                 User.SMS_CODE, "0000"
         );
     }
 
+    /* @Deprecated
     public void accept(@NonNull final InternetCallback<Boolean> callback) {
         InternetTask task = new InternetTask(ACCEPT_URL, new InternetCallback<String>() {
             @Override
@@ -237,9 +238,9 @@ public class Order extends DynamicObject implements Comparable<Order> {
 
         task.execute(
                 HASH, getStringProp(HASH),
-                ID, getStringProp(ID)
+                User.ID, getStringProp(ID)
         );
-    }
+    } */
 
     public void status(@NonNull final InternetCallback<OrderStatus> callback) {
         InternetTask task = new InternetTask(STATUS_URL, new InternetCallback<String>() {
@@ -251,7 +252,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
 
         task.execute(
                 HASH, getStringProp(HASH),
-                ID, getStringProp(ID)
+                User.ID, getStringProp(ID)
         );
     }
 

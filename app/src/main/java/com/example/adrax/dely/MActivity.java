@@ -166,8 +166,6 @@ public class MActivity extends AppCompatActivity
             });
         }
 
-        user.syncInfo(null);
-
         // face_orders = user.currentOrders();
         // face_delivery = user.currentDelivery();
     }
@@ -184,11 +182,14 @@ public class MActivity extends AppCompatActivity
         return false;
     }
 
-    public boolean updateUserData()
+    public void updateUserData()
     {
-        //#ServerRequest
-
-        return true;
+        user.syncInfo(new InternetCallback<Boolean>() {
+            @Override
+            public void call(Boolean result) {
+                // Сделай что-то с результатом.
+            }
+        });
     }
 
     /**
