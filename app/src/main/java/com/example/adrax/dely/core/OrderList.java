@@ -109,11 +109,11 @@ public class OrderList extends AbstractList<Order> {
      */
     public OrderList where(@NonNull Predicate<Order> predicate) {
         ArrayList<Order> list = new ArrayList<>();
-        if (predicate == null) {
+        /*if (predicate == null) {
             String m = "Предикат не может быть null.";
             LogHelper.error(m);
             throw new IllegalArgumentException(m);
-        }
+        }*/
 
         for (Order order : m_orders) {
             if (predicate.apply(order)) {

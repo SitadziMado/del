@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.LogHelper;
+import com.example.adrax.dely.core.NotificationHelper;
 import com.example.adrax.dely.core.Order;
 import com.example.adrax.dely.core.OrderList;
 import com.example.adrax.dely.core.OrderStatus;
@@ -33,8 +34,7 @@ import static com.example.adrax.dely.LoginActivity.user;
 
 public class MActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-    FragmentFace fface;         // Страница ккаунта
+    FragmentFace fface;         // Страница аккаунта
     FragmentOrder forder;       // Страница заказа
     FragmentGet fget;           // Заказы
     // FragmentTools ftools;       // Настройки
@@ -51,14 +51,15 @@ public class MActivity extends AppCompatActivity
     static UpdateTimer updateTimer;
 
     //static FragmentTransaction fTrans;
-    public static int fragment_id=-1;
+    public static int fragment_id = -1;
 
     public static OrderList orders = new OrderList();
     public static OrderList face_orders = new OrderList();
     public static Order face_delivery = null;
 
-    public static final Object faceOrdersLock = new Object();
-    public static final Object faceDeliveryLock = new Object();
+    private static final Object ordersLock = new Object();
+    private static final Object faceDeliveryLock = new Object();
+    private static final Object faceOrdersLock = new Object();
 
     public static Integer selected_id = 0;
     public static String delyDescription = "Тест";
@@ -130,8 +131,10 @@ public class MActivity extends AppCompatActivity
         fdelyshow = new FragmentDeliveriesShow();
         fordershow = new FragmentOrderShow();
 
+        NotificationHelper.createNotification(this, "Del", "Заказ создан.");
+
         // загружаем заказы/доставки
-        ordersUpdate();
+        updateOrders();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fface);
@@ -143,10 +146,10 @@ public class MActivity extends AppCompatActivity
         //updateTimer.disable(); // Turn off for now
         this_context = getApplicationContext();
     }
-    //загрузка заказов/доставок
-    public static void ordersUpdate()
-    {
-        user.syncOrders(new InternetCallback<OrderList>() {
+
+    // загрузка заказов/доставок
+    public static void updateOrders() {
+        user.currentOrders(new InternetCallback<OrderList>() {
             @Override
             public void call(OrderList orders) {
                 synchronized (faceOrdersLock) {
@@ -155,35 +158,38 @@ public class MActivity extends AppCompatActivity
             }
         });
 
-        if (orders != null) {
-            user.currentOrder(new InternetCallback<OrderList>() {
-                @Override
-                public void call(OrderList orders) {
-                    synchronized (faceDeliveryLock) {
-                        face_delivery = orders.firstOrDefault(); // ToDo: заказов может быть > 1.
-                    }
+        user.currentDelivery(new InternetCallback<OrderList>() {
+            @Override
+            public void call(OrderList orders) {
+                synchronized (faceDeliveryLock) {
+                    // ToDo: доставок может быть > 1.
+                    face_delivery = orders.firstOrDefault();
                 }
-            });
-        }
+            }
+        });
 
-        // face_orders = user.currentOrders();
-        // face_delivery = user.currentDelivery();
+        user.syncOrders(new InternetCallback<OrderList>() {
+            @Override
+            public void call(OrderList result) {
+                synchronized (ordersLock) {
+                    orders = result;
+                }
+            }
+        });
     }
 
     /**
      * Запрос обновлений с сервера
      * @return
      */
-    public boolean updateData()
-    {
+    public boolean updateData() {
         //#ServerRequest
         //if (курьер появился)
         //updateTime.disable();
         return false;
     }
 
-    public void updateUserData()
-    {
+    public void updateUserData() {
         user.syncInfo(new InternetCallback<Boolean>() {
             @Override
             public void call(Boolean result) {
@@ -195,18 +201,18 @@ public class MActivity extends AppCompatActivity
     /**
      * Запускает процесс ожидания начала доставки
      */
-    public static void waitingForCourier()
-    {
+    public static void waitingForCourier() {
+
     }
 
-    public static void stopWaiting()
-    {
+    public static void stopWaiting() {
+
     }
 
     /**
      * Обновляет face
      */
-    public static void updateFace(){
+    public static void updateFace() {
         if (face_delivery != null) {
             face_delivery.status(new InternetCallback<OrderStatus>() {
                 @Override
@@ -296,40 +302,40 @@ public class MActivity extends AppCompatActivity
     /**
      * Для вызова фрагмента списка доставок из других фрагментов
      */
-    public void showFragmentGet(){
+    public void showFragmentGet() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fget);
         transaction.addToBackStack(null);
         transaction.commit();
 
         //fragment_id = 1050;
-        //updateData(); //#updateData
+        updateData();
     }
 
     /**
      * Для вызова фрагмента доставки из других фрагментов
      */
-    public void deliveryShowFragment(){
+    public void deliveryShowFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fdelyshow);
         transaction.addToBackStack(null);
         transaction.commit();
 
         //fragment_id = 1050;
-        updateData(); //#updateData
+        updateData();
     }
 
     /**
      * Для вызова фрагмента заказа из других фрагментов
      */
-    public void orderShowFragment(){
+    public void orderShowFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fordershow);
         transaction.addToBackStack(null);
         transaction.commit();
 
         //fragment_id = 5010;
-        updateData(); //#updateData
+        updateData();
     }
 
     /**

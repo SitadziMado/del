@@ -3,7 +3,6 @@ package com.example.adrax.dely;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,10 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.User;
-import com.example.adrax.dely.delivery.DeliveryUser;
 
 import java.io.UnsupportedEncodingException;
 
@@ -89,9 +88,8 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 /// костыль -----------------------------------------------------------------------------------------
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-        StrictMode.setThreadPolicy(policy);
+        // StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        // StrictMode.setThreadPolicy(policy);
 /// -------------------------------------------------------------------------------------------------
         _signupButton.setEnabled(false);
 
@@ -170,7 +168,11 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void onSignupFailed() {
-        //Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(
+                getBaseContext(),
+                "Регистрация неудачна, возможно, логин уже занят.",
+                Toast.LENGTH_LONG)
+                .show();
 
         _signupButton.setEnabled(true);
     }

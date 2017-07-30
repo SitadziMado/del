@@ -170,9 +170,9 @@ public class User {
         task.execute(REFRESH, DELIVERIES);
     }
 
-    public void currentOrder(@NonNull final InternetCallback<OrderList> callback) {
+    public void currentDelivery(@NonNull final InternetCallback<OrderList> callback) {
         final User user = this;
-        InternetTask task = new InternetTask(CURRENT_URL, new InternetCallback<String>() {
+        InternetTask task = new InternetTask(CURRENT_DELIVERY_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 OrderList orders = null;
@@ -182,7 +182,29 @@ public class User {
                         orders = new OrderList();
                     }
                 } else {
-                    LogHelper.error("При запросе текущего заказа произошла ошибка.");
+                    LogHelper.error("При запросе текуще доставки произошла ошибка.");
+                }
+
+                callback.call(orders);
+            }
+        });
+
+        task.execute(HASH, m_hash);
+    }
+
+    public void currentOrders(@NonNull final InternetCallback<OrderList> callback) {
+        final User user = this;
+        InternetTask task = new InternetTask(CURRENT_ORDERS_URL, new InternetCallback<String>() {
+            @Override
+            public void call(String s) {
+                OrderList orders = null;
+                if (!s.equals(ERROR)) {
+                    orders = Order.fromString(s, user);
+                    if (orders == null) {
+                        orders = new OrderList();
+                    }
+                } else {
+                    LogHelper.error("При запросе текущих заказов произошла ошибка.");
                 }
 
                 callback.call(orders);
@@ -315,6 +337,10 @@ public class User {
                 return RequestStatus.ORDER_TOO_MANY;
             case OK:
                 return RequestStatus.ORDER_OK;
+            case NO_DATA:
+                return RequestStatus.ORDER_NO_DATA;
+            case ACCESS_ERROR:
+                return RequestStatus.ACCESS_ERROR;
             default:
                 LogHelper.warn("Неизвестный код возврата с сервера.");
                 return RequestStatus.OTHER;
@@ -402,7 +428,8 @@ public class User {
     private static final String LOGOUT_URL = "http://adrax.pythonanywhere.com/logout";
     private static final String SYNC_URL = "http://adrax.pythonanywhere.com/send_delys";
     private static final String PEEK_URL = null; // "http://adrax.pythonanywhere.com/send_delys";
-    private static final String CURRENT_URL = "http://adrax.pythonanywhere.com/current_delivery";
+    private static final String CURRENT_DELIVERY_URL = "http://adrax.pythonanywhere.com/current_delivery";
+    private static final String CURRENT_ORDERS_URL = "http://adrax.pythonanywhere.com/current_orders";
     private static final String ADD_PASSPORT_URL = "http://adrax.pythonanywhere.com/add_passport";
     private static final String ADD_CARD_URL = "http://adrax.pythonanywhere.com/add_card";
     private static final String USER_INFO_URL = "http://adrax.pythonanywhere.com/user_info";
@@ -427,6 +454,8 @@ public class User {
     static final String BUSY = "delivery_busy";           /** Пользователь - слоупок, рекомендуем обновиться до 10-ки */
     static final String OK = "ok";                        /** Заказ успешно подтверждён (обеими сторонами) */
     static final String TOO_MANY = "already_enough";      /** Только 1 заказ можно доставлять */
+    static final String NO_DATA = "nodata_error";
+    static final String ACCESS_ERROR = "access_error";
 
     static final String ID = "dely_id";
     static final String SMS_CODE = "sms_code";

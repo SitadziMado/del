@@ -22,11 +22,9 @@ import static com.example.adrax.dely.MActivity.orders;
 
 
 public class FragmentGet extends Fragment {
-
-    //delys list
-    //delys list
     //Объявляем RecyclerView
     RecyclerView rvMain;
+
     //Объявляем адаптер
     AdapterForGet adapterForGet;
 
@@ -41,7 +39,6 @@ public class FragmentGet extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -53,31 +50,36 @@ public class FragmentGet extends Fragment {
             //RecyclerView
         //Привязываем RecyclerView к элементу
         rvMain = (RecyclerView)root.findViewById(R.id.delys_list);
+
         //И установим LayoutManager
         rvMain.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         //свистелки-перделки
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvMain.getContext(),
                 llm.getOrientation());
         rvMain.addItemDecoration(dividerItemDecoration);
+
         //Создаём адаптер
         adapterForGet = new AdapterForGet(mContext);
+
         //Применим наш адаптер к RecyclerView
         rvMain.setAdapter(adapterForGet);
+
         // Inflate the layout for this fragment
         return root;
 
     }
 
-    public void update(Context mycontext) {
+    public void update(Context myContext) {
         //Создаём адаптер
-        adapterForGet = new AdapterForGet(mycontext);
+        adapterForGet = new AdapterForGet(myContext);
         //Применим наш адаптер к RecyclerView
         rvMain.setAdapter(adapterForGet);
         // Inflate the layout for this fragment
     }
 
-    private void getDeliveries() {
+    /* private void getDeliveries() {
         user.syncOrders(new InternetCallback<OrderList>() {
             @Override
             public void call(OrderList result) {
@@ -86,6 +88,7 @@ public class FragmentGet extends Fragment {
                 }
             }
         });
+    } */
 
         // orders = user.orderList();
 
@@ -143,6 +146,6 @@ public class FragmentGet extends Fragment {
             del.payment = "новый заказ!";
             delys.add(del);
         }
-        return delys;*/
-    }
+        return delys;
+    }*/
 }

@@ -21,7 +21,6 @@ public class AdapterForGet extends RecyclerView.Adapter<LVHolderForGet> {
     //Простенький конструктор
     public AdapterForGet(Context context){
         this.mContext = context;
-
     }
 
     //Этот метод вызывается при прикреплении нового элемента к RecyclerView
@@ -63,7 +62,7 @@ public class AdapterForGet extends RecyclerView.Adapter<LVHolderForGet> {
         return new LVHolderForGet(itemView, mContext);
     }
 
-    //количество элементов списка
+    // количество элементов списка
     @Override
     public int getItemCount(){
         return orders.size();

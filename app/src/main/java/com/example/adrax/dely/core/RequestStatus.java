@@ -13,4 +13,5 @@ public enum RequestStatus {
     ORDER_BUSY,
     ORDER_OK,
     ORDER_ERROR,
+    ORDER_NO_DATA, ACCESS_ERROR,
 }

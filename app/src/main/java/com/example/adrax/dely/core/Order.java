@@ -55,7 +55,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        appendFieldValue(sb, "Название: ", NAME);
+        appendFieldValue(sb, "Название: ", DESCRIPTION);
         appendFieldValue(sb, "Откуда: ", FROM);
         appendFieldValue(sb, "Куда: ", TO);
         appendFieldValue(sb, "Заказчик: ", CUSTOMER);
@@ -114,6 +114,10 @@ public class Order extends DynamicObject implements Comparable<Order> {
                         LogHelper.error("Ошибка при отправлении заказа на сервер.");
                         break;
 
+                    case ACCESS_ERROR:
+                        LogHelper.error("Ошибка доступа.");
+                        break;
+
                     case ORDER_LOADED:
                         result = Boolean.TRUE;
                         break;
@@ -124,7 +128,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
         });
 
         task.execute(
-                Order.CUSTOMER, getStringProp(Order.CUSTOMER),
+                // Order.CUSTOMER, getStringProp(Order.CUSTOMER),
                 Order.FROM, getStringProp(Order.FROM),
                 Order.TO, getStringProp(Order.TO),
                 Order.COST, getStringProp(Order.COST),
@@ -135,8 +139,10 @@ public class Order extends DynamicObject implements Comparable<Order> {
                 Order.PHONE, getStringProp(Order.PHONE),
                 Order.WEIGHT, getStringProp(Order.WEIGHT),
                 Order.SIZE, getStringProp(Order.SIZE),
-                HASH, ((User)getProp(PARENT)).getHash(),
                 Order.DESCRIPTION, getStringProp(Order.DESCRIPTION),
+                Order.TAKE_TIME, getStringProp(Order.TAKE_TIME),
+                Order.BRING_TIME, getStringProp(Order.BRING_TIME),
+                HASH, ((User)getProp(PARENT)).getHash(),
                 // Order.ROOM, getStringProp(Order.ROOM),
                 "recnum", "undefined"
         );
