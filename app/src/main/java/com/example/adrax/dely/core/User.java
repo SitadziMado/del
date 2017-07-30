@@ -153,12 +153,9 @@ public class User {
         InternetTask task = new InternetTask(SYNC_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
-                OrderList orders = null;
+                OrderList orders = new OrderList();
                 if (!s.equals("404")) {
                     orders = Order.fromString(s, user);
-                    if (orders == null) {
-                        orders = new OrderList();
-                    }
                 } else {
                     LogHelper.error("При синхронизации заказов произошла ошибка.");
                 }
@@ -175,14 +172,14 @@ public class User {
         InternetTask task = new InternetTask(CURRENT_DELIVERY_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
-                OrderList orders = null;
+                OrderList orders = new OrderList();
                 if (!s.equals(ERROR)) {
                     orders = Order.fromString(s, user);
                     if (orders == null) {
                         orders = new OrderList();
                     }
                 } else {
-                    LogHelper.error("При запросе текуще доставки произошла ошибка.");
+                    LogHelper.error("При запросе текущих доставки произошла ошибка.");
                 }
 
                 callback.call(orders);
@@ -197,7 +194,7 @@ public class User {
         InternetTask task = new InternetTask(CURRENT_ORDERS_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
-                OrderList orders = null;
+                OrderList orders = new OrderList();
                 if (!s.equals(ERROR)) {
                     orders = Order.fromString(s, user);
                     if (orders == null) {
@@ -341,6 +338,10 @@ public class User {
                 return RequestStatus.ORDER_NO_DATA;
             case ACCESS_ERROR:
                 return RequestStatus.ACCESS_ERROR;
+            case IO_ERROR:
+                return RequestStatus.IO_ERROR;
+            case URL_ERROR:
+                return RequestStatus.URL_ERROR;
             default:
                 LogHelper.warn("Неизвестный код возврата с сервера.");
                 return RequestStatus.OTHER;
@@ -456,6 +457,8 @@ public class User {
     static final String TOO_MANY = "already_enough";      /** Только 1 заказ можно доставлять */
     static final String NO_DATA = "nodata_error";
     static final String ACCESS_ERROR = "access_error";
+    static final String IO_ERROR = "io_error";
+    static final String URL_ERROR = "url_error";
 
     static final String ID = "dely_id";
     static final String SMS_CODE = "sms_code";

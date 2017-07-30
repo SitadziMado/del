@@ -186,8 +186,8 @@ public class Order extends DynamicObject implements Comparable<Order> {
 
         task.execute(
                 HASH, getStringProp(HASH),
-                User.ID, getStringProp(ID),
-                User.COURIER, ((User)getProp(PARENT)).getLogin()
+                User.ID, getStringProp(ID) /*,
+                User.COURIER, ((User)getProp(PARENT)).getLogin()*/
         );
     }
 

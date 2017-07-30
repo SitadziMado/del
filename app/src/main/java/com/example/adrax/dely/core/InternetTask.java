@@ -62,10 +62,10 @@ class InternetTask extends AsyncTask<String, Void, String> {
             }
         } catch (MalformedURLException e) {
             LogHelper.error(m_address + " некорректен.");
-            result = User.SERVER_PROBLEMS;
+            result = User.URL_ERROR;
         } catch (IOException e) {
             LogHelper.error("Ошибка соединения с " + m_address + ".");
-            result = User.SERVER_PROBLEMS;
+            result = User.IO_ERROR;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
