@@ -145,6 +145,9 @@ public class MActivity extends AppCompatActivity
         //updateTimer = new UpdateTimer(300000, 15000, this);
         //updateTimer.disable(); // Turn off for now
         this_context = getApplicationContext();
+
+        // Фрагмент сначала: face.
+        fragment_id = R.id.frag_face_id;
     }
 
     // загрузка заказов/доставок

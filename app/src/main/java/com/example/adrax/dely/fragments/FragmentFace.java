@@ -84,6 +84,9 @@ public class FragmentFace extends Fragment {
         //обновляем заказы/доставки
         // updateFace();
 
+        // Code
+        text_code = (EditText) root.findViewById(R.id.text_code);
+
         //окончание доставки
         btn_finish = (Button) root.findViewById(R.id.btn_finish);
         btn_finish.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +95,7 @@ public class FragmentFace extends Fragment {
             {
                 //if(user.orderStart(selected_id))
                 // user.orderFinish(Integer.parseInt(face_delivery.getId()));
-                face_delivery.finish(new InternetCallback<Boolean>() {
+                face_delivery.finish(text_code.getText().toString(), new InternetCallback<Boolean>() {
                     @Override
                     public void call(Boolean result) {
                         if (result) {
@@ -131,9 +134,6 @@ public class FragmentFace extends Fragment {
             }
 
         });
-
-        // Code
-        text_code = (EditText) root.findViewById(R.id.text_code);
 
         //Привязываем RecyclerView к элементу
         rvMain = (RecyclerView)root.findViewById(R.id.face_orders_list);

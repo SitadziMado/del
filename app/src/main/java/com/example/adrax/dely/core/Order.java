@@ -191,18 +191,21 @@ public class Order extends DynamicObject implements Comparable<Order> {
         );
     }
 
-    public void finish(@NonNull final InternetCallback<Boolean> callback) {
+    public void finish(
+            @NonNull String smsCode,
+            @NonNull final InternetCallback<Boolean> callback
+    ) {
         InternetTask task = new InternetTask(FINISH_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 Boolean result = Boolean.FALSE;
                 switch (User.requestStatusFromString(s)) {
-                    case ORDER_BUSY:
-                        LogHelper.error("Заказ уже начат.");
-                        break;
-
                     case ORDER_STARTED:
                         result = Boolean.TRUE;
+                        break;
+
+                    case ORDER_ERROR:
+                        LogHelper.error("Ошибка при завершении заказа");
                         break;
                 }
 
@@ -213,7 +216,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
         task.execute(
                 HASH, getStringProp(HASH),
                 User.ID, getStringProp(ID),
-                User.SMS_CODE, "0000"
+                User.SMS_CODE, smsCode
         );
     }
 
