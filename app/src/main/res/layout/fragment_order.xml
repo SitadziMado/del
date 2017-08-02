@@ -90,6 +90,51 @@
                 android:hint="Стоимость содержимого"/>
         </android.support.design.widget.TextInputLayout>
 
+        <!-- time_take Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_time_take"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text|number"
+                android:hint="Когда забрать"/>
+
+            <DatePicker
+                android:id="@+id/datePicker"
+                android:layout_width="match_parent"
+                android:datePickerMode="spinner"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TimePicker
+                android:id="@+id/time_take_picker"
+                android:layout_width="match_parent"
+                android:timePickerMode="spinner"
+                android:layout_height="141dp" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- time_bring Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_time_bring"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text|number"
+                android:hint="Ко скольки доставить"/>
+
+            <TimePicker
+                android:id="@+id/time_bring_picker"
+                android:layout_width="match_parent"
+                android:layout_height="141dp"
+                android:timePickerMode="spinner" />
+        </android.support.design.widget.TextInputLayout>
+
         <!-- padik Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
