@@ -16,7 +16,7 @@ import com.example.adrax.dely.core.Order;
 import com.example.adrax.dely.delivery.DeliveryFormula;
 
 import static com.example.adrax.dely.LoginActivity.user;
-import static com.example.adrax.dely.MActivity.ordersUpdate;
+import static com.example.adrax.dely.MActivity.updateOrders;
 import static com.example.adrax.dely.MActivity.updateFace;
 import static com.example.adrax.dely.MActivity.waitingForCourier;
 
@@ -154,7 +154,9 @@ public class FragmentOrder extends Fragment {
                     Order.ROOM, ko,
                     Order.PHONE, num,
                     "recnum", rec,
-                    Order.DESCRIPTION, description
+                    Order.DESCRIPTION, description,
+                    Order.TAKE_TIME, "undefined",
+                    Order.BRING_TIME, "undefined"
             );
 
             /* user.order(user.getLogin(),
@@ -176,7 +178,7 @@ public class FragmentOrder extends Fragment {
                 @Override
                 public void call(Boolean result) {
                     if (result) {
-                        ordersUpdate();
+                        updateOrders();
                         waitingForCourier(); //#UpdateTimerRun
                         updateFace();
 

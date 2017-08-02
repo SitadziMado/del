@@ -16,7 +16,7 @@ import com.example.adrax.dely.core.Order;
 import static com.example.adrax.dely.LoginActivity.user;
 import static com.example.adrax.dely.MActivity.delyDescription;
 import static com.example.adrax.dely.MActivity.face_delivery;
-import static com.example.adrax.dely.MActivity.ordersUpdate;
+import static com.example.adrax.dely.MActivity.updateOrders;
 import static com.example.adrax.dely.MActivity.selected_id;
 import static com.example.adrax.dely.MActivity.updateFace;
 
@@ -55,7 +55,7 @@ public class FragmentDeliveriesShow extends Fragment {
                                 @Override
                                 public void call(Boolean result) {
                                     if (result) {
-                                        ordersUpdate();
+                                        updateOrders();
                                         updateFace();
                                         Toast.makeText(getActivity(),"Доставка началась!", Toast.LENGTH_LONG).show();
                                         if (getFragmentManager().getBackStackEntryCount() > 0) {

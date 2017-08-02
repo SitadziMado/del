@@ -18,9 +18,9 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 
 class InternetTask extends AsyncTask<String, Void, String> {
-    public InternetTask(String address, InternetCallback<String> callable) {
-        if (callable == null || address == null || address.equals("")) {
-            String m = "Адрес, callback-функция не могут быть пустыми.";
+    public InternetTask(@NonNull String address, @NonNull InternetCallback<String> callable) {
+        if (address.equals("")) {
+            String m = "Адрес не может быть пустым.";
             LogHelper.error(m);
             throw new NullPointerException(m);
         }
@@ -62,10 +62,10 @@ class InternetTask extends AsyncTask<String, Void, String> {
             }
         } catch (MalformedURLException e) {
             LogHelper.error(m_address + " некорректен.");
-            result = User.SERVER_PROBLEMS;
+            result = User.URL_ERROR;
         } catch (IOException e) {
             LogHelper.error("Ошибка соединения с " + m_address + ".");
-            result = User.SERVER_PROBLEMS;
+            result = User.IO_ERROR;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();

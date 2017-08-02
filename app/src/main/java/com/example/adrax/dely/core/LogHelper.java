@@ -64,9 +64,11 @@ public class LogHelper {
 
         try {
             Class<?> clazz = Class.forName(tr.getClassName());
-            return "[" + getClassName(clazz) + ":" + tr.getMethodName() + ":" + tr.getLineNumber() + "]: ";
+            return "(" + //"[" + getClassName(clazz) + ":" + tr.getMethodName() + ":" + tr.getLineNumber() + ", " +
+                    tr.getFileName() + ":" + tr.getLineNumber() +
+                    "): "; //"]: ";
         } catch (ClassNotFoundException e) {
-            return "[]: ";
+            return "(): ";
         }
     }
 }

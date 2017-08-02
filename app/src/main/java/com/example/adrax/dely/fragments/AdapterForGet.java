@@ -21,7 +21,6 @@ public class AdapterForGet extends RecyclerView.Adapter<LVHolderForGet> {
     //Простенький конструктор
     public AdapterForGet(Context context){
         this.mContext = context;
-
     }
 
     //Этот метод вызывается при прикреплении нового элемента к RecyclerView
@@ -36,21 +35,21 @@ public class AdapterForGet extends RecyclerView.Adapter<LVHolderForGet> {
 
             newViewHolder.tvDescription.setText("Название: " + cur.getStringProp(Order.DESCRIPTION));
             newViewHolder.tvFrom.setText("Откуда: " + cur.getStringProp(Order.FROM));
-            newViewHolder.tvId = cur.getStringProp(Order.ID);
+            newViewHolder.tvId = Integer.toString(i);
             newViewHolder.tvTo.setText("Куда: " + cur.getStringProp(Order.TO));
             newViewHolder.tvCustomer.setText("Заказчик: " + cur.getStringProp(Order.CUSTOMER));
             newViewHolder.tvPhoneNumber.setText("Номер телефона: " + cur.getStringProp(Order.PHONE));
             newViewHolder.tvCost.setText("Аванс: " + cur.getStringProp(Order.COST));
             newViewHolder.tvPayment.setText("Оплата: " + cur.getStringProp(Order.PAYMENT));
         } else {
-            newViewHolder.tvDescription.setText("На данный момент");
-            newViewHolder.tvFrom.setText("");
-            newViewHolder.tvId = "заказов нет, ";
-            newViewHolder.tvTo.setText("");
-            newViewHolder.tvCustomer.setText("но Вы всегда");
-            newViewHolder.tvPhoneNumber.setText("");
-            newViewHolder.tvCost.setText("можете оформить новый!");
-            newViewHolder.tvPayment.setText("");
+            newViewHolder.tvDescription.setText("");
+            newViewHolder.tvFrom.setText("На данный момент");
+            newViewHolder.tvId = "0";
+            newViewHolder.tvTo.setText("заказов нет, ");
+            newViewHolder.tvCustomer.setText("");
+            newViewHolder.tvPhoneNumber.setText("но Вы всегда");
+            newViewHolder.tvCost.setText("");
+            newViewHolder.tvPayment.setText("можете оформить новый!");
         }
     }
 
@@ -63,7 +62,7 @@ public class AdapterForGet extends RecyclerView.Adapter<LVHolderForGet> {
         return new LVHolderForGet(itemView, mContext);
     }
 
-    //количество элементов списка
+    // количество элементов списка
     @Override
     public int getItemCount(){
         return orders.size();

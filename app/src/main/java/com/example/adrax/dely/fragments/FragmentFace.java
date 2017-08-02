@@ -62,7 +62,6 @@ public class FragmentFace extends Fragment {
 
         mContext = this.getActivity();
 
-
         face_deliver_text_view = (TextView) root.findViewById(R.id.text_cur_dely);
 
         face_tab = (TabHost) root.findViewById(R.id.fhost_tab);
@@ -85,6 +84,9 @@ public class FragmentFace extends Fragment {
         //обновляем заказы/доставки
         // updateFace();
 
+        // Code
+        text_code = (EditText) root.findViewById(R.id.text_code);
+
         //окончание доставки
         btn_finish = (Button) root.findViewById(R.id.btn_finish);
         btn_finish.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +95,7 @@ public class FragmentFace extends Fragment {
             {
                 //if(user.orderStart(selected_id))
                 // user.orderFinish(Integer.parseInt(face_delivery.getId()));
-                face_delivery.finish(new InternetCallback<Boolean>() {
+                face_delivery.finish(text_code.getText().toString(), new InternetCallback<Boolean>() {
                     @Override
                     public void call(Boolean result) {
                         if (result) {
@@ -133,9 +135,6 @@ public class FragmentFace extends Fragment {
 
         });
 
-        // Code
-        text_code = (EditText) root.findViewById(R.id.text_code);
-
         //Привязываем RecyclerView к элементу
         rvMain = (RecyclerView)root.findViewById(R.id.face_orders_list);
 
@@ -164,8 +163,7 @@ public class FragmentFace extends Fragment {
                 // Start the Signup activity
                 //Intent intent = new Intent(getActivity(), SignupActivity.class);
                 //startActivityForResult(intent, REQUEST_SIGNUP);
-                if (face_deliver_text_view.getText() == "Начните новую доставку!")
-                {
+                if (face_deliver_text_view.getText() == "Начните новую доставку!") {
                     switchFragment();
                 }
             }
@@ -175,15 +173,16 @@ public class FragmentFace extends Fragment {
     }
 
     private void switchFragment() {
-        if (mContext == null)
+        if (mContext == null) {
             return;
+        }
         if (mContext instanceof MActivity) {
             MActivity feeds = (MActivity) mContext;
             feeds.showFragmentGet();
         }
     }
 
-    private void getOrders() {
+    /* private void getOrders() {
         user.syncOrders(new InternetCallback<OrderList>() {
             @Override
             public void call(OrderList result) {
@@ -192,6 +191,7 @@ public class FragmentFace extends Fragment {
                 }
             }
         });
+    } */
 
         /* ArrayList<Dely> delys = new ArrayList<>();
         Dely del;
@@ -245,8 +245,8 @@ public class FragmentFace extends Fragment {
             del.payment = "новый!";
             delys.add(del);
         }
-        return delys; */
-    }
+        return delys;
+    } */
 
     private void updateUserInfo()
     {
