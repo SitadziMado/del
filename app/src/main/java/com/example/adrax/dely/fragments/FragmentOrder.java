@@ -1,19 +1,30 @@
 package com.example.adrax.dely.fragments;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
 import com.example.adrax.dely.delivery.DeliveryFormula;
+
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import static com.example.adrax.dely.LoginActivity.user;
 import static com.example.adrax.dely.MActivity.updateOrders;
@@ -35,8 +46,12 @@ public class FragmentOrder extends Fragment {
     EditText _descriptionText;
     EditText _distanceText;
     TextView _payView;
-
-
+    EditText _dayText;
+    EditText _timeTakeText;
+    EditText _timeBringText;
+    Calendar dayCalendar = Calendar.getInstance();
+    Calendar takeCalendar = Calendar.getInstance();
+    Calendar bringCalendar = Calendar.getInstance();
     public FragmentOrder() {
         // Required empty public constructor
     }
@@ -67,7 +82,76 @@ public class FragmentOrder extends Fragment {
         _distanceText = (EditText)root.findViewById(R.id.input_distance);
 
         _distanceText.setText("5");
+        _dayText = (EditText)root.findViewById(R.id.input_day);
+        _timeTakeText = (EditText)root.findViewById(R.id.input_time_take);
+        _timeBringText = (EditText)root.findViewById(R.id.input_time_bring);
+        // Pickers
+        // setup
+        setChosenDay();
+        _timeTakeText.setText(takeCalendar.get(Calendar.HOUR_OF_DAY)+":"+takeCalendar.get(Calendar.MINUTE));
+        _timeBringText.setText(bringCalendar.get(Calendar.HOUR_OF_DAY)+":"+bringCalendar.get(Calendar.MINUTE));
 
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                dayCalendar.set(Calendar.YEAR, year);
+                dayCalendar.set(Calendar.MONTH, monthOfYear);
+                dayCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                setChosenDay();
+            }
+        };
+
+        final TimePickerDialog.OnTimeSetListener timeTakeD = new TimePickerDialog.OnTimeSetListener(){
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                takeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                takeCalendar.set(Calendar.MINUTE, minute);
+                _timeTakeText.setText(takeCalendar.get(Calendar.HOUR_OF_DAY)+":"+takeCalendar.get(Calendar.MINUTE));
+            }
+        };
+
+        final TimePickerDialog.OnTimeSetListener timeBringD = new TimePickerDialog.OnTimeSetListener(){
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                bringCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                bringCalendar.set(Calendar.MINUTE, minute);
+                _timeBringText.setText(bringCalendar.get(Calendar.HOUR_OF_DAY)+":"+bringCalendar.get(Calendar.MINUTE));
+            }
+        };
+
+        _dayText.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(getActivity(), date,
+                        dayCalendar.get(Calendar.YEAR),
+                        dayCalendar.get(Calendar.MONTH),
+                        dayCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        _timeTakeText.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(getActivity(), timeTakeD,
+                        takeCalendar.get(Calendar.HOUR_OF_DAY),
+                        takeCalendar.get(Calendar.MINUTE), true).show();
+            }
+        });
+
+        _timeBringText.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(getActivity(), timeBringD,
+                        bringCalendar.get(Calendar.HOUR_OF_DAY),
+                        bringCalendar.get(Calendar.MINUTE), true).show();
+            }
+        });
+        // End pickers
 
         final Button button =
                 (Button) root.findViewById(R.id.btn_order);
@@ -120,6 +204,24 @@ public class FragmentOrder extends Fragment {
         });
 
         return root;
+    }
+
+    private void setChosenDay() {
+        String myFormat = "d MMM yyyy";
+        //SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+
+        Locale russian = new Locale("ru");
+        String[] newMonths = {
+                "января", "февраля", "марта", "апреля", "мая", "июня",
+                "июля", "августа", "сентября", "октября", "ноября", "декабря"};
+        DateFormatSymbols dfs = DateFormatSymbols.getInstance(russian);
+        dfs.setMonths(newMonths);
+        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, russian);
+        SimpleDateFormat sdf = (SimpleDateFormat) df;
+        sdf.setDateFormatSymbols(dfs);
+
+        _dayText.setText(sdf.format(dayCalendar.getTime()));
     }
 
     // Отправка формы на сервер
