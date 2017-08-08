@@ -350,13 +350,6 @@ public class FragmentOrder extends Fragment {
             _numText.setError(null);
         }
 
-        if (ko.isEmpty()) {
-            _numText.setError("Доставлять в квартиру или в офис?");
-            valid = false;
-        } else {
-            _numText.setError(null);
-        }
-
         return valid;
     }
 }

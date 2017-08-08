@@ -20,7 +20,7 @@ import static com.example.adrax.dely.MActivity.updateOrders;
 import static com.example.adrax.dely.MActivity.selected_id;
 import static com.example.adrax.dely.MActivity.updateFace;
 
-
+@Deprecated
 public class FragmentDeliveriesShow extends Fragment {
 
 

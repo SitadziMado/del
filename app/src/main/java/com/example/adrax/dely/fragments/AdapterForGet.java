@@ -33,23 +33,18 @@ public class AdapterForGet extends RecyclerView.Adapter<LVHolderForGet> {
             //Получаем элемент набора данных для заполнения
             Order cur = orders.get(i);
 
-            newViewHolder.tvDescription.setText("Название: " + cur.getStringProp(Order.DESCRIPTION));
-            newViewHolder.tvFrom.setText("Откуда: " + cur.getStringProp(Order.FROM));
+            newViewHolder.tvDescription.setText(cur.getStringProp(Order.DESCRIPTION));
+            newViewHolder.tvFrom.setText("От: " + cur.getStringProp(Order.FROM));
             newViewHolder.tvId = Integer.toString(i);
-            newViewHolder.tvTo.setText("Куда: " + cur.getStringProp(Order.TO));
+            newViewHolder.tvTo.setText("До: " + cur.getStringProp(Order.TO));
+            newViewHolder.tvTimeTake.setText(cur.getStringProp(Order.TAKE_TIME));
+            newViewHolder.tvTimeBring.setText(cur.getStringProp(Order.BRING_TIME));
             newViewHolder.tvCustomer.setText("Заказчик: " + cur.getStringProp(Order.CUSTOMER));
             newViewHolder.tvPhoneNumber.setText("Номер телефона: " + cur.getStringProp(Order.PHONE));
             newViewHolder.tvCost.setText("Аванс: " + cur.getStringProp(Order.COST));
-            newViewHolder.tvPayment.setText("Оплата: " + cur.getStringProp(Order.PAYMENT));
+            newViewHolder.tvPayment.setText(cur.getStringProp(Order.PAYMENT) + "руб.");
         } else {
-            newViewHolder.tvDescription.setText("");
-            newViewHolder.tvFrom.setText("На данный момент");
-            newViewHolder.tvId = "0";
-            newViewHolder.tvTo.setText("заказов нет, ");
-            newViewHolder.tvCustomer.setText("");
-            newViewHolder.tvPhoneNumber.setText("но Вы всегда");
-            newViewHolder.tvCost.setText("");
-            newViewHolder.tvPayment.setText("можете оформить новый!");
+            // ToDo: Show picture of emptiness
         }
     }
 

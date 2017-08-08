@@ -37,19 +37,14 @@ public class AdapterForFace extends RecyclerView.Adapter<LVHolderForFace> {
             newViewHolder.tvFrom.setText("Откуда: " + cur.getStringProp(Order.FROM));
             newViewHolder.tvId = Integer.toString(i);
             newViewHolder.tvTo.setText("Куда: " + cur.getStringProp(Order.TO));
+            newViewHolder.tvTimeTake.setText(cur.getStringProp(Order.TAKE_TIME));
+            newViewHolder.tvTimeBring.setText(cur.getStringProp(Order.BRING_TIME));
             newViewHolder.tvCustomer.setText("Заказчик: " + cur.getStringProp(Order.CUSTOMER));
             newViewHolder.tvPhoneNumber.setText("Номер телефона: " + cur.getStringProp(Order.PHONE));
             newViewHolder.tvCost.setText("Аванс: " + cur.getStringProp(Order.COST));
-            newViewHolder.tvPayment.setText("Оплата: " + cur.getStringProp(Order.PAYMENT));
+            newViewHolder.tvPayment.setText(cur.getStringProp(Order.PAYMENT) + "руб.");
         } else {
-            newViewHolder.tvDescription.setText("");
-            newViewHolder.tvFrom.setText("На данный момент");
-            newViewHolder.tvId = "";
-            newViewHolder.tvTo.setText("заказов нет, ");
-            newViewHolder.tvCustomer.setText("");
-            newViewHolder.tvPhoneNumber.setText("но Вы всегда");
-            newViewHolder.tvCost.setText("");
-            newViewHolder.tvPayment.setText("можете оформить новый!");
+            // ToDo: Show picture of emptiness
         }
     }
 
@@ -57,7 +52,7 @@ public class AdapterForFace extends RecyclerView.Adapter<LVHolderForFace> {
     @Override
     public LVHolderForFace onCreateViewHolder(ViewGroup viewGroup, int i){
         //Создаём новый view при помощи LayoutInflater
-        View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item, viewGroup, false);
+        View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_order, viewGroup, false);
 
         return new LVHolderForFace(mContext, itemView);
     }

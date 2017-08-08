@@ -15,7 +15,7 @@ import static com.example.adrax.dely.LoginActivity.user;
 import static com.example.adrax.dely.MActivity.face_cur_order_text;
 import static com.example.adrax.dely.MActivity.selected_id;
 
-
+@Deprecated
 public class FragmentOrderShow extends Fragment {
 
     public FragmentOrderShow() {

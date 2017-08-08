@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/item"
+    android:id="@+id/item_order"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -110,7 +109,7 @@
 
     <ToggleButton
         android:id="@+id/btnExpandItem"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="37dp"
         android:layout_marginTop="16dp"
         android:background="@color/colorAccent"
@@ -120,15 +119,5 @@
         app:layout_constraintHorizontal_bias="0.11"
         app:layout_constraintLeft_toLeftOf="@+id/tvTo"
         app:layout_constraintTop_toBottomOf="@+id/tvCost" />
-
-    <Button
-        android:id="@+id/btnStartDely"
-        android:layout_width="102dp"
-        android:layout_height="37dp"
-        android:background="@color/colorAccent"
-        android:textColor="@color/white"
-        android:text="Доставить"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btnExpandItem"
-        app:layout_constraintRight_toRightOf="@+id/tvTimeBring" />
 
 </android.support.constraint.ConstraintLayout>

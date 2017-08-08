@@ -1,18 +1,27 @@
 package com.example.adrax.dely.fragments;
 
 import android.content.Context;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.example.adrax.dely.MActivity;
 import com.example.adrax.dely.R;
+import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
 
+import static com.example.adrax.dely.LoginActivity.user;
 import static com.example.adrax.dely.MActivity.delyDescription;
+import static com.example.adrax.dely.MActivity.face_delivery;
 import static com.example.adrax.dely.MActivity.orders;
 import static com.example.adrax.dely.MActivity.selected_id;
+import static com.example.adrax.dely.MActivity.updateFace;
+import static com.example.adrax.dely.MActivity.updateOrders;
 
 public final class LVHolderForGet extends RecyclerView.ViewHolder {
     //объявим поля, созданные в файле интерфейса itemView.xml
@@ -24,36 +33,82 @@ public final class LVHolderForGet extends RecyclerView.ViewHolder {
     TextView tvCost;
     TextView tvPayment;
     TextView tvDescription;
-    LinearLayout Item;
-
+    TextView tvTimeTake;
+    TextView tvTimeBring;
+    //LinearLayout Item;
+    ConstraintLayout item;
+    ToggleButton btnExpandItem;
+    Button btnStartDely;
     private Context mContext;
 
     // объявляем конструктор
-    public LVHolderForGet(View itemView, Context context){
+    public LVHolderForGet(View itemView, Context context) {
         super(itemView);
         mContext = context;
         //привязываем элементы к полям
-        tvDescription = (TextView)itemView.findViewById(R.id.tvDescription);
-        tvFrom = (TextView)itemView.findViewById(R.id.tvFrom);
-        tvTo = (TextView)itemView.findViewById(R.id.tvTo);
-        tvCustomer = (TextView)itemView.findViewById(R.id.tvCustomer);
-        tvPhoneNumber = (TextView)itemView.findViewById(R.id.tvPhoneNumber);
-        tvCost = (TextView)itemView.findViewById(R.id.tvCost);
-        tvPayment = (TextView)itemView.findViewById(R.id.tvPayment);
-        Item = (LinearLayout)itemView.findViewById(R.id.item);
-        Item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != orders) {
-                    int id = Integer.parseInt(tvId);
-                    //id = 0;
-
-                    selected_id = Integer.parseInt(orders.get(id).getStringProp(Order.ID));
-                    delyDescription = orders.get(id).toString();
-
-                    switchFragment();
+        tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
+        tvFrom = (TextView) itemView.findViewById(R.id.tvFrom);
+        tvTo = (TextView) itemView.findViewById(R.id.tvTo);
+        tvCustomer = (TextView) itemView.findViewById(R.id.tvCustomer);
+        tvPhoneNumber = (TextView) itemView.findViewById(R.id.tvPhoneNumber);
+        tvCost = (TextView) itemView.findViewById(R.id.tvCost);
+        tvPayment = (TextView) itemView.findViewById(R.id.tvPayment);
+        tvTimeTake = (TextView) itemView.findViewById(R.id.tvTimeTake);
+        tvTimeBring = (TextView) itemView.findViewById(R.id.tvTimeBring);
+        item = (ConstraintLayout) itemView.findViewById(R.id.item);
+        btnExpandItem = (ToggleButton) itemView.findViewById(R.id.btnExpandItem);
+        btnExpandItem.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                if (isChecked) {
+                    tvCost.setVisibility(View.VISIBLE);
+                    tvPhoneNumber.setVisibility(View.VISIBLE);
+                    tvCustomer.setVisibility(View.VISIBLE);
+                } else {
+                    tvCost.setVisibility(View.GONE);
+                    tvPhoneNumber.setVisibility(View.GONE);
+                    tvCustomer.setVisibility(View.GONE);
                 }
             }
+        });
+
+        // Кнопка начала доставки
+        btnStartDely = (Button) itemView.findViewById(R.id.btnStartDely);
+        btnStartDely.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if (face_delivery == null) {
+                    new Order(user, Order.ID, orders.get(Integer.parseInt(tvId)).getStringProp(Order.ID)).start(
+                            new InternetCallback<Boolean>() {
+                                @Override
+                                public void call(Boolean result) {
+                                    if (result) {
+                                        updateOrders();
+                                        updateFace();
+                                        Toast.makeText(mContext,
+                                                "Доставка началась!",
+                                                Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(
+                                                mContext,
+                                                "Не удалось начать заказ, возможно, он уже начат.",
+                                                Toast.LENGTH_LONG
+                                        ).show();
+                                    }
+                                }
+                            });
+
+                } else {
+                    Toast.makeText(
+                            mContext,
+                            "У вас уже есть активная доставка!",
+                            Toast.LENGTH_LONG
+                    ).show();
+                }
+            }
+
         });
     }
 
