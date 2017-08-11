@@ -13,6 +13,14 @@
     <string name="order_item">Создать заказ</string>
     <string name="get_item">Доставить заказ</string>
 
+    <string-array name="weights_array">
+        <item>до 500гр</item>
+        <item>до 1кг  </item>
+        <item>до 2кг  </item>
+        <item>до 5кг  </item>
+        <item>до 10кг </item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="text_about_fragment">Копырин Максим Викторович\n
 Должность: Генеральный деректор\n

@@ -250,7 +250,8 @@
 
         <Button
             android:id="@+id/btnSaveCard"
-            style="@android:style/Widget.Material.Button.Colored"
+            android:background="@color/colorAccent"
+            android:textColor="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="casual"
@@ -344,7 +345,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp">
-                <EditText android:id="@+id/passport_date"
+                <EditText
+                    android:id="@+id/passport_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
@@ -354,7 +356,8 @@
 
         <Button
             android:id="@+id/btnSavePassport"
-            style="@android:style/Widget.Material.Button.Colored"
+            android:background="@color/colorAccent"
+            android:textColor="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="casual"

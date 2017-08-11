@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -49,6 +52,7 @@ public class FragmentOrder extends Fragment {
     EditText _dayText;
     EditText _timeTakeText;
     EditText _timeBringText;
+    Spinner _spinnerWeight;
     Calendar dayCalendar = Calendar.getInstance();
     Calendar takeCalendar = Calendar.getInstance();
     Calendar bringCalendar = Calendar.getInstance();
@@ -76,6 +80,7 @@ public class FragmentOrder extends Fragment {
         _floorText = (EditText)root.findViewById(R.id.input_floor);
         _koText = (EditText)root.findViewById(R.id.input_ko);
         _numText = (EditText)root.findViewById(R.id.input_num);
+        _numText.setText(user.getPhone());
         _recText = (EditText)root.findViewById(R.id.input_recnum);
         _descriptionText = (EditText)root.findViewById(R.id.input_description);
         _payView = (TextView)root.findViewById(R.id.view_pay);
@@ -83,10 +88,42 @@ public class FragmentOrder extends Fragment {
 
         _distanceText.setText("5");
         _dayText = (EditText)root.findViewById(R.id.input_day);
+
+        // FIDGET SPINNERS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        _spinnerWeight = (Spinner) root.findViewById(R.id.spinner_weight);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter =
+                ArrayAdapter.createFromResource(
+                        getActivity(),
+                        R.array.weights_array,
+                        android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        _spinnerWeight.setAdapter(adapter);
+
+        _spinnerWeight.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        // An item was selected. You can retrieve the selected item using
+                        // parent.getItemAtPosition(pos)
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // Another interface callback
+                    }
+                }
+        );
+        // End FIDGET ----------------------------------------------------
+
+        // Pickers ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        // setup
         _timeTakeText = (EditText)root.findViewById(R.id.input_time_take);
         _timeBringText = (EditText)root.findViewById(R.id.input_time_bring);
-        // Pickers
-        // setup
+
         setChosenDay();
         _timeTakeText.setText(takeCalendar.get(Calendar.HOUR_OF_DAY)+":"+takeCalendar.get(Calendar.MINUTE));
         _timeBringText.setText(bringCalendar.get(Calendar.HOUR_OF_DAY)+":"+bringCalendar.get(Calendar.MINUTE));
@@ -151,7 +188,7 @@ public class FragmentOrder extends Fragment {
                         bringCalendar.get(Calendar.MINUTE), true).show();
             }
         });
-        // End pickers
+        // End pickers ----------------------------------------------------------
 
         final Button button =
                 (Button) root.findViewById(R.id.btn_order);
@@ -242,13 +279,15 @@ public class FragmentOrder extends Fragment {
         final String rec = _recText.getText().toString();
         final String description = _descriptionText.getText().toString();
         final String payment = formula.calculate(Integer.parseInt(_distanceText.getText().toString())).toString();
+        final String timeTake = _timeTakeText.getText().toString();
+        final String timeBring = _timeBringText.getText().toString();
 
         if (validate(description,from,to,num, ko)) {
             Order order = new Order(
                     user,
                     Order.FROM, from,
                     Order.TO, to,
-                    Order.CODE, cost,
+                    Order.COST, cost,
                     Order.PAYMENT, payment,
                     Order.ENTRANCE, padik,
                     Order.CODE, code,
@@ -257,24 +296,9 @@ public class FragmentOrder extends Fragment {
                     Order.PHONE, num,
                     "recnum", rec,
                     Order.DESCRIPTION, description,
-                    Order.TAKE_TIME, "undefined",
-                    Order.BRING_TIME, "undefined"
+                    Order.TAKE_TIME, timeTake,
+                    Order.BRING_TIME, timeBring
             );
-
-            /* user.order(user.getLogin(),
-                    from,
-                    to,
-                    cost,
-                    payment,
-                    padik,
-                    code,
-                    floor,
-                    ko,
-                    num,
-                    rec,
-                    "",
-                    "",
-                    description); */
 
             order.post(new InternetCallback<Boolean>() {
                 @Override

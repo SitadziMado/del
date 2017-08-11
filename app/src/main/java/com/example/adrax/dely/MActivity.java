@@ -24,11 +24,9 @@ import com.example.adrax.dely.core.Order;
 import com.example.adrax.dely.core.OrderList;
 import com.example.adrax.dely.core.OrderStatus;
 import com.example.adrax.dely.fragments.FragmentAbout;
-import com.example.adrax.dely.fragments.FragmentDeliveriesShow;
 import com.example.adrax.dely.fragments.FragmentFace;
 import com.example.adrax.dely.fragments.FragmentGet;
 import com.example.adrax.dely.fragments.FragmentOrder;
-import com.example.adrax.dely.fragments.FragmentOrderShow;
 
 import static com.example.adrax.dely.LoginActivity.user;
 
@@ -39,8 +37,6 @@ public class MActivity extends AppCompatActivity
     FragmentGet fget;           // Заказы
     // FragmentTools ftools;       // Настройки
     FragmentAbout fabout;       // О нас
-    FragmentDeliveriesShow fdelyshow; // Показ выбранной доставки
-    FragmentOrderShow fordershow; // Показ выбранного заказа
 
     // Fragments keeper
     Fragment mFragmentToSet = null;
@@ -128,8 +124,6 @@ public class MActivity extends AppCompatActivity
         forder = new FragmentOrder();
         fget = new FragmentGet();
         fabout = new FragmentAbout();
-        fdelyshow = new FragmentDeliveriesShow();
-        fordershow = new FragmentOrderShow();
 
         NotificationHelper.createNotification(this, "Del", "Заказ создан.");
 
@@ -312,32 +306,6 @@ public class MActivity extends AppCompatActivity
         transaction.commit();
 
         //fragment_id = 1050;
-        updateData();
-    }
-
-    /**
-     * Для вызова фрагмента доставки из других фрагментов
-     */
-    public void deliveryShowFragment() {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fdelyshow);
-        transaction.addToBackStack(null);
-        transaction.commit();
-
-        //fragment_id = 1050;
-        updateData();
-    }
-
-    /**
-     * Для вызова фрагмента заказа из других фрагментов
-     */
-    public void orderShowFragment() {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fordershow);
-        transaction.addToBackStack(null);
-        transaction.commit();
-
-        //fragment_id = 5010;
         updateData();
     }
 

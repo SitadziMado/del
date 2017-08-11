@@ -76,13 +76,4 @@ public final class LVHolderForFace extends RecyclerView.ViewHolder {
             }
         });
     }
-
-    private void switchFragment() {
-        if (mContext == null)
-            return;
-        if (mContext instanceof MActivity) {
-            MActivity feeds = (MActivity) mContext;
-            feeds.orderShowFragment();
-        }
-    }
 }
