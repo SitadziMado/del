@@ -88,20 +88,6 @@
                 android:hint="Куда доставить? (Адрес)*" />
         </android.support.design.widget.TextInputLayout>
 
-        <!--  Distance Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:visibility="gone">
-            <EditText android:id="@+id/input_distance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="Примерное расстояние" />
-        </android.support.design.widget.TextInputLayout>
-
         <!-- the_day Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -174,6 +160,15 @@
             android:textSize="22sp"
             android:textAlignment="center">
         </TextView>
+
+        <!--  Distance Label -->
+        <TextView android:id="@+id/input_distance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textAlignment="center"
+            android:text = "Расстояние: "
+            />
 
         <!-- order Button -->
         <Button

@@ -17,16 +17,28 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
 import com.example.adrax.dely.delivery.DeliveryFormula;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import static com.example.adrax.dely.LoginActivity.user;
@@ -47,7 +59,7 @@ public class FragmentOrder extends Fragment {
     EditText _numText;
     EditText _recText;
     EditText _descriptionText;
-    EditText _distanceText;
+    TextView _distanceView;
     TextView _payView;
     EditText _dayText;
     EditText _timeTakeText;
@@ -56,6 +68,9 @@ public class FragmentOrder extends Fragment {
     Calendar dayCalendar = Calendar.getInstance();
     Calendar takeCalendar = Calendar.getInstance();
     Calendar bringCalendar = Calendar.getInstance();
+    Button button;
+
+    boolean flagStart = false;
     public FragmentOrder() {
         // Required empty public constructor
     }
@@ -84,9 +99,9 @@ public class FragmentOrder extends Fragment {
         _recText = (EditText)root.findViewById(R.id.input_recnum);
         _descriptionText = (EditText)root.findViewById(R.id.input_description);
         _payView = (TextView)root.findViewById(R.id.view_pay);
-        _distanceText = (EditText)root.findViewById(R.id.input_distance);
+        _distanceView = (TextView) root.findViewById(R.id.input_distance);
 
-        _distanceText.setText("5");
+        _distanceView.setText("5");
         _dayText = (EditText)root.findViewById(R.id.input_day);
 
         // FIDGET SPINNERS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -190,13 +205,14 @@ public class FragmentOrder extends Fragment {
         });
         // End pickers ----------------------------------------------------------
 
-        final Button button =
-                (Button) root.findViewById(R.id.btn_order);
+        button = (Button) root.findViewById(R.id.btn_order);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 buttonClicked();
             }
         });
+
+        button.setText("Рассчитать стоимость");
 
         _fromText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -204,8 +220,8 @@ public class FragmentOrder extends Fragment {
                 if (!hasFocus) {
                     if (!_fromText.getText().toString().equals("") && !_toText.getText().toString().equals("")){
                         DeliveryFormula formula = DeliveryFormula.getInstance();
-                        if (_distanceText.getText().toString().equals("")) _distanceText.setText("0");
-                        String message = "Стоимость заказа: "+formula.calculate(Integer.parseInt(_distanceText.getText().toString())).toString();
+                        if (_distanceView.getText().toString().equals("")) _distanceView.setText("0");
+                        String message = "Стоимость заказа: "+formula.calculate(Integer.parseInt(_distanceView.getText().toString())).toString();
                         _payView.setText(message);
                     }
                 }
@@ -218,8 +234,8 @@ public class FragmentOrder extends Fragment {
                 if (!hasFocus) {
                     if (!_fromText.getText().toString().equals("") && !_toText.getText().toString().equals("")){
                         DeliveryFormula formula = DeliveryFormula.getInstance();
-                        if (_distanceText.getText().toString().equals("")) _distanceText.setText("0");
-                        String message = "Стоимость заказа: "+formula.calculate(Integer.parseInt(_distanceText.getText().toString())).toString();
+                        if (_distanceView.getText().toString().equals("")) _distanceView.setText("0");
+                        String message = "Стоимость заказа: "+formula.calculate(Integer.parseInt(_distanceView.getText().toString())).toString();
                         _payView.setText(message);
                     }
 
@@ -228,13 +244,13 @@ public class FragmentOrder extends Fragment {
         });
 
 
-        _distanceText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        _distanceView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                         DeliveryFormula formula = DeliveryFormula.getInstance();
-                        if (_distanceText.getText().toString().equals("")) _distanceText.setText("0");
-                        String message = "Стоимость заказа: "+formula.calculate(Integer.parseInt(_distanceText.getText().toString())).toString();
+                        if (_distanceView.getText().toString().equals("")) _distanceView.setText("0");
+                        String message = "Стоимость заказа: "+formula.calculate(Integer.parseInt(_distanceView.getText().toString())).toString();
                         _payView.setText(message);
                 }
             }
@@ -261,11 +277,137 @@ public class FragmentOrder extends Fragment {
         _dayText.setText(sdf.format(dayCalendar.getTime()));
     }
 
+    public void HuyakGoogleRequest(){
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        String url = null;
+        try {
+            url = String.format("https://maps.googleapis.com/maps/api/directions/json?" +
+                    "origin=%1$s&" +
+                    "destination=%2$s&" +
+                    "mode=driving&" +
+                    "language=ru&" +
+                    "unit=metric&" +
+                    "region=ru&" +
+                    "key=AIzaSyCOn2sDKTCQfGZfT3QTO99snxEikwrZkQ4", URLEncoder.encode("Пермь,"+_fromText.getText().toString(),"UTF-8"), URLEncoder.encode("Пермь,"+_toText.getText().toString(),"UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        // Request a string response from the provided URL.
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            //response.getJSONObject("routes").getJSONObject("legs").getJSONObject("distance").getString("value");
+                            _distanceView.setText(response.getJSONArray("routes").getJSONObject(0)
+                                    .getJSONArray("legs").getJSONObject(0)
+                                    .getJSONObject("distance").getString("value"));
+                            flagStart = true;
+                        }
+                        catch ( Exception e){
+                            _distanceView.setText("Error: "+e.toString());//"Мы не можем найти указанные адреса");
+                            flagStart = false;
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                _payView.setText("Error: "+error.toString());
+                flagStart = false;
+            }
+        });
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+    // ToDo: Do something with this high quality code below
+
+    ArrayList<ArrayList<String>> price_list = new ArrayList<ArrayList<String>>();
+
+    public void HuyakArray(){
+        ArrayList<String> list =  new ArrayList<String>();
+        list.add("50");
+        list.add("90");
+        list.add("170");
+        list.add("270");
+        list.add("420");
+        price_list.add(list);
+        list =  new ArrayList<String>();
+        list.add("60");
+        list.add("100");
+        list.add("180");
+        list.add("290");
+        list.add("430");
+        price_list.add(list);
+        list =  new ArrayList<String>();
+        list.add("70");
+        list.add("110");
+        list.add("190");
+        list.add("310");
+        list.add("450");
+        price_list.add(list);
+        list =  new ArrayList<String>();
+        list.add("80");
+        list.add("130");
+        list.add("210");
+        list.add("330");
+        list.add("480");
+        price_list.add(list);
+        list =  new ArrayList<String>();
+        list.add("100");
+        list.add("150");
+        list.add("230");
+        list.add("350");
+        list.add("500");
+        price_list.add(list);
+    }
+
+            /*[[50, 90, 170, 270, 420],
+            [60, 100, 180, 290, 430],
+            [70, 110, 190, 310, 450],
+            [80, 130, 210, 330, 480],
+            [100, 150, 230, 350, 500]]
+            */
+
+    // Считает деньги по формуле
+    public String Cash()
+    {
+        int mass = Integer.parseInt(_spinnerWeight.getSelectedItem().toString().substring(3,_spinnerWeight.getSelectedItem().toString().lastIndexOf("г")));
+        int length = Integer.parseInt(_distanceView.getText().toString());
+        HuyakArray();
+        int y;
+        int x;
+             if  (mass <= 500) y = 0;
+        else if (mass <=  1000 ) y = 1;
+        else if (mass <=  2000 ) y = 2;
+        else if (mass <=  5000 ) y = 3;
+        else y = 4;
+
+             if (length <= 5000 ) x = 0;
+        else if (length <= 10000) x = 1;
+        else if (length <= 15000) x = 2;
+        else if (length <= 20000) x = 3;
+        else x = 4;
+
+        return price_list.get(x).get(y);
+    }
+
     // Отправка формы на сервер
-    public void buttonClicked () {
+    public int buttonClicked () {
+
+        // ХХДД
+
+        if (!flagStart) {
+            HuyakGoogleRequest(); // Узнаём расстояние и флаг
+            if (flagStart) button.setText("Создать заказ");
+            _payView.setText(Cash());
+            return 0;
+        }
+        //-----
         // Говнище
-        DeliveryFormula formula = DeliveryFormula.getInstance();
-        if (_distanceText.getText().toString().equals("")) _distanceText.setText("0");
+        //DeliveryFormula formula = DeliveryFormula.getInstance();
+        //if (_distanceView.getText().toString().equals("")) _distanceView.setText("0");
         //--------
 
         final String from = _fromText.getText().toString();
@@ -278,9 +420,10 @@ public class FragmentOrder extends Fragment {
         final String num = _numText.getText().toString();
         final String rec = _recText.getText().toString();
         final String description = _descriptionText.getText().toString();
-        final String payment = formula.calculate(Integer.parseInt(_distanceText.getText().toString())).toString();
+        final String payment = _payView.getText().toString(); //formula.calculate(Integer.parseInt(_distanceView.getText().toString())).toString();
         final String timeTake = _timeTakeText.getText().toString();
         final String timeBring = _timeBringText.getText().toString();
+        final String weight = _spinnerWeight.getSelectedItem().toString().substring(3,_spinnerWeight.getSelectedItem().toString().lastIndexOf("г"));
 
         if (validate(description,from,to,num, ko)) {
             Order order = new Order(
@@ -295,6 +438,7 @@ public class FragmentOrder extends Fragment {
                     Order.ROOM, ko,
                     Order.PHONE, num,
                     "recnum", rec,
+                    Order.WEIGHT, weight,
                     Order.DESCRIPTION, description,
                     Order.TAKE_TIME, timeTake,
                     Order.BRING_TIME, timeBring
@@ -324,8 +468,8 @@ public class FragmentOrder extends Fragment {
                         _numText.setText("");
                         _recText.setText("");
                         _descriptionText.setText("");
-                        _distanceText.setText("5");
-                        _payView.setText("Стоимость заказа: ");
+                        _distanceView.setText("Расстояние: ");
+                        _payView.setText("Оплата: ");
                     } else {
                         Toast.makeText(
                                 getActivity(),
@@ -337,7 +481,10 @@ public class FragmentOrder extends Fragment {
                 }
             });
 
+            button.setText("Рассчитать стоимость");
+
         }
+        return 0;
     }
 
     // Проверка данных формы
