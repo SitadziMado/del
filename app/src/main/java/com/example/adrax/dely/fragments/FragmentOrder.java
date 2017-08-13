@@ -2,6 +2,9 @@ package com.example.adrax.dely.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,14 +25,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
 import com.example.adrax.dely.delivery.DeliveryFormula;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -44,9 +45,8 @@ import java.util.Locale;
 import static com.example.adrax.dely.LoginActivity.user;
 import static com.example.adrax.dely.MActivity.updateOrders;
 import static com.example.adrax.dely.MActivity.updateFace;
-import static com.example.adrax.dely.MActivity.waitingForCourier;
 
-
+//implements NoticeDialogFragment.NoticeDialogListener
 public class FragmentOrder extends Fragment {
 
     EditText _fromText;
@@ -69,6 +69,10 @@ public class FragmentOrder extends Fragment {
     Calendar takeCalendar = Calendar.getInstance();
     Calendar bringCalendar = Calendar.getInstance();
     Button button;
+
+    String money = "";
+    String distance = "";
+    String weight_ = "500";
 
     boolean flagStart = false;
     public FragmentOrder() {
@@ -123,7 +127,8 @@ public class FragmentOrder extends Fragment {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         // An item was selected. You can retrieve the selected item using
                         // parent.getItemAtPosition(pos)
-
+                        weight_ = _spinnerWeight.getSelectedItem().toString().substring(3,_spinnerWeight.getSelectedItem().toString().lastIndexOf("г"));
+                        if (weight_.length()<3) weight_+="000";
                     }
 
                     @Override
@@ -212,50 +217,6 @@ public class FragmentOrder extends Fragment {
             }
         });
 
-        button.setText("Рассчитать стоимость");
-
-        _fromText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (!_fromText.getText().toString().equals("") && !_toText.getText().toString().equals("")){
-                        DeliveryFormula formula = DeliveryFormula.getInstance();
-                        if (_distanceView.getText().toString().equals("")) _distanceView.setText("0");
-                        String message = "Стоимость заказа: "+formula.calculate(Integer.parseInt(_distanceView.getText().toString())).toString();
-                        _payView.setText(message);
-                    }
-                }
-            }
-        });
-
-        _toText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (!_fromText.getText().toString().equals("") && !_toText.getText().toString().equals("")){
-                        DeliveryFormula formula = DeliveryFormula.getInstance();
-                        if (_distanceView.getText().toString().equals("")) _distanceView.setText("0");
-                        String message = "Стоимость заказа: "+formula.calculate(Integer.parseInt(_distanceView.getText().toString())).toString();
-                        _payView.setText(message);
-                    }
-
-                }
-            }
-        });
-
-
-        _distanceView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                        DeliveryFormula formula = DeliveryFormula.getInstance();
-                        if (_distanceView.getText().toString().equals("")) _distanceView.setText("0");
-                        String message = "Стоимость заказа: "+formula.calculate(Integer.parseInt(_distanceView.getText().toString())).toString();
-                        _payView.setText(message);
-                }
-            }
-        });
-
         return root;
     }
 
@@ -277,6 +238,7 @@ public class FragmentOrder extends Fragment {
         _dayText.setText(sdf.format(dayCalendar.getTime()));
     }
 
+    // Get запрос к гуглу, получение дистанции
     public void HuyakGoogleRequest(){
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(getActivity());
@@ -300,12 +262,14 @@ public class FragmentOrder extends Fragment {
                     public void onResponse(JSONObject response) {
                         try {
                             //response.getJSONObject("routes").getJSONObject("legs").getJSONObject("distance").getString("value");
-                            _distanceView.setText(response.getJSONArray("routes").getJSONObject(0)
+                            distance = response.getJSONArray("routes").getJSONObject(0)
                                     .getJSONArray("legs").getJSONObject(0)
-                                    .getJSONObject("distance").getString("value"));
+                                    .getJSONObject("distance").getString("value");
+                            _distanceView.setText(distance + "м");
                             flagStart = true;
                         }
                         catch ( Exception e){
+                            // ToDo: заменить на уведомления об ошибке
                             _distanceView.setText("Error: "+e.toString());//"Мы не можем найти указанные адреса");
                             flagStart = false;
                         }
@@ -313,11 +277,12 @@ public class FragmentOrder extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                // ToDo: заменить на уведомления об ошибке
                 _payView.setText("Error: "+error.toString());
                 flagStart = false;
             }
         });
-// Add the request to the RequestQueue.
+        // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
 
@@ -325,6 +290,7 @@ public class FragmentOrder extends Fragment {
 
     ArrayList<ArrayList<String>> price_list = new ArrayList<ArrayList<String>>();
 
+    // Билдер коллекции цен
     public void HuyakArray(){
         ArrayList<String> list =  new ArrayList<String>();
         list.add("50");
@@ -373,8 +339,8 @@ public class FragmentOrder extends Fragment {
     // Считает деньги по формуле
     public String Cash()
     {
-        int mass = Integer.parseInt(_spinnerWeight.getSelectedItem().toString().substring(3,_spinnerWeight.getSelectedItem().toString().lastIndexOf("г")));
-        int length = Integer.parseInt(_distanceView.getText().toString());
+        int mass = Integer.parseInt(weight_);
+        int length = Integer.parseInt(distance);
         HuyakArray();
         int y;
         int x;
@@ -390,26 +356,47 @@ public class FragmentOrder extends Fragment {
         else if (length <= 20000) x = 3;
         else x = 4;
 
+        money = price_list.get(x).get(y);
+
         return price_list.get(x).get(y);
     }
 
-    // Отправка формы на сервер
-    public int buttonClicked () {
+    // Призыв даилога
+    public void buttonClicked () {
 
         // ХХДД
+        HuyakGoogleRequest(); // Узнаём расстояние и флаг
+        if (flagStart) {
+            _payView.setText(Cash() + "руб.");
 
-        if (!flagStart) {
-            HuyakGoogleRequest(); // Узнаём расстояние и флаг
-            if (flagStart) button.setText("Создать заказ");
-            _payView.setText(Cash());
-            return 0;
+            OrderDialog orderDialog = new OrderDialog();
+            Bundle args = new Bundle();
+            args.putString("money", money);
+            args.putString("timeTake", _timeTakeText.getText().toString());
+            args.putString("timeBring", _timeBringText.getText().toString());
+            args.putString("from", _fromText.getText().toString());
+            args.putString("to", _toText.getText().toString());
+            args.putString("number", _numText.getText().toString());
+            args.putString("description", _descriptionText.getText().toString());
+            args.putString("cost", _costText.getText().toString());
+            args.putString("weight", weight_);
+            args.putString("day",_dayText.getText().toString());
+            orderDialog.setArguments(args);
+            orderDialog.setTargetFragment(this, 0);
+            orderDialog.show(getFragmentManager(), "OrderDialog");
+            flagStart = false;
         }
-        //-----
-        // Говнище
-        //DeliveryFormula formula = DeliveryFormula.getInstance();
-        //if (_distanceView.getText().toString().equals("")) _distanceView.setText("0");
-        //--------
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+            SendOrder();
+    }
+
+    // Отправка формы на сервер
+    public void  SendOrder()
+    {
         final String from = _fromText.getText().toString();
         final String to = _toText.getText().toString();
         final String cost = _costText.getText().toString();
@@ -420,10 +407,10 @@ public class FragmentOrder extends Fragment {
         final String num = _numText.getText().toString();
         final String rec = _recText.getText().toString();
         final String description = _descriptionText.getText().toString();
-        final String payment = _payView.getText().toString(); //formula.calculate(Integer.parseInt(_distanceView.getText().toString())).toString();
+        final String payment = money;
         final String timeTake = _timeTakeText.getText().toString();
         final String timeBring = _timeBringText.getText().toString();
-        final String weight = _spinnerWeight.getSelectedItem().toString().substring(3,_spinnerWeight.getSelectedItem().toString().lastIndexOf("г"));
+        final String weight = weight_;
 
         if (validate(description,from,to,num, ko)) {
             Order order = new Order(
@@ -449,7 +436,6 @@ public class FragmentOrder extends Fragment {
                 public void call(Boolean result) {
                     if (result) {
                         updateOrders();
-                        waitingForCourier(); //#UpdateTimerRun
                         updateFace();
 
                         Toast.makeText(
@@ -480,11 +466,7 @@ public class FragmentOrder extends Fragment {
                     }
                 }
             });
-
-            button.setText("Рассчитать стоимость");
-
         }
-        return 0;
     }
 
     // Проверка данных формы

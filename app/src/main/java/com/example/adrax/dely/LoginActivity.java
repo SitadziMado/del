@@ -258,10 +258,14 @@ public class LoginActivity extends AppCompatActivity {
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            finish();
+            acct.getEmail();
+            acct.getIdToken();
+            // Запускаем МАктивити
+            /*finish();
             Intent myIntent;
             myIntent = new Intent(LoginActivity.this, MActivity.class);
             LoginActivity.this.startActivity(myIntent);
+            */
             //mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             //updateUI(true);
         } else {

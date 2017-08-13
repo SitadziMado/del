@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -27,11 +28,13 @@ import com.example.adrax.dely.fragments.FragmentAbout;
 import com.example.adrax.dely.fragments.FragmentFace;
 import com.example.adrax.dely.fragments.FragmentGet;
 import com.example.adrax.dely.fragments.FragmentOrder;
+import com.example.adrax.dely.fragments.OrderDialog;
 
 import static com.example.adrax.dely.LoginActivity.user;
 
+
 public class MActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
     FragmentFace fface;         // Страница аккаунта
     FragmentOrder forder;       // Страница заказа
     FragmentGet fget;           // Заказы
@@ -44,7 +47,6 @@ public class MActivity extends AppCompatActivity
     boolean addToStack = false;
 
     boolean is_update = false;
-    static UpdateTimer updateTimer;
 
     //static FragmentTransaction fTrans;
     public static int fragment_id = -1;
@@ -125,7 +127,8 @@ public class MActivity extends AppCompatActivity
         fget = new FragmentGet();
         fabout = new FragmentAbout();
 
-        NotificationHelper.createNotification(this, "Del", "Заказ создан.");
+        // Уведомление
+        //NotificationHelper.createNotification(this, "Del", "Заказ создан.");
 
         // загружаем заказы/доставки
         updateOrders();
@@ -134,10 +137,6 @@ public class MActivity extends AppCompatActivity
         transaction.replace(R.id.container, fface);
         transaction.commit();
 
-        // Timer
-        //5min, 1min / update every 1min
-        //updateTimer = new UpdateTimer(300000, 15000, this);
-        //updateTimer.disable(); // Turn off for now
         this_context = getApplicationContext();
 
         // Фрагмент сначала: face.
@@ -175,17 +174,6 @@ public class MActivity extends AppCompatActivity
         });
     }
 
-    /**
-     * Запрос обновлений с сервера
-     * @return
-     */
-    public boolean updateData() {
-        //#ServerRequest
-        //if (курьер появился)
-        //updateTime.disable();
-        return false;
-    }
-
     public void updateUserData() {
         user.syncInfo(new InternetCallback<Boolean>() {
             @Override
@@ -193,17 +181,6 @@ public class MActivity extends AppCompatActivity
                 // Сделай что-то с результатом.
             }
         });
-    }
-
-    /**
-     * Запускает процесс ожидания начала доставки
-     */
-    public static void waitingForCourier() {
-
-    }
-
-    public static void stopWaiting() {
-
     }
 
     /**
@@ -306,7 +283,7 @@ public class MActivity extends AppCompatActivity
         transaction.commit();
 
         //fragment_id = 1050;
-        updateData();
+        //updateData();
     }
 
     /**
@@ -338,7 +315,7 @@ public class MActivity extends AppCompatActivity
             mFragmentToSet = forder;
         } else if (id == R.id.frag_get_id) {
             mFragmentToSet = fget;
-            updateData(); //#updateData
+            //updateData();
         } else if (id == R.id.frag_tools_id) {
             //mFragmentToSet = ftools;
             Intent i = new Intent(MActivity.this, ProfileActivity.class);
