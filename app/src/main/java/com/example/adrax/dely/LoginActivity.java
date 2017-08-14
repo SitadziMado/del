@@ -12,11 +12,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.LogHelper;
 import com.example.adrax.dely.core.User;
-import com.example.adrax.dely.delivery.DeliveryUser;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -57,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        // ToDo: запрос на валидность хэша (if (valid) onLiginSuccess;)
         if (user != null) {
             onLoginSuccess();
         }
@@ -118,6 +118,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    // ToDo: хранить hash
     public void login() {
         LogHelper.verbose("Login");
 
@@ -192,7 +193,7 @@ public class LoginActivity extends AppCompatActivity {
         return valid;
     }
 
-    // Google
+    // Google ---------------------------------------------------------------------------------
 
     // Выбор аккаунта гугл
     private void signIn() {

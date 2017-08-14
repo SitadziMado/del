@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -113,8 +112,8 @@
         android:layout_width="wrap_content"
         android:layout_height="37dp"
         android:layout_marginTop="16dp"
-        android:background="@color/colorAccent"
-        android:textColor="@color/white"
+        android:background="@color/white"
+        android:textColor="@color/colorAccent"
         android:textOff="Подробнее"
         android:textOn="Кратко"
         app:layout_constraintHorizontal_bias="0.11"
@@ -125,8 +124,8 @@
         android:id="@+id/btnStartDely"
         android:layout_width="102dp"
         android:layout_height="37dp"
-        android:background="@color/colorAccent"
-        android:textColor="@color/white"
+        android:background="@color/white"
+        android:textColor="@color/colorAccent"
         android:text="Доставить"
         app:layout_constraintBaseline_toBaselineOf="@+id/btnExpandItem"
         app:layout_constraintRight_toRightOf="@+id/tvTimeBring" />

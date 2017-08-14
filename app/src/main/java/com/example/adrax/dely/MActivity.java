@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -20,7 +19,6 @@ import android.widget.Toast;
 
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.LogHelper;
-import com.example.adrax.dely.core.NotificationHelper;
 import com.example.adrax.dely.core.Order;
 import com.example.adrax.dely.core.OrderList;
 import com.example.adrax.dely.core.OrderStatus;
@@ -28,7 +26,6 @@ import com.example.adrax.dely.fragments.FragmentAbout;
 import com.example.adrax.dely.fragments.FragmentFace;
 import com.example.adrax.dely.fragments.FragmentGet;
 import com.example.adrax.dely.fragments.FragmentOrder;
-import com.example.adrax.dely.fragments.OrderDialog;
 
 import static com.example.adrax.dely.LoginActivity.user;
 
@@ -209,14 +206,11 @@ public class MActivity extends AppCompatActivity
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        if (drawer.isDrawerOpen(GravityCompat.START)) {                                                 // Close NavBar if it opened
+        if (drawer.isDrawerOpen(GravityCompat.START)) {   // Close NavBar if it opened
             drawer.closeDrawer(GravityCompat.START);
-        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {                                 // Clean stack of fragments
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) // Clean stack of fragments
             getSupportFragmentManager().popBackStack();
-        } else if (!drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.openDrawer(GravityCompat.START);   // Open NavBar if it closed
-        }
-        // super.onBackPressed();
+        else finish();
     }
 
     /**

@@ -1,8 +1,8 @@
 package com.example.adrax.dely.fragments;
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,13 +18,10 @@ import android.widget.Toast;
 import com.example.adrax.dely.MActivity;
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.InternetCallback;
-import com.example.adrax.dely.core.OrderList;
 import com.example.adrax.dely.core.OrderStatus;
 
-import static com.example.adrax.dely.LoginActivity.user;
 import static com.example.adrax.dely.MActivity.face_deliver_text;
 import static com.example.adrax.dely.MActivity.face_delivery;
-import static com.example.adrax.dely.MActivity.face_orders;
 import static com.example.adrax.dely.MActivity.updateFace;
 
 
@@ -79,10 +76,6 @@ public class FragmentFace extends Fragment {
         ts.setIndicator("История");
         face_tab.addTab(ts);
         face_tab.getTabWidget().getChildAt(2).setVisibility(View.GONE);
-        // Inflate the layout for this fragment
-
-        //обновляем заказы/доставки
-        // updateFace();
 
         // Code
         text_code = (EditText) root.findViewById(R.id.text_code);
@@ -104,8 +97,6 @@ public class FragmentFace extends Fragment {
                                     "Доставка завершена!",
                                     Toast.LENGTH_LONG
                             ).show();
-
-                            face_deliver_text_view.append("\n Дождитесь подтверждения заказчика.");
                         } else {
                             Toast.makeText(
                                     getActivity(),
@@ -121,10 +112,12 @@ public class FragmentFace extends Fragment {
                                     case DELIVERY_DONE:
                                     case DELIVERED:
                                         btn_finish.setVisibility(View.GONE);
+                                        text_code.setVisibility(View.GONE);
+                                        face_deliver_text_view.setText("Готово");
                                         break;
-
                                     default:
                                         btn_finish.setVisibility(View.VISIBLE);
+                                        text_code.setVisibility(View.VISIBLE);
                                         break;
                                 }
                             }

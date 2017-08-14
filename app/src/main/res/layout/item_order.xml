@@ -68,13 +68,13 @@
         android:text="З/П"
         android:textSize="18sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/tvDescription"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="7dp" />
 
     <TextView
         android:id="@+id/tvCustomer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="Заказчик"
         android:textSize="18sp"
         android:visibility="gone"
@@ -86,8 +86,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="1dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="Телефон"
         android:textSize="18sp"
         android:visibility="gone"
@@ -99,8 +97,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="1dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="ЭЭЭ"
         android:textSize="18sp"
         android:visibility="gone"
@@ -109,11 +105,11 @@
 
     <ToggleButton
         android:id="@+id/btnExpandItem"
-        android:layout_width="match_parent"
-        android:layout_height="37dp"
+        android:layout_width="368dp"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
-        android:background="@color/colorAccent"
-        android:textColor="@color/white"
+        android:background="@color/white"
+        android:textColor="@color/colorAccent"
         android:textOff="Подробнее"
         android:textOn="Кратко"
         app:layout_constraintHorizontal_bias="0.11"
