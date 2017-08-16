@@ -142,6 +142,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
                 Order.DESCRIPTION, getStringProp(Order.DESCRIPTION),
                 Order.TAKE_TIME, getStringProp(Order.TAKE_TIME),
                 Order.BRING_TIME, getStringProp(Order.BRING_TIME),
+                Order.DISTANCE, getStringProp(Order.DISTANCE),
                 HASH, ((User)getProp(PARENT)).getHash(),
                 // Order.ROOM, getStringProp(Order.ROOM),
                 "recnum", "undefined"
@@ -340,6 +341,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
     public static final String PARENT = "parent";
     public static final String TAKE_TIME = "take_time";
     public static final String BRING_TIME = "bring_time";
+    public static final String DISTANCE = "distance";
 
     private OrderStatus m_orderStatus;
 }

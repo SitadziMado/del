@@ -35,7 +35,6 @@ public class MActivity extends AppCompatActivity
     FragmentFace fface;         // Страница аккаунта
     FragmentOrder forder;       // Страница заказа
     FragmentGet fget;           // Заказы
-    // FragmentTools ftools;       // Настройки
     FragmentAbout fabout;       // О нас
 
     // Fragments keeper
@@ -43,12 +42,11 @@ public class MActivity extends AppCompatActivity
 
     boolean addToStack = false;
 
-    boolean is_update = false;
-
     //static FragmentTransaction fTrans;
     public static int fragment_id = -1;
 
     public static OrderList orders = new OrderList();
+    public static OrderList sorted_orders = new OrderList();
     public static OrderList face_orders = new OrderList();
     public static Order face_delivery = null;
 
@@ -166,6 +164,7 @@ public class MActivity extends AppCompatActivity
             public void call(OrderList result) {
                 synchronized (ordersLock) {
                     orders = result;
+                    sorted_orders = orders;
                 }
             }
         });

@@ -1,25 +1,23 @@
 package com.example.adrax.dely.fragments;
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
-import com.example.adrax.dely.core.InternetCallback;
-import com.example.adrax.dely.core.Order;
 import com.example.adrax.dely.R;
-import com.example.adrax.dely.core.OrderList;
+import com.example.adrax.dely.core.Order;
 
-import java.util.ArrayList;
-
-import static com.example.adrax.dely.LoginActivity.user;
 import static com.example.adrax.dely.MActivity.orders;
-
+import static com.example.adrax.dely.MActivity.sorted_orders;
 
 public class FragmentGet extends Fragment {
     //Объявляем RecyclerView
@@ -28,6 +26,7 @@ public class FragmentGet extends Fragment {
     //Объявляем адаптер
     AdapterForGet adapterForGet;
 
+    Spinner _spinnerSort;
     Context mContext;
 
     public static final Object ordersLock = new Object();
@@ -47,6 +46,55 @@ public class FragmentGet extends Fragment {
         mContext = this.getActivity();
         View root = inflater.inflate(R.layout.fragment_get, container, false);
 
+        sorted_orders = orders; // Copy...
+
+
+        // FIDGET SPINNERS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        _spinnerSort = (Spinner) root.findViewById(R.id.spinner_sort);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        final ArrayAdapter<CharSequence> adapter =
+                ArrayAdapter.createFromResource(
+                        getActivity(),
+                        R.array.sort_array,
+                        R.layout.item_spinner);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        _spinnerSort.setAdapter(adapter);
+
+        _spinnerSort.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        // An item was selected. You can retrieve the selected item using
+                        // parent.getItemAtPosition(pos)
+                       switch (position){
+                           case 0: // Расстояние
+                               sorted_orders.sortBy(Order.DISTANCE);
+                               break;
+                           case 1:  // Оплата
+                               sorted_orders.sortBy(Order.PAYMENT);
+                               break;
+                           case 2:  // Вес
+                               sorted_orders.sortBy(Order.WEIGHT);
+                               break;
+                           case 3:  // Вес
+                               sorted_orders.sortBy(Order.COST);
+                               break;
+                           default:
+                               break;
+                       }
+                        update(mContext);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // Another interface callback
+                    }
+                }
+        );
+        // End FIDGET ----------------------------------------------------
+
             //RecyclerView
         //Привязываем RecyclerView к элементу
         rvMain = (RecyclerView)root.findViewById(R.id.delys_list);
@@ -54,21 +102,20 @@ public class FragmentGet extends Fragment {
         //И установим LayoutManager
         rvMain.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        //свистелки-перделки
+        // свистелки-перделки
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvMain.getContext(),
                 llm.getOrientation());
         rvMain.addItemDecoration(dividerItemDecoration);
 
-        //Создаём адаптер
+        // Создаём адаптер
         adapterForGet = new AdapterForGet(mContext);
 
-        //Применим наш адаптер к RecyclerView
+        // Применим наш адаптер к RecyclerView
         rvMain.setAdapter(adapterForGet);
 
         // Inflate the layout for this fragment
         return root;
-
     }
 
     public void update(Context myContext) {

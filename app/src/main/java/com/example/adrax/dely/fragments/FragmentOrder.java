@@ -3,10 +3,8 @@ package com.example.adrax.dely.fragments;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +27,6 @@ import com.android.volley.toolbox.Volley;
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
-import com.example.adrax.dely.delivery.DeliveryFormula;
 
 import org.json.JSONObject;
 
@@ -43,8 +40,8 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import static com.example.adrax.dely.LoginActivity.user;
-import static com.example.adrax.dely.MActivity.updateOrders;
 import static com.example.adrax.dely.MActivity.updateFace;
+import static com.example.adrax.dely.MActivity.updateOrders;
 
 //implements NoticeDialogFragment.NoticeDialogListener
 public class FragmentOrder extends Fragment {
@@ -115,7 +112,7 @@ public class FragmentOrder extends Fragment {
                 ArrayAdapter.createFromResource(
                         getActivity(),
                         R.array.weights_array,
-                        android.R.layout.simple_spinner_item);
+                        R.layout.item_spinner);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner

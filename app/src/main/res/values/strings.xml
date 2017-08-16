@@ -21,6 +21,13 @@
         <item>до 10кг </item>
     </string-array>
 
+    <string-array name="sort_array">
+        <item>по расстоянию</item>
+        <item>по оплате</item>
+        <item>по весу</item>
+        <item>по залогу</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="text_about_fragment">Копырин Максим Викторович\n
 Должность: Генеральный деректор\n

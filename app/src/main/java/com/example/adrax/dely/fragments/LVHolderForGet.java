@@ -10,16 +10,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.example.adrax.dely.MActivity;
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
 
 import static com.example.adrax.dely.LoginActivity.user;
-import static com.example.adrax.dely.MActivity.delyDescription;
 import static com.example.adrax.dely.MActivity.face_delivery;
 import static com.example.adrax.dely.MActivity.orders;
-import static com.example.adrax.dely.MActivity.selected_id;
 import static com.example.adrax.dely.MActivity.updateFace;
 import static com.example.adrax.dely.MActivity.updateOrders;
 
@@ -35,6 +32,7 @@ public final class LVHolderForGet extends RecyclerView.ViewHolder {
     TextView tvDescription;
     TextView tvTimeTake;
     TextView tvTimeBring;
+    TextView tvDistance;
     //LinearLayout Item;
     ConstraintLayout item;
     ToggleButton btnExpandItem;
@@ -47,6 +45,7 @@ public final class LVHolderForGet extends RecyclerView.ViewHolder {
         mContext = context;
         //привязываем элементы к полям
         tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
+        tvDistance = (TextView) itemView.findViewById(R.id.tvDistance);
         tvFrom = (TextView) itemView.findViewById(R.id.tvFrom);
         tvTo = (TextView) itemView.findViewById(R.id.tvTo);
         tvCustomer = (TextView) itemView.findViewById(R.id.tvCustomer);

@@ -4,26 +4,11 @@ import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.example.adrax.dely.MActivity;
 import com.example.adrax.dely.R;
-import com.example.adrax.dely.core.InternetCallback;
-import com.example.adrax.dely.core.Order;
-
-import static com.example.adrax.dely.LoginActivity.user;
-import static com.example.adrax.dely.MActivity.face_cur_order_text;
-import static com.example.adrax.dely.MActivity.face_delivery;
-import static com.example.adrax.dely.MActivity.face_orders;
-import static com.example.adrax.dely.MActivity.orders;
-import static com.example.adrax.dely.MActivity.selected_id;
-import static com.example.adrax.dely.MActivity.updateFace;
-import static com.example.adrax.dely.MActivity.updateOrders;
 
 public final class LVHolderForFace extends RecyclerView.ViewHolder {
     //объявим поля, созданные в файле интерфейса itemView.xml
@@ -37,6 +22,7 @@ public final class LVHolderForFace extends RecyclerView.ViewHolder {
     TextView tvDescription;
     TextView tvTimeTake;
     TextView tvTimeBring;
+    TextView tvDistance;
     ConstraintLayout item;
     ToggleButton btnExpandItem;
     private Context mContext;
@@ -49,6 +35,7 @@ public final class LVHolderForFace extends RecyclerView.ViewHolder {
 
         //привязываем элементы к полям
         tvDescription = (TextView)itemView.findViewById(R.id.tvDescription);
+        tvDistance = (TextView) itemView.findViewById(R.id.tvDistance);
         tvFrom = (TextView)itemView.findViewById(R.id.tvFrom);
         tvTo = (TextView)itemView.findViewById(R.id.tvTo);
         tvCustomer = (TextView)itemView.findViewById(R.id.tvCustomer);

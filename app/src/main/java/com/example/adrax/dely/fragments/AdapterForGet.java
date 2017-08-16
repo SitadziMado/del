@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.Order;
 
-import static com.example.adrax.dely.MActivity.orders;
+import static com.example.adrax.dely.MActivity.sorted_orders;
 
 /**
  * Created by adrax on 30.10.16.
@@ -29,9 +29,9 @@ public class AdapterForGet extends RecyclerView.Adapter<LVHolderForGet> {
         newViewHolder.setIsRecyclable(false);
 
         //Заполняем поля viewHolder'а данными из элемента набора данных
-        if (!orders.isEmpty()) {
+        if (!sorted_orders.isEmpty()) {
             //Получаем элемент набора данных для заполнения
-            Order cur = orders.get(i);
+            Order cur = sorted_orders.get(i);
 
             newViewHolder.tvDescription.setText(cur.getStringProp(Order.DESCRIPTION));
             newViewHolder.tvFrom.setText("От: " + cur.getStringProp(Order.FROM));
@@ -43,6 +43,7 @@ public class AdapterForGet extends RecyclerView.Adapter<LVHolderForGet> {
             newViewHolder.tvPhoneNumber.setText("Номер телефона: " + cur.getStringProp(Order.PHONE));
             newViewHolder.tvCost.setText("Аванс: " + cur.getStringProp(Order.COST));
             newViewHolder.tvPayment.setText(cur.getStringProp(Order.PAYMENT) + "руб.");
+            newViewHolder.tvDistance.setText(cur.getStringProp(Order.DISTANCE) + "м");
         } else {
             // ToDo: Show picture of emptiness
         }
@@ -60,6 +61,6 @@ public class AdapterForGet extends RecyclerView.Adapter<LVHolderForGet> {
     // количество элементов списка
     @Override
     public int getItemCount(){
-        return orders.size();
+        return sorted_orders.size();
     }
 }

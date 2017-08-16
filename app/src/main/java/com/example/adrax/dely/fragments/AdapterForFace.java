@@ -43,6 +43,7 @@ public class AdapterForFace extends RecyclerView.Adapter<LVHolderForFace> {
             newViewHolder.tvPhoneNumber.setText("Номер телефона: " + cur.getStringProp(Order.PHONE));
             newViewHolder.tvCost.setText("Аванс: " + cur.getStringProp(Order.COST));
             newViewHolder.tvPayment.setText(cur.getStringProp(Order.PAYMENT) + "руб.");
+            newViewHolder.tvDistance.setText(cur.getStringProp(Order.DISTANCE) + "м");
         } else {
             // ToDo: Show picture of emptiness
         }
