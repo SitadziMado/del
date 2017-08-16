@@ -1,19 +1,14 @@
 package com.example.adrax.dely.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.adrax.dely.R;
@@ -74,6 +69,7 @@ public class OrderDialog extends DialogFragment {
         numText = (TextView) content.findViewById(R.id.tvPhoneNumber);
 
         builder.setView(content)
+                .setTitle("Подтвердите заказ")
                 .setPositiveButton("Создать", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         getTargetFragment().onActivityResult(getTargetRequestCode(),1, new Intent("done"));

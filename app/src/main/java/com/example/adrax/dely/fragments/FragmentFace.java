@@ -1,6 +1,7 @@
 package com.example.adrax.dely.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -31,6 +32,8 @@ public class FragmentFace extends Fragment {
     public TextView face_deliver_text_view;
     public Button btn_finish;
     public EditText text_code;
+
+    int REQUEST_CODE = 0;
 
     //Объявляем RecyclerView
     RecyclerView rvMain;
@@ -88,6 +91,7 @@ public class FragmentFace extends Fragment {
             {
                 //if(user.orderStart(selected_id))
                 // user.orderFinish(Integer.parseInt(face_delivery.getId()));
+                //RunFeedbackDialog();
                 face_delivery.finish(text_code.getText().toString(), new InternetCallback<Boolean>() {
                     @Override
                     public void call(Boolean result) {
@@ -97,6 +101,7 @@ public class FragmentFace extends Fragment {
                                     "Доставка завершена!",
                                     Toast.LENGTH_LONG
                             ).show();
+                            RunFeedbackDialog();
                         } else {
                             Toast.makeText(
                                     getActivity(),
@@ -163,6 +168,20 @@ public class FragmentFace extends Fragment {
         });
 
         return root;
+    }
+
+    private  void RunFeedbackDialog(){
+        FeedbackDialog feedbackDialog = new FeedbackDialog();
+        feedbackDialog.setTargetFragment(this, REQUEST_CODE);
+        feedbackDialog.show(getFragmentManager(), "FeedbackDialog");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Делаем, что хотим
+        String feedback = data.getStringExtra("feedback");
+        int rating = data.getIntExtra("rating",0);
     }
 
     private void switchFragment() {
