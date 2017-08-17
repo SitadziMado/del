@@ -3,12 +3,17 @@ package com.example.adrax.dely;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.adrax.dely.core.InternetCallback;
 
 import static com.example.adrax.dely.LoginActivity.user;
 
@@ -28,6 +33,9 @@ public class ProfileActivity extends AppCompatActivity {
     TextView passport_given;
     TextView passport_date;
 
+    Button btnAddCard;
+    Button btnAddPassport;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,12 +43,15 @@ public class ProfileActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //What to do on back clicked
+                finish();
             }
         });
 
@@ -69,6 +80,72 @@ public class ProfileActivity extends AppCompatActivity {
         passport_date   = (TextView) findViewById(R.id.passport_date);
 
         WriteUserInfo();
+
+        btnAddCard = (Button) findViewById(R.id.btnAddCard);
+        btnAddPassport = (Button) findViewById(R.id.btnAddPassport);
+
+        // Добавление карты
+        btnAddCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                user.addCreditCard(card_number.getText().toString(),
+                        card_valid.getText().toString(),
+                        card_owner.getText().toString(),
+                        new InternetCallback<Boolean>() {
+                            @Override
+                            public void call(Boolean result) {
+                                if (result)
+                                {
+                                    Toast.makeText(
+                                            getApplicationContext(),
+                                            "Сохранено",
+                                            Toast.LENGTH_LONG
+                                    ).show();
+                                }
+                                else{
+                                    Toast.makeText(
+                                            getApplicationContext(),
+                                            "Ошибка при обработке данных",
+                                            Toast.LENGTH_LONG
+                                    ).show();
+                                }
+                            }
+                        });
+            }
+        });
+
+        // Добавление пасспорта
+        btnAddPassport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // ToDo: добавить выбор пола
+                user.addPassport(passport_serial.getText().toString(),
+                        passport_number.getText().toString(),
+                        passport_given.getText().toString(),
+                        passport_date.getText().toString(),
+                        true,
+                        new InternetCallback<Boolean>() {
+                            @Override
+                            public void call(Boolean result) {
+                                if (result)
+                                {
+                                    Toast.makeText(
+                                            getApplicationContext(),
+                                            "Сохранено",
+                                            Toast.LENGTH_LONG
+                                    ).show();
+                                }
+                                else{
+                                    Toast.makeText(
+                                            getApplicationContext(),
+                                            "Ошибка при обработке данных",
+                                            Toast.LENGTH_LONG
+                                    ).show();
+                                }
+                            }
+                        });
+            }
+        });
     }
 
     void WriteUserInfo()
@@ -91,10 +168,12 @@ public class ProfileActivity extends AppCompatActivity {
         */
     }
 
+    /**
+     * Обработка нажатия "назад"
+     */
     @Override
-    public boolean onSupportNavigateUp() {
-        super.onBackPressed();
-        return true;
+    public void onBackPressed() {
+        finish();
     }
 
     @Override
@@ -112,10 +191,7 @@ public class ProfileActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.home) {
-            //Intent intent = new Intent(ProfileActivity.this, MActivity.class);
-            //startActivity(intent);
             finish();
-            super.onBackPressed();
             return true;
         }
         //noinspection SimplifiableIfStatement
