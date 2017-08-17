@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.adrax.dely.R;
+import com.example.adrax.dely.core.Order;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,18 +41,19 @@ public class OrderDialog extends DialogFragment {
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    @NonNull
+    public Dialog onCreateDialog( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = this.getArguments();
-        String from = args.getString("from");
-        String to = args.getString("to");
-        String cost = args.getString("cost");
-        String num = args.getString("number");
-        String description = args.getString("description");
-        String payment = args.getString("money");
-        String timeTake = args.getString("timeTake");
-        String timeBring = args.getString("timeBring");
-        String weight = args.getString("weight");
+        String from = args.getString(Order.FROM);
+        String to = args.getString(Order.TO);
+        String cost = args.getString(Order.COST);
+        String num = args.getString(Order.PHONE);
+        String description = args.getString(Order.DESCRIPTION);
+        String payment = args.getString(Order.PAYMENT);
+        String timeTake = args.getString(Order.TAKE_TIME);
+        String timeBring = args.getString(Order.BRING_TIME);
+        String weight = args.getString(Order.WEIGHT);
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -72,7 +75,7 @@ public class OrderDialog extends DialogFragment {
                 .setTitle("Подтвердите заказ")
                 .setPositiveButton("Создать", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        getTargetFragment().onActivityResult(getTargetRequestCode(),1, new Intent("done"));
+                        getTargetFragment().onActivityResult(getTargetRequestCode(), 1, new Intent("done"));
                     }
                 })
                 .setNegativeButton("Назад", new DialogInterface.OnClickListener() {
@@ -83,12 +86,12 @@ public class OrderDialog extends DialogFragment {
 
         fromText.setText(from);
         toText.setText(to);
-        costText.setText(cost+"руб");
+        costText.setText(cost + "руб");
         timeTakeText.setText(timeTake);
         timeBringText.setText(timeBring);
-        paymentText.setText(payment+"руб");
+        paymentText.setText(payment + "руб");
         descriptionText.setText(description);
-        weightText.setText(weight+"гр");
+        weightText.setText(weight + "гр");
         numText.setText(num);
 
         // Create the AlertDialog object and return it

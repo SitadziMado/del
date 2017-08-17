@@ -342,6 +342,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
     public static final String TAKE_TIME = "take_time";
     public static final String BRING_TIME = "bring_time";
     public static final String DISTANCE = "distance";
+    public static final String DAY = "day";
 
     private OrderStatus m_orderStatus;
 }

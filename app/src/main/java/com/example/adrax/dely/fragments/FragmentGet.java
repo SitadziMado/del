@@ -48,7 +48,6 @@ public class FragmentGet extends Fragment {
 
         sorted_orders = orders; // Copy...
 
-
         // FIDGET SPINNERS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         _spinnerSort = (Spinner) root.findViewById(R.id.spinner_sort);
         // Create an ArrayAdapter using the string array and a default spinner layout
