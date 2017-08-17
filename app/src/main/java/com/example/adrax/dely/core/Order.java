@@ -104,7 +104,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
     }
 
     public void post(@NonNull final InternetCallback<Boolean> callback) {
-        InternetTask task = new InternetTask(ORDER_URL, new InternetCallback<String>() {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, ORDER_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 Boolean result = Boolean.FALSE;
@@ -150,7 +150,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
     }
 
     public void cancel(@NonNull final InternetCallback<Boolean> callback) {
-        InternetTask task = new InternetTask(CANCEL_URL, new InternetCallback<String>() {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, CANCEL_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 callback.call(Boolean.FALSE);
@@ -161,7 +161,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
     }
 
     public void start(@NonNull final InternetCallback<Boolean> callback) {
-        InternetTask task = new InternetTask(START_URL, new InternetCallback<String>() {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, START_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 Boolean result = Boolean.FALSE;
@@ -196,7 +196,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
             @NonNull String smsCode,
             @NonNull final InternetCallback<Boolean> callback
     ) {
-        InternetTask task = new InternetTask(FINISH_URL, new InternetCallback<String>() {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, FINISH_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 Boolean result = Boolean.FALSE;
@@ -248,7 +248,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
     } */
 
     public void status(@NonNull final InternetCallback<OrderStatus> callback) {
-        InternetTask task = new InternetTask(STATUS_URL, new InternetCallback<String>() {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, STATUS_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 callback.call(statusFromString(s));
@@ -342,6 +342,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
     public static final String TAKE_TIME = "take_time";
     public static final String BRING_TIME = "bring_time";
     public static final String DISTANCE = "distance";
+    public static final String DAY = "day";
 
     private OrderStatus m_orderStatus;
 }

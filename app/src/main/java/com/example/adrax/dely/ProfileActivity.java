@@ -114,7 +114,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        // Добавление пасспорта
+        // Добавление паспорта
         btnAddPassport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

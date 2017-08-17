@@ -18,13 +18,18 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 
 class InternetTask extends AsyncTask<String, Void, String> {
-    public InternetTask(@NonNull String address, @NonNull InternetCallback<String> callable) {
+    InternetTask(
+            @NonNull String method,
+            @NonNull String address,
+            @NonNull InternetCallback<String> callable
+    ) {
         if (address.equals("")) {
             String m = "Адрес не может быть пустым.";
             LogHelper.error(m);
-            throw new NullPointerException(m);
+            throw new IllegalArgumentException(m);
         }
 
+        m_method = method;
         m_address = address;
         m_callback  = callable;
     }
@@ -34,21 +39,30 @@ class InternetTask extends AsyncTask<String, Void, String> {
         String result = null;
         HttpURLConnection urlConnection = null;
         try {
-            URL url = new URL(m_address);
-            urlConnection = (HttpURLConnection)url.openConnection();
-
             String data = concatenateParameters(params);
 
-            urlConnection.setRequestMethod("POST");
+            URL url;
+
+            if (false) {// (m_method.equals(METHOD_POST)) {
+                url = new URL(m_address);
+            } else {
+                url = new URL(m_address + "?" + data);
+            }
+
+            urlConnection = (HttpURLConnection)url.openConnection();
+
+            urlConnection.setRequestMethod(m_method);
             urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             urlConnection.setRequestProperty("Content-Length", String.valueOf(data.length()));
 
             urlConnection.setDoOutput(true);
             urlConnection.setChunkedStreamingMode(0);
 
-            OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
-            out.write(data.getBytes(Charset.forName("UTF-8")));
-            out.flush();
+            if (m_method.equals(METHOD_POST)) {
+                OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
+                out.write(data.getBytes(Charset.forName("UTF-8")));
+                out.flush();
+            }
 
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             result = readStream(in);
@@ -131,6 +145,10 @@ class InternetTask extends AsyncTask<String, Void, String> {
         return sb.toString();
     }
 
+    static final String METHOD_POST = "POST";
+    static final String METHOD_GET = "GET";
+
+    private String m_method = null;
     private String m_address = null;
     private InternetCallback<String> m_callback = null;
 }

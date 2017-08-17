@@ -63,7 +63,7 @@ public class User {
             @NonNull String about,
             @NonNull final InternetCallback<Boolean> callback
     ) {
-        InternetTask task = new InternetTask(REGISTER_URL, new InternetCallback<String>() {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, REGISTER_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 Boolean result = Boolean.FALSE;
@@ -105,7 +105,7 @@ public class User {
             @NonNull String password,
             @NonNull final InternetCallback<User> callback
     ) {
-        InternetTask task = new InternetTask(LOGIN_URL, new InternetCallback<String>() {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, LOGIN_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 User user = null;
@@ -138,7 +138,7 @@ public class User {
     }
 
     public void logout(@NonNull final InternetCallback<Boolean> callback) {
-        InternetTask task = new InternetTask(LOGOUT_URL, new InternetCallback<String>() {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, LOGOUT_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 callback.call(Boolean.TRUE);
@@ -150,7 +150,7 @@ public class User {
 
     public void syncOrders(@NonNull final InternetCallback<OrderList> callback) {
         final User user = this;
-        InternetTask task = new InternetTask(SYNC_URL, new InternetCallback<String>() {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, SYNC_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 OrderList orders = new OrderList();
@@ -169,7 +169,7 @@ public class User {
 
     public void currentDelivery(@NonNull final InternetCallback<OrderList> callback) {
         final User user = this;
-        InternetTask task = new InternetTask(CURRENT_DELIVERY_URL, new InternetCallback<String>() {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, CURRENT_DELIVERY_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 OrderList orders = new OrderList();
@@ -191,7 +191,7 @@ public class User {
 
     public void currentOrders(@NonNull final InternetCallback<OrderList> callback) {
         final User user = this;
-        InternetTask task = new InternetTask(CURRENT_ORDERS_URL, new InternetCallback<String>() {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, CURRENT_ORDERS_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 OrderList orders = new OrderList();
@@ -219,7 +219,7 @@ public class User {
             Boolean isMale,
             @NonNull final InternetCallback<Boolean> callback
     ) {
-        InternetTask task = new InternetTask(ADD_PASSPORT_URL, new InternetCallback<String>() {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, ADD_PASSPORT_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 Boolean result = Boolean.FALSE;
@@ -253,7 +253,7 @@ public class User {
             @NonNull String cardValid,
             @NonNull String cardOwner,
             @NonNull final InternetCallback<Boolean> callback) {
-        InternetTask task = new InternetTask(ADD_CARD_URL, new InternetCallback<String>() {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, ADD_CARD_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 Boolean result = Boolean.FALSE;
@@ -281,7 +281,7 @@ public class User {
     }
 
     public void syncInfo(@Nullable final InternetCallback<Boolean> callback) {
-        InternetTask task = new InternetTask(USER_INFO_URL, new InternetCallback<String>() {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, USER_INFO_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
                 Boolean result = Boolean.TRUE;
