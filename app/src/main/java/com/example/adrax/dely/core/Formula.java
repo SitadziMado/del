@@ -9,10 +9,20 @@ public class Formula {
 
     }
 
+    /**
+     * Возвращает формулу по умолчанию.
+     * @return инстанс формулы.
+     */
     public static Formula getDefault() {
         return defaultFormula;
     }
 
+    /**
+     * Рассчитать стоимость заказа с помощью расстояния и веса.
+     * @param weight вес заказа.
+     * @param distance дистанция между пунктами А и Б.
+     * @return стоимость заказа.
+     */
     public Double calculate(Double weight, Double distance) {
         int weightIndex;
         int distanceIndex;
@@ -41,16 +51,21 @@ public class Formula {
             distanceIndex = 4;
         }
 
-        return pricesMatrix[distanceIndex][weightIndex];
+        return
+                m_pricesMatrix[distanceIndex][weightIndex] *
+                m_warrantyOnCost *
+                m_warrantyOnRepayment;
     }
 
-    private static final Double[][] pricesMatrix = {
+    private final Double[][] m_pricesMatrix = {
             { 50., 90., 170., 270., 420. },
             { 60., 100., 180., 290., 430. },
             { 70., 110., 190., 310., 450. },
             { 80., 130., 210., 330., 480. },
             { 100., 150., 230., 350., 500. },
     };
+    private final Double m_warrantyOnCost = 1.009;
+    private final Double m_warrantyOnRepayment = 1.009;
 
     private static Formula defaultFormula = new Formula();
 }
