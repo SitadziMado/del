@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.Formula;
+import com.example.adrax.dely.core.GoogleMapsHelper;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
 
@@ -80,7 +82,6 @@ public class FragmentOrder extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -116,6 +117,7 @@ public class FragmentOrder extends Fragment {
                         R.layout.item_spinner);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         // Apply the adapter to the spinner
         _spinnerWeight.setAdapter(adapter);
 
@@ -126,7 +128,10 @@ public class FragmentOrder extends Fragment {
                         // An item was selected. You can retrieve the selected item using
                         // parent.getItemAtPosition(pos)
                         weight_ = _spinnerWeight.getSelectedItem().toString().substring(3,_spinnerWeight.getSelectedItem().toString().lastIndexOf("г"));
-                        if (weight_.length()<3) weight_+="000";
+
+                        if (weight_.length()<3) {
+                            weight_ += "000";
+                        }
                     }
 
                     @Override
@@ -222,7 +227,6 @@ public class FragmentOrder extends Fragment {
         String myFormat = "d MMM yyyy";
         //SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
-
         Locale russian = new Locale("ru");
         String[] newMonths = {
                 "января", "февраля", "марта", "апреля", "мая", "июня",
@@ -236,90 +240,58 @@ public class FragmentOrder extends Fragment {
         _dayText.setText(sdf.format(dayCalendar.getTime()));
     }
 
-    // Get запрос к гуглу, получение дистанции
-    public void googleRequest() {
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-        String url = null;
-        try {
-            url = String.format("https://maps.googleapis.com/maps/api/directions/json?" +
-                    "origin=%1$s&" +
-                    "destination=%2$s&" +
-                    "mode=driving&" +
-                    "language=ru&" +
-                    "unit=metric&" +
-                    "region=ru&" +
-                    "key=AIzaSyCOn2sDKTCQfGZfT3QTO99snxEikwrZkQ4", URLEncoder.encode("Пермь,"+_fromText.getText().toString(),"UTF-8"), URLEncoder.encode("Пермь,"+_toText.getText().toString(),"UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        // Request a string response from the provided URL.
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            //response.getJSONObject("routes").getJSONObject("legs").getJSONObject("distance").getString("value");
-                            distance = response.getJSONArray("routes").getJSONObject(0)
-                                    .getJSONArray("legs").getJSONObject(0)
-                                    .getJSONObject("distance").getString("value");
-                            _distanceView.setText(distance + "м");
-                            flagStart = true;
-                        }
-                        catch ( Exception e){
-                            // ToDo: заменить на уведомления об ошибке
-                            _distanceView.setText("Error: " + e.toString());//"Мы не можем найти указанные адреса");
-                            flagStart = false;
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // ToDo: заменить на уведомления об ошибке
-                _payView.setText("Error: " + error.toString());
-                flagStart = false;
-            }
-        });
-
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-    }
-
     // Призыв даилога
     public void buttonClicked () {
+        final FragmentOrder me = this;
 
-        // ХХДД
-        googleRequest(); // Узнаём расстояние и флаг
+        GoogleMapsHelper.getInstance().calculateDistance(
+                "Пермь," + _fromText.getText().toString(),
+                "Пермь," + _toText.getText().toString(),
+                new InternetCallback<Double>() {
+                    @Override
+                    public void call(Double distance) {
+                        if (distance > 0.) {
+                            me.distance = distance.toString();
+                            _distanceView.setText(distance + "м");
+                            me.createOrderDialog();
+                        } else {
+                            _distanceView.setText(
+                                    "Не удалось рассчитать растояние, проверьте правильность адреса"
+                            );
+                            _payView.setText(
+                                    "Не удалось рассчитать растояние, проверьте правильность адреса"
+                            );
+                        }
+                    }
+                }
+        );
+    }
 
-        if (flagStart) {
-            //int mass = Integer.parseInt(weight);
-            //int length = Integer.parseInt(distance);
+    private void createOrderDialog() {
+        money = Formula.getDefault().calculate(
+                Double.parseDouble(weight_),
+                Double.parseDouble(distance)
+        ).toString() + "руб.";
 
-            money = Formula.getDefault().calculate(
-                    Double.parseDouble(weight_),
-                    Double.parseDouble(distance)
-            ).toString() + "руб.";
+        _payView.setText(money);
 
-            _payView.setText(money);
+        OrderDialog orderDialog = new OrderDialog();
+        Bundle args = new Bundle();
 
-            OrderDialog orderDialog = new OrderDialog();
-            Bundle args = new Bundle();
-
-            args.putString(Order.PAYMENT, money);
-            args.putString(Order.TAKE_TIME, _timeTakeText.getText().toString());
-            args.putString(Order.BRING_TIME, _timeBringText.getText().toString());
-            args.putString(Order.FROM, _fromText.getText().toString());
-            args.putString(Order.TO, _toText.getText().toString());
-            args.putString(Order.PHONE, _numText.getText().toString());
-            args.putString(Order.DESCRIPTION, _descriptionText.getText().toString());
-            args.putString(Order.COST, _costText.getText().toString());
-            args.putString(Order.WEIGHT, weight_);
-            args.putString(Order.DAY,_dayText.getText().toString());
-            orderDialog.setArguments(args);
-            orderDialog.setTargetFragment(this, 0);
-            orderDialog.show(getFragmentManager(), "OrderDialog");
-            flagStart = false;
-        }
+        args.putString(Order.PAYMENT, money);
+        args.putString(Order.TAKE_TIME, _timeTakeText.getText().toString());
+        args.putString(Order.BRING_TIME, _timeBringText.getText().toString());
+        args.putString(Order.FROM, _fromText.getText().toString());
+        args.putString(Order.TO, _toText.getText().toString());
+        args.putString(Order.PHONE, _numText.getText().toString());
+        args.putString(Order.DESCRIPTION, _descriptionText.getText().toString());
+        args.putString(Order.COST, _costText.getText().toString());
+        args.putString(Order.WEIGHT, weight_);
+        args.putString(Order.DAY,_dayText.getText().toString());
+        orderDialog.setArguments(args);
+        orderDialog.setTargetFragment(this, 0);
+        orderDialog.show(getFragmentManager(), "OrderDialog");
+        flagStart = false;
     }
 
     // Обратная связь с диалогом заказа
@@ -403,12 +375,16 @@ public class FragmentOrder extends Fragment {
     }
 
     // Проверка данных формы
-    public boolean validate(String description, String from, String to, String num, String ko) {
+    public boolean validate(
+            @NonNull String description,
+            @NonNull String from,
+            @NonNull String to, String num,
+            @NonNull String ko
+    ) {
         boolean valid = true;
 
-
         if (description.isEmpty()) {
-            _descriptionText.setError("Назовите посылку, например, в соотсветствии с содержимым");
+            _descriptionText.setError("Назовите посылку, например, в соответствии с содержимым");
             valid = false;
         } else {
             _descriptionText.setError(null);
