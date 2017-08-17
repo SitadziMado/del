@@ -48,7 +48,7 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".ProfileActivity"
-            android:label="Аккаунт"
+            android:label=""
             android:parentActivityName="com.example.adrax.dely.MActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
