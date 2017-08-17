@@ -183,7 +183,6 @@
 
         </RelativeLayout>
 
-        <include layout="@layout/item_divider" />
         <!-- card_number-->
         <RelativeLayout
             android:layout_width="match_parent"
@@ -204,7 +203,6 @@
             </android.support.design.widget.TextInputLayout>
         </RelativeLayout>
 
-        <include layout="@layout/item_divider" />
         <!-- card_valid-->
         <RelativeLayout
             android:layout_width="match_parent"
@@ -225,7 +223,6 @@
             </android.support.design.widget.TextInputLayout>
         </RelativeLayout>
 
-        <include layout="@layout/item_divider" />
         <!-- cvv-->
         <RelativeLayout
             android:layout_width="match_parent"
@@ -241,15 +238,13 @@
                 <EditText android:id="@+id/cvv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="numberPassword"
                     android:hint="CVV" />
             </android.support.design.widget.TextInputLayout>
         </RelativeLayout>
 
-        <include layout="@layout/item_gap" />
-
         <Button
-            android:id="@+id/btnSaveCard"
+            android:id="@+id/btnAddCard"
             android:background="@color/colorAccent"
             android:textColor="@color/white"
             android:layout_width="match_parent"
@@ -257,6 +252,8 @@
             android:fontFamily="casual"
             android:text="Сохранить изменения"
             android:textSize="16sp" />
+
+        <include layout="@layout/item_gap" />
 
         <!-- Пасспорт -->
 
@@ -288,7 +285,6 @@
 
         </RelativeLayout>
 
-        <include layout="@layout/item_divider" />
         <!-- passport_number-->
         <RelativeLayout
             android:layout_width="match_parent"
@@ -310,7 +306,6 @@
             </android.support.design.widget.TextInputLayout>
         </RelativeLayout>
 
-        <include layout="@layout/item_divider" />
         <!-- passport_given-->
         <RelativeLayout
             android:layout_width="match_parent"
@@ -331,7 +326,6 @@
             </android.support.design.widget.TextInputLayout>
         </RelativeLayout>
 
-        <include layout="@layout/item_divider" />
         <!-- passport_date-->
         <RelativeLayout
             android:layout_width="match_parent"
@@ -355,7 +349,7 @@
         </RelativeLayout>
 
         <Button
-            android:id="@+id/btnSavePassport"
+            android:id="@+id/btnAddPassport"
             android:background="@color/colorAccent"
             android:textColor="@color/white"
             android:layout_width="match_parent"
