@@ -50,8 +50,7 @@ public class FragmentGet extends Fragment {
         mContext = this.getActivity();
         View root = inflater.inflate(R.layout.fragment_get, container, false);
 
-        sorted_orders = orders; // Copy...
-
+        sorted_orders = orders.clone(); // Copy...
 
         // SORTING ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         _spinnerSort = (Spinner) root.findViewById(R.id.spinner_sort);
@@ -60,7 +59,8 @@ public class FragmentGet extends Fragment {
                 ArrayAdapter.createFromResource(
                         getActivity(),
                         R.array.sort_array,
-                        R.layout.item_spinner);
+                        R.layout.item_spinner
+                );
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
@@ -104,25 +104,29 @@ public class FragmentGet extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) { // increasing
-                    // ToDo: revrse function
+                    // ToDo: reverse function
                 } else { // decreasing
-                    // ToDo: revrse function
+                    // ToDo: reverse function
                 }
             }
         });
         // End SORTING----------------------------------------------------
 
-            //RecyclerView
-        //Привязываем RecyclerView к элементу
+        // RecyclerView
+        // Привязываем RecyclerView к элементу
         rvMain = (RecyclerView)root.findViewById(R.id.delys_list);
-
-        //И установим LayoutManager
-        rvMain.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // свистелки-перделки
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvMain.getContext(),
-                llm.getOrientation());
+
+        // И установим LayoutManager
+        rvMain.setLayoutManager(llm);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                rvMain.getContext(),
+                llm.getOrientation()
+        );
+
         rvMain.addItemDecoration(dividerItemDecoration);
 
         // Создаём адаптер
@@ -136,10 +140,12 @@ public class FragmentGet extends Fragment {
     }
 
     public void update(Context myContext) {
-        //Создаём адаптер
+        // Создаём адаптер
         adapterForGet = new AdapterForGet(myContext);
-        //Применим наш адаптер к RecyclerView
+
+        // Применим наш адаптер к RecyclerView
         rvMain.setAdapter(adapterForGet);
+
         // Inflate the layout for this fragment
     }
 }

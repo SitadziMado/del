@@ -16,22 +16,10 @@ public class OrderList extends AbstractList<Order> {
     }
 
     public OrderList(@NonNull Order[] orders) {
-        /*if (orders == null) {
-            String m = "Список заказов не может быть null";
-            LogHelper.error(m);
-            throw new NullPointerException(m);
-        }*/
-
         m_orders = new ArrayList<Order>(Arrays.asList(orders));
     }
 
     private OrderList(@NonNull ArrayList<Order> init) {
-        /*if (init == null) {
-            String m = "Внутренний массив не может быть null";
-            LogHelper.error(m);
-            throw new NullPointerException(m);
-        }*/
-
         m_orders = new ArrayList<Order>();
 
         for (Order o : init) {
@@ -42,6 +30,16 @@ public class OrderList extends AbstractList<Order> {
     public boolean add(Order item) {
         m_orders.add(item);
         return true;
+    }
+
+    @Override
+    public OrderList clone() {
+        try {
+            super.clone();
+        } catch (CloneNotSupportedException ignored) {
+            // e.printStackTrace();
+        }
+        return new OrderList(this.m_orders);
     }
 
     public boolean isEmpty() {
@@ -109,12 +107,6 @@ public class OrderList extends AbstractList<Order> {
      */
     public OrderList where(@NonNull Predicate<Order> predicate) {
         ArrayList<Order> list = new ArrayList<>();
-        /*if (predicate == null) {
-            String m = "Предикат не может быть null.";
-            LogHelper.error(m);
-            throw new IllegalArgumentException(m);
-        }*/
-
         for (Order order : m_orders) {
             if (predicate.apply(order)) {
                 list.add(order);

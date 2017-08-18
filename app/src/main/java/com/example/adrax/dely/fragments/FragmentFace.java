@@ -136,11 +136,12 @@ public class FragmentFace extends Fragment {
         //Привязываем RecyclerView к элементу
         rvMain = (RecyclerView)root.findViewById(R.id.face_orders_list);
 
-        //И установим LayoutManager
-        rvMain.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         //свистелки-перделки
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+
+        //И установим LayoutManager
+        rvMain.setLayoutManager(llm);
+
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvMain.getContext(),
                 llm.getOrientation());
         rvMain.addItemDecoration(dividerItemDecoration);

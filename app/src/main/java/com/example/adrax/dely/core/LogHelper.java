@@ -4,6 +4,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 public class LogHelper {
+    public static void debug(String msg) {
+        Log.d("DEBUG", getLocation() + msg);
+    }
+
     public static void error(String msg) {
         Log.e("ERROR", getLocation() + msg);
     }
