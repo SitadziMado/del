@@ -79,7 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
         passport_given  = (TextView) findViewById(R.id.passport_given);
         passport_date   = (TextView) findViewById(R.id.passport_date);
 
-        WriteUserInfo();
+        writeUserInfo();
 
         btnAddCard = (Button) findViewById(R.id.btnAddCard);
         btnAddPassport = (Button) findViewById(R.id.btnAddPassport);
@@ -94,15 +94,13 @@ public class ProfileActivity extends AppCompatActivity {
                         new InternetCallback<Boolean>() {
                             @Override
                             public void call(Boolean result) {
-                                if (result)
-                                {
+                                if (result) {
                                     Toast.makeText(
                                             getApplicationContext(),
                                             "Сохранено",
                                             Toast.LENGTH_LONG
                                     ).show();
-                                }
-                                else{
+                                } else {
                                     Toast.makeText(
                                             getApplicationContext(),
                                             "Ошибка при обработке данных",
@@ -127,15 +125,13 @@ public class ProfileActivity extends AppCompatActivity {
                         new InternetCallback<Boolean>() {
                             @Override
                             public void call(Boolean result) {
-                                if (result)
-                                {
+                                if (result) {
                                     Toast.makeText(
                                             getApplicationContext(),
                                             "Сохранено",
                                             Toast.LENGTH_LONG
                                     ).show();
-                                }
-                                else{
+                                } else {
                                     Toast.makeText(
                                             getApplicationContext(),
                                             "Ошибка при обработке данных",
@@ -148,8 +144,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    void WriteUserInfo()
-    {
+    void writeUserInfo() {
         lvName.setText(user.getSurname() +" "+user.getName() + " " + user.getMiddleName());
         lvMail.setText(user.getMail());
         lvMoney.setText(user.getMoney() + " руб.");
@@ -190,21 +185,31 @@ public class ProfileActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.home) {
-            finish();
-            return true;
-        }
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh) {
-            WriteUserInfo();
-            return true;
-        }
+        switch (id) {
+            case R.id.home:
+                finish();
+                return true;
 
-        if (id == R.id.action_logout) {
+            case R.id.action_refresh:
+                writeUserInfo();
+                return true;
 
-            return true;
+            case R.id.action_logout:
+                user.logout(this, new InternetCallback<Boolean>() {
+                    @Override
+                    public void call(Boolean result) {
+                        // ToDo: сделать действия по завершению текущего сеанса.
+                        if (result) {
+
+                        } else {
+
+                        }
+                    }
+                });
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }

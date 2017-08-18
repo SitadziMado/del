@@ -161,7 +161,13 @@ public class User {
             }
         });
 
-        task.execute(HASH, restoreHash(context));
+        String restoredHash = restoreHash(context);
+
+        if (restoredHash.equals("none")) {
+            callback.call(null);
+        } else {
+            task.execute(HASH, restoreHash(context));
+        }
     }
 
 
@@ -223,15 +229,39 @@ public class User {
         }
     }
 
-    public void logout(@NonNull final InternetCallback<Boolean> callback) {
-        InternetTask task = new InternetTask(InternetTask.METHOD_POST, LOGOUT_URL, new InternetCallback<String>() {
+    public void logout(
+            @NonNull final Activity context,
+            @NonNull final InternetCallback<Boolean> callback
+    ) {
+        InternetTask task = new InternetTask(InternetTask.METHOD_GET, LOGOUT_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
-                callback.call(Boolean.TRUE);
+                Boolean result = Boolean.FALSE;
+
+                switch (requestStatusFromString(s)) {
+                    case ORDER_OK:
+                        storeHash(context, "none");
+                        result = Boolean.TRUE;
+                        break;
+
+                    case ORDER_ERROR:
+                        LogHelper.error("Ошибка сервера.");
+                        break;
+
+                    case ACCESS_ERROR:
+                        LogHelper.error("Ошибка доступа.");
+                        break;
+
+                    default:
+                        LogHelper.error("При загрузке паспорта произошла ошибка.");
+                        break;
+                }
+
+                callback.call(result);
             }
         });
 
-        task.execute();
+        task.execute(HASH, m_hash);
     }
 
     public void syncOrders(@NonNull final InternetCallback<OrderList> callback) {

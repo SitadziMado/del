@@ -41,13 +41,7 @@ class InternetTask extends AsyncTask<String, Void, String> {
         try {
             String data = concatenateParameters(params);
 
-            URL url;
-
-            if (false) {// (m_method.equals(METHOD_POST)) {
-                url = new URL(m_address);
-            } else {
-                url = new URL(m_address + "?" + data);
-            }
+            URL url = new URL(m_address + "?" + data);
 
             urlConnection = (HttpURLConnection)url.openConnection();
 
