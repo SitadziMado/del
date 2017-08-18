@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.ToggleButton;
 
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.Order;
@@ -28,6 +30,8 @@ public class FragmentGet extends Fragment {
 
     Spinner _spinnerSort;
     Context mContext;
+
+    ToggleButton btnReverse;
 
     public static final Object ordersLock = new Object();
 
@@ -48,7 +52,8 @@ public class FragmentGet extends Fragment {
 
         sorted_orders = orders; // Copy...
 
-        // FIDGET SPINNERS ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+        // SORTING ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         _spinnerSort = (Spinner) root.findViewById(R.id.spinner_sort);
         // Create an ArrayAdapter using the string array and a default spinner layout
         final ArrayAdapter<CharSequence> adapter =
@@ -84,6 +89,7 @@ public class FragmentGet extends Fragment {
                                break;
                        }
                         update(mContext);
+                        btnReverse.setChecked(true);
                     }
 
                     @Override
@@ -92,7 +98,19 @@ public class FragmentGet extends Fragment {
                     }
                 }
         );
-        // End FIDGET ----------------------------------------------------
+
+        btnReverse = (ToggleButton) root.findViewById(R.id.btnReverse);
+        btnReverse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) { // increasing
+                    // ToDo: revrse function
+                } else { // decreasing
+                    // ToDo: revrse function
+                }
+            }
+        });
+        // End SORTING----------------------------------------------------
 
             //RecyclerView
         //Привязываем RecyclerView к элементу

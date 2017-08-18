@@ -195,9 +195,13 @@ public class ProfileActivity extends AppCompatActivity {
             return true;
         }
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {
             WriteUserInfo();
-            super.onBackPressed();
+            return true;
+        }
+
+        if (id == R.id.action_logout) {
+
             return true;
         }
 

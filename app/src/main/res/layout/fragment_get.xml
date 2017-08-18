@@ -8,10 +8,26 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <Spinner
-        android:id="@+id/spinner_sort"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinner_sort"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ToggleButton
+            android:id="@+id/btnReverse"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="ToggleButton"
+            android:textOn="возрастание"
+            android:textOff="убывание"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/getHeaderTextView"

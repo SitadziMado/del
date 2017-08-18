@@ -62,4 +62,5 @@
     <string name="title_activity_account">Account</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="tvMakeOrder">Оформление заказа</string>
+    <string name="action_logout">Выйти</string>
 </resources>
