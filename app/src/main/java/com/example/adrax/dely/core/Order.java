@@ -261,6 +261,36 @@ public class Order extends DynamicObject implements Comparable<Order> {
         );
     }
 
+    public void feedback(
+            @NonNull Rating rating,
+            @NonNull final InternetCallback<Boolean> callback
+    ) {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, FEEDBACK_URL, new InternetCallback<String>() {
+            @Override
+            public void call(String s) {
+                Boolean result = Boolean.FALSE;
+
+                switch (User.requestStatusFromString(s)) {
+                    case ORDER_OK:
+                        result = Boolean.TRUE;
+                        break;
+
+                    default:
+                        break;
+                }
+
+                callback.call(result);
+            }
+        });
+
+        task.execute(
+                HASH, getStringProp(HASH),
+                TEXT, getStringProp(TEXT),
+                RATING, getStringProp(RATING),
+                User.ID, getStringProp(User.ID)
+        );
+    }
+
     @Override
     public int compareTo(@NonNull Order rhs) {
         String thisDate = getStringProp(TAKE_TIME);
@@ -320,6 +350,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
     private static final String FINISH_URL = "http://adrax.pythonanywhere.com/delivered";
     private static final String ACCEPT_URL = "http://adrax.pythonanywhere.com/delivery_done";
     private static final String STATUS_URL = "http://adrax.pythonanywhere.com/chosen";
+    private static final String FEEDBACK_URL = "http://adrax.pythonanywhere.com/feedback";
 
     public static final String HASH = "hash";
     public static final String ID = "id";
@@ -343,6 +374,8 @@ public class Order extends DynamicObject implements Comparable<Order> {
     public static final String BRING_TIME = "bring_time";
     public static final String DISTANCE = "distance";
     public static final String DAY = "day";
+    public static final String TEXT = "text";
+    public static final String RATING = "rating";
 
     private OrderStatus m_orderStatus;
 }
