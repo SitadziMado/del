@@ -58,10 +58,11 @@ public class LoginActivity extends AppCompatActivity {
 
         User.restoreLastSession(this, new InternetCallback<User>() {
             @Override
-            public void call(User user) {
-                // ToDo: запрос на валидность хэша (if (valid) onLiginSuccess;)
-                if (user != null) {
+            public void call(User result) {
+                if ((user = result) != null) {
                     onLoginSuccess();
+                } else {
+                    LogHelper.warn("Невозможно автоматически перезайти в систему.");
                 }
             }
         });

@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -18,26 +19,6 @@ import java.util.ArrayList;
 public class User {
     private User() {
 
-    }
-
-    private static User fromString(String jsonString) {
-        User user = new User();
-        try {
-            JSONObject userData = new JSONObject(jsonString);
-            user.setAbout(userData.getString(ABOUT));
-            user.m_hash = userData.getString(HASH);
-            user.setMail(userData.getString(MAIL));
-            user.setMiddleName(userData.getString(MIDDLE_NAME));
-            user.setMoney(String.valueOf(userData.getDouble(MONEY)));
-            user.setName(userData.getString(NAME));
-            user.setPhone(userData.getString(PHONE));
-            user.setSurname(userData.getString(SURNAME));
-        } catch (JSONException ex) {
-            LogHelper.error("Ошибка при чтении JSON.");
-            user = null;
-        }
-
-        return user;
     }
 
     public static void register(
@@ -137,14 +118,7 @@ public class User {
 
                 // Пишем хэш.
                 if (user != null) {
-                    try {
-                        OutputStream outputStream = context.openFileOutput("hash.txt", 0);
-                        OutputStreamWriter osw = new OutputStreamWriter(outputStream);
-                        osw.write(user.getHash());
-                        osw.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    storeHash(context, user.getHash());
                 }
 
                 callback.call(user);
@@ -187,9 +161,34 @@ public class User {
             }
         });
 
+        task.execute(HASH, restoreHash(context));
+    }
+
+
+    private static User fromString(String jsonString) {
+        User user = new User();
+        try {
+            JSONObject userData = new JSONObject(jsonString);
+            user.setAbout(userData.getString(ABOUT));
+            user.m_hash = userData.getString(HASH);
+            user.setMail(userData.getString(MAIL));
+            user.setMiddleName(userData.getString(MIDDLE_NAME));
+            user.setMoney(String.valueOf(userData.getDouble(MONEY)));
+            user.setName(userData.getString(NAME));
+            user.setPhone(userData.getString(PHONE));
+            user.setSurname(userData.getString(SURNAME));
+        } catch (JSONException ex) {
+            LogHelper.error("Ошибка при чтении JSON.");
+            user = null;
+        }
+
+        return user;
+    }
+
+    @NonNull
+    private static String restoreHash(@NonNull Activity context) {
         String restoredHash = "none";
 
-        // Читаем хэш.
         try {
             char[] buf = new char[256];
             InputStream inputStream = context.openFileInput("hash.txt");
@@ -201,11 +200,27 @@ public class User {
             }
 
             isr.close();
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        task.execute(HASH, restoredHash);
+        return restoredHash;
+    }
+
+    private static void storeHash(
+            @NonNull Activity context,
+            @NonNull String hash
+    ) {
+        try {
+            OutputStream outputStream = context.openFileOutput("hash.txt", 0);
+            OutputStreamWriter osw = new OutputStreamWriter(outputStream);
+            osw.write(hash);
+            osw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void logout(@NonNull final InternetCallback<Boolean> callback) {
