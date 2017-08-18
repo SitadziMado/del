@@ -170,7 +170,6 @@ public class User {
         }
     }
 
-
     private static User fromString(String jsonString) {
         User user = new User();
         try {
@@ -253,7 +252,7 @@ public class User {
                         break;
 
                     default:
-                        LogHelper.error("При загрузке паспорта произошла ошибка.");
+                        LogHelper.error("При выходе из аккаунта произошла ошибка.");
                         break;
                 }
 
@@ -397,6 +396,8 @@ public class User {
     }
 
     public void syncInfo(@Nullable final InternetCallback<Boolean> callback) {
+        final User me = this;
+
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, USER_INFO_URL, new InternetCallback<String>() {
             @Override
             public void call(String s) {
@@ -408,7 +409,17 @@ public class User {
                         break;
 
                     default:
-                        DynamicObject obj = new DynamicObject(s);
+                        // DynamicObject obj = new DynamicObject(s);
+                        User temp = fromString(s);
+
+                        me.setAbout(temp.getAbout());
+                        me.setMail(temp.getMail());
+                        me.setMiddleName(temp.getMiddleName());
+                        me.setMoney(temp.getMoney());
+                        me.setName(temp.getName());
+                        me.setPhone(temp.getPhone());
+                        me.setSurname(temp.getSurname());
+
                         break;
                 }
 
