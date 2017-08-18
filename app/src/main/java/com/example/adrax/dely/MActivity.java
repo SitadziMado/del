@@ -54,9 +54,6 @@ public class MActivity extends AppCompatActivity
     private static final Object faceDeliveryLock = new Object();
     private static final Object faceOrdersLock = new Object();
 
-    public static Integer selected_id = 0;
-    public static String delyDescription = "Тест";
-    public static String face_cur_order_text = "Тест";
     public static String face_deliver_text = "На данный момент нет активных заказов"; // Текст окна заказчика в щачле
 
     Context this_context;
