@@ -56,9 +56,17 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Попытка авторегистрации...");
+        progressDialog.show();
+
         User.restoreLastSession(this, new InternetCallback<User>() {
             @Override
             public void call(User result) {
+                progressDialog.dismiss();
+
                 if ((user = result) != null) {
                     onLoginSuccess();
                 } else {
@@ -124,7 +132,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    // ToDo: хранить hash
     public void login() {
         LogHelper.verbose("Login");
 
@@ -138,7 +145,7 @@ public class LoginActivity extends AppCompatActivity {
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
+        progressDialog.setMessage("Авторизация...");
         progressDialog.show();
 
         final String email = _emailText.getText().toString();
@@ -215,7 +222,7 @@ public class LoginActivity extends AppCompatActivity {
         if (opr.isDone()) {
             // If the user's cached credentials are valid, the OptionalPendingResult will be "done"
             // and the GoogleSignInResult will be available instantly.
-            Log.d(TAG, "Got cached sign-in");
+            LogHelper.debug("Got cached sign-in");
             GoogleSignInResult result = opr.get();
             handleSignInResult(result);
         } else {
