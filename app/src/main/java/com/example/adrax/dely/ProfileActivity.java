@@ -1,5 +1,6 @@
 package com.example.adrax.dely;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -200,7 +201,8 @@ public class ProfileActivity extends AppCompatActivity {
                     public void call(Boolean result) {
                         // ToDo: сделать действия по завершению текущего сеанса.
                         if (result) {
-
+                            setResult(RESULT_OK, new Intent("ok"));
+                            finish();
                         } else {
 
                         }
