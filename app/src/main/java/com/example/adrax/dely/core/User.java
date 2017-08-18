@@ -1,11 +1,18 @@
 package com.example.adrax.dely.core;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.CharBuffer;
 import java.util.ArrayList;
 
 public class User {
@@ -13,7 +20,7 @@ public class User {
 
     }
 
-    public static User fromString(String jsonString) {
+    private static User fromString(String jsonString) {
         User user = new User();
         try {
             JSONObject userData = new JSONObject(jsonString);
@@ -101,6 +108,7 @@ public class User {
     }
 
     public static void login(
+            @NonNull final Activity context,
             @NonNull String username,
             @NonNull String password,
             @NonNull final InternetCallback<User> callback
@@ -127,6 +135,18 @@ public class User {
                         break;
                 }
 
+                // Пишем хэш.
+                if (user != null) {
+                    try {
+                        OutputStream outputStream = context.openFileOutput("hash.txt", 0);
+                        OutputStreamWriter osw = new OutputStreamWriter(outputStream);
+                        osw.write(user.getHash());
+                        osw.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 callback.call(user);
             }
         });
@@ -135,6 +155,57 @@ public class User {
                 USERNAME, username,
                 PASSWORD, password
         );
+    }
+
+    public static void restoreLastSession(
+            @NonNull final Activity context,
+            @NonNull final InternetCallback<User> callback
+    ) {
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, RESTORE_URL, new InternetCallback<String>() {
+            @Override
+            public void call(String s) {
+                User user = null;
+                switch (requestStatusFromString(s)) {
+                    case INCORRECT_AUTHORIZATION_DATA:
+                        LogHelper.error("Некорректные данные авторизации.");
+                        break;
+
+                    case SERVER_PROBLEMS:
+                        LogHelper.error("Проблемы с сервером.");
+                        break;
+
+                    case REQUEST_INCORRECT:
+                        LogHelper.error("Некорректный запрос.");
+                        break;
+
+                    case OTHER:
+                        user = User.fromString(s);
+                        break;
+                }
+
+                callback.call(user);
+            }
+        });
+
+        String restoredHash = "none";
+
+        // Читаем хэш.
+        try {
+            char[] buf = new char[256];
+            InputStream inputStream = context.openFileInput("hash.txt");
+            InputStreamReader isr = new InputStreamReader(inputStream);
+            int bytesRead = isr.read(buf);
+
+            if (bytesRead > 0) {
+                restoredHash = String.copyValueOf(buf, 0, bytesRead);
+            }
+
+            isr.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        task.execute(HASH, restoredHash);
     }
 
     public void logout(@NonNull final InternetCallback<Boolean> callback) {
@@ -434,6 +505,7 @@ public class User {
     private static final String ADD_PASSPORT_URL = "http://adrax.pythonanywhere.com/add_passport";
     private static final String ADD_CARD_URL = "http://adrax.pythonanywhere.com/add_card";
     private static final String USER_INFO_URL = "http://adrax.pythonanywhere.com/user_info";
+    private static final String RESTORE_URL = "http://adrax.pythonanywhere.com/fast_login";
 
     /// Константы авторизации
     static final String INCORRECT_AUTHORIZATION_DATA = "incorrect_auth";    /** Некорректная инфа для авторизации */

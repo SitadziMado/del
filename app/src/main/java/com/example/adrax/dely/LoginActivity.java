@@ -56,10 +56,15 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        // ToDo: запрос на валидность хэша (if (valid) onLiginSuccess;)
-        if (user != null) {
-            onLoginSuccess();
-        }
+        User.restoreLastSession(this, new InternetCallback<User>() {
+            @Override
+            public void call(User user) {
+                // ToDo: запрос на валидность хэша (if (valid) onLiginSuccess;)
+                if (user != null) {
+                    onLoginSuccess();
+                }
+            }
+        });
 
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
@@ -139,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
         final String password = _passwordText.getText().toString();
 
         if (user == null) {
-            User.login(email, password, new InternetCallback<User>() {
+            User.login(this, email, password, new InternetCallback<User>() {
                 @Override
                 public void call(User result) {
                     if ((user = result) != null) {
