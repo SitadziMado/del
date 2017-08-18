@@ -325,6 +325,9 @@ public class MActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK){
             finish();
+            Intent myIntent;
+            myIntent = new Intent(this, LoginActivity.class);
+            startActivity(myIntent);
         }
     }
 }

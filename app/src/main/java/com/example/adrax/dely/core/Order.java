@@ -201,7 +201,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
             public void call(String s) {
                 Boolean result = Boolean.FALSE;
                 switch (User.requestStatusFromString(s)) {
-                    case ORDER_STARTED:
+                    case ORDER_OK:
                         result = Boolean.TRUE;
                         break;
 
@@ -262,7 +262,8 @@ public class Order extends DynamicObject implements Comparable<Order> {
     }
 
     public void feedback(
-            @NonNull Rating rating,
+            @NonNull Integer rating,
+            @NonNull String text,
             @NonNull final InternetCallback<Boolean> callback
     ) {
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, FEEDBACK_URL, new InternetCallback<String>() {
@@ -285,9 +286,9 @@ public class Order extends DynamicObject implements Comparable<Order> {
 
         task.execute(
                 HASH, getStringProp(HASH),
-                TEXT, getStringProp(TEXT),
-                RATING, getStringProp(RATING),
-                User.ID, getStringProp(User.ID)
+                TEXT, text,
+                RATING, rating.toString(),
+                "delivery_id", getStringProp(ID)
         );
     }
 

@@ -180,9 +180,22 @@ public class FragmentFace extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Делаем, что хотим
         String feedback = data.getStringExtra("feedback");
         int rating = data.getIntExtra("rating",0);
+        //new Rating(rating, feedback)
+        face_delivery.feedback( rating, feedback,
+                new InternetCallback<Boolean>() {
+                    @Override
+                    public void call(Boolean result) {
+                        if (result)
+                        Toast.makeText(
+                                getActivity(),
+                                "Спасибо за отзыв!",
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+                }
+        );
     }
 
     private void switchFragment() {
