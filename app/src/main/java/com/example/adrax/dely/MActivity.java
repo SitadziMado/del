@@ -140,25 +140,6 @@ public class MActivity extends AppCompatActivity
 
     // загрузка заказов/доставок
     public static void updateOrders() {
-        user.currentOrders(new InternetCallback<OrderList>() {
-            @Override
-            public void call(OrderList orders) {
-                synchronized (faceOrdersLock) {
-                    face_orders = orders;
-                }
-            }
-        });
-
-        user.currentDelivery(new InternetCallback<OrderList>() {
-            @Override
-            public void call(OrderList orders) {
-                synchronized (faceDeliveryLock) {
-                    // ToDo: доставок может быть > 1.
-                    face_delivery = orders.firstOrDefault();
-                }
-            }
-        });
-
         user.syncOrders(new InternetCallback<OrderList>() {
             @Override
             public void call(OrderList result) {
@@ -183,19 +164,38 @@ public class MActivity extends AppCompatActivity
      * Обновляет face
      */
     public static void updateFace() {
-        if (face_delivery != null) {
-            face_delivery.status(new InternetCallback<OrderStatus>() {
-                @Override
-                public void call(OrderStatus orderStatus) {
-                    if (orderStatus != OrderStatus.DELIVERED &&
-                            orderStatus != OrderStatus.DELIVERY_DONE) {
-                        face_deliver_text = face_delivery.toString();
-                    } else {
-                        face_deliver_text = "На данный момент нет активных заказов";
+        user.currentOrders(new InternetCallback<OrderList>() {
+            @Override
+            public void call(OrderList orders) {
+                synchronized (faceOrdersLock) {
+                    face_orders = orders;
+                }
+            }
+        });
+
+        user.currentDelivery(new InternetCallback<OrderList>() {
+            @Override
+            public void call(OrderList orders) {
+                synchronized (faceDeliveryLock) {
+                    // ToDo: доставок может быть > 1.
+                    face_delivery = orders.firstOrDefault();
+
+                    if (face_delivery != null) {
+                        face_delivery.status(new InternetCallback<OrderStatus>() {
+                            @Override
+                            public void call(OrderStatus orderStatus) {
+                                if (orderStatus != OrderStatus.DELIVERED &&
+                                        orderStatus != OrderStatus.DELIVERY_DONE) {
+                                    face_deliver_text = face_delivery.toString();
+                                } else {
+                                    face_deliver_text = "На данный момент нет активных заказов";
+                                }
+                            }
+                        });
                     }
                 }
-            });
-        }
+            }
+        });
     }
 
     /**
@@ -245,6 +245,7 @@ public class MActivity extends AppCompatActivity
             case R.id.action_refresh:
                 if (fragment_id == R.id.frag_get_id) {
                     fget.update(this);
+                    updateOrders();
                 } else if (fragment_id == R.id.frag_face_id) {
                     updateFace();
                 } else {
