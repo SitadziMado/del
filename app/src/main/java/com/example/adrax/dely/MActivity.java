@@ -310,7 +310,7 @@ public class MActivity extends AppCompatActivity
         } else if (id == R.id.frag_tools_id) {
             //mFragmentToSet = ftools;
             Intent i = new Intent(MActivity.this, ProfileActivity.class);
-            startActivity(i);
+            startActivityForResult(i, 1);
         } else if (id == R.id.frag_about_id) {
             mFragmentToSet = fabout;
         }
@@ -318,5 +318,13 @@ public class MActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK){
+            finish();
+        }
     }
 }
