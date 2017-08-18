@@ -32,6 +32,16 @@ public class OrderList extends AbstractList<Order> {
         return true;
     }
 
+    @Override
+    public OrderList clone() {
+        try {
+            super.clone();
+        } catch (CloneNotSupportedException ignored) {
+            // e.printStackTrace();
+        }
+        return new OrderList(this.m_orders);
+    }
+
     public boolean isEmpty() {
         return m_orders.size() == 0;
     }

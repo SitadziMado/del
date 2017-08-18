@@ -145,7 +145,7 @@ public class MActivity extends AppCompatActivity
             public void call(OrderList result) {
                 synchronized (ordersLock) {
                     orders = result;
-                    sorted_orders = orders;
+                    sorted_orders = orders.clone();
                 }
             }
         });
