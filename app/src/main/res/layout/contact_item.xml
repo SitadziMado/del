@@ -34,7 +34,7 @@
         android:layout_marginTop="8dp"
         android:layout_toEndOf="@id/ivContactItem"
         android:layout_toRightOf="@id/ivContactItem"
-        android:text="Номер телефона"
+        android:text="@string/layout_phone"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <ImageView

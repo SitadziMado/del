@@ -118,14 +118,15 @@ public class FragmentOrder extends Fragment {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         // An item was selected. You can retrieve the selected item using
                         // parent.getItemAtPosition(pos)
+                        String wt = _spinnerWeight.getSelectedItem().toString();
+
+                        // ToDo: переписать непереносимый код, идущий далее.
                         weight_ = _spinnerWeight
                                 .getSelectedItem()
                                 .toString()
                                 .substring(
                                         3,
-                                        _spinnerWeight.getSelectedItem()
-                                                .toString()
-                                                .lastIndexOf("г")
+                                        wt.lastIndexOf("г")
                                 );
 
                         if (weight_.length() < 3) {
@@ -231,9 +232,9 @@ public class FragmentOrder extends Fragment {
         String[] newMonths = {
                 "января", "февраля", "марта", "апреля", "мая", "июня",
                 "июля", "августа", "сентября", "октября", "ноября", "декабря"};
-        DateFormatSymbols dfs = DateFormatSymbols.getInstance(russian);
+        DateFormatSymbols dfs = DateFormatSymbols.getInstance(russian); // Locale.getDefault());
         dfs.setMonths(newMonths);
-        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, russian);
+        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, russian); // Locale.getDefault());
         SimpleDateFormat sdf = (SimpleDateFormat) df;
         sdf.setDateFormatSymbols(dfs);
 

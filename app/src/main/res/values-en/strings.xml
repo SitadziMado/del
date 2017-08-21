@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="weights_array">
+        <item>up to 500 g</item>
+        <item>up to 1 kg  </item>
+        <item>up to 2 kg  </item>
+        <item>up to 5 kg  </item>
+        <item>up to 10 kg </item>
+    </string-array>
+
+    <string-array name="sort_array">
+        <item>by distance</item>
+        <item>by payment</item>
+        <item>by weight</item>
+        <item>by credit</item>
+    </string-array>
+
+    <string name="text_about_fragment">
+        Kopyrin Maxim Viktorovich\n
+        Position: CEO\n
+        Phone: 8-919-470-98-10\n
+        Private e-mail: kopyrin.mak@yandex.ru\n\n
+
+        Simakova Alina Robertovna\n
+        Position: IT department leader, lead accountant\n
+        Phone: 8-909-114-94-14\n
+        Private e-mail: jjmaectro@yandex.ru\n\n
+
+        Polygalov Denis Andreyevich\n
+        Position: Lead marketer\n
+        Phone: 8-952-329-68-10\n\n
+
+        Terlych Nikita Andreyevich\n
+        Position: Front-end developer\n
+        Phone: 8-961-754-44-28\n
+        Private e-mail: terlychnikita@gmail.com\n\n
+
+        Suntsev Maxim Alexandrovich\n
+        Position: Back-end developer\n
+        Phone: 8-961-754-44-28\n
+        Private e-mail: sunmax1234@mail.ru
+    </string>
+
+    <string name="authorizing">Authorizing…</string>
+    <string name="about_item">About</string>
+    <string name="accept_an_order">Accept</string>
+    <string name="action_logout">Log out</string>
+    <string name="action_settings">Refresh</string>
+    <string name="alredy_have_a_delivery">You already have an active delivery!</string>
+    <string name="back">Back</string>
+    <string name="check_info_validity">Check validity of entered information.</string>
+    <string name="communicate_item">Contacts</string>
+    <string name="create">Create</string>
+    <string name="creating_account">Creating an account…</string>
+    <string name="currency_text">%s rub.</string>
+    <string name="deliveries">Deliveries</string>
+    <string name="distance">Distance:</string>
+    <string name="done">Done</string>
+    <string name="email_constraint">enter a valid e-mail address</string>
+    <string name="face_item">Orders &amp; deliveries</string>
+    <string name="get_item">Deliver an order</string>
+    <string name="grams">%s g</string>
+    <string name="history">History</string>
+    <string name="incorrect_phone">Incorrect phone number</string>
+    <string name="input_constraint">between 4 &amp; 20 alphanumeric characters</string>
+    <string name="leave_feedback">Leave a feedback</string>
+    <string name="loading">Loading…</string>
+    <string name="login_failed">Cannot authorize.</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="meters_text">%s m</string>
+    <string name="name_an_order">Name an order, for instance, according to what\'s in</string>
+    <string name="name_constraint">at least 3 characters</string>
+    <string name="no_orders_available">There is no active orders at the moment</string>
+    <string name="order_cost">Credit: %s</string>
+    <string name="order_customer">Customer: %s</string>
+    <string name="order_from">From: %s</string>
+    <string name="order_item">Create an order</string>
+    <string name="order_name">Name: %s</string>
+    <string name="order_phone">Phone number: %s</string>
+    <string name="order_to">To: %s</string>
+    <string name="orders">Orders</string>
+    <string name="password_constraint">enter between 4 &amp; 10 alphanumeric characters</string>
+    <string name="payment">Cost:</string>
+    <string name="restore_attempt">Attempt to auto-authorize…</string>
+    <string name="send">Send</string>
+    <string name="start_an_order">Make a new order!</string>
+    <string name="title_activity_signup">Sign up</string>
+    <string name="tools_item">Account</string>
+    <string name="where_to_bring">Where to bring the order?</string>
+    <string name="where_to_take">Where to take the order?</string>
+    <string name="layout_about">About you</string>
+    <string name="layout_additional_phone_number">Additional phone number</string>
+    <string name="layout_already_registered">Already signed up? Sign in then!</string>
+    <string name="layout_ascending">ascending</string>
+    <string name="layout_available_orders">Available orders</string>
+    <string name="layout_card_number">Card number</string>
+    <string name="layout_choose_a_day">Choose a day</string>
+    <string name="layout_code">Entrance code</string>
+    <string name="layout_conditions">Order conditions</string>
+    <string name="layout_create_account">Create an account</string>
+    <string name="layout_create_an_order">Create an order</string>
+    <string name="layout_descending">descending</string>
+    <string name="layout_describe_an_order">Describe an order*</string>
+    <string name="layout_entrance">Entrance</string>
+    <string name="layout_feedback">Feedback</string>
+    <string name="layout_floor">Floor</string>
+    <string name="layout_how_much_does_it_cost">How much does it cost?*</string>
+    <string name="layout_how_much_does_it_weigh">How much does it weigh?</string>
+    <string name="layout_initials">Initials</string>
+    <string name="layout_login">Login</string>
+    <string name="layout_map">Credit card</string>
+    <string name="layout_money">Money</string>
+    <string name="layout_name">Name</string>
+    <string name="layout_or_register">… or sign up for free</string>
+    <string name="layout_owner_name">Owner name</string>
+    <string name="layout_passport_given_by">Given by</string>
+    <string name="layout_passport_given_date">Given when</string>
+    <string name="layout_passport_number">Number</string>
+    <string name="layout_passport_serie">Series</string>
+    <string name="layout_password">Password</string>
+    <string name="layout_patronym">Patronym</string>
+    <string name="layout_payment">Payment:</string>
+    <string name="layout_phone">Phone number</string>
+    <string name="layout_phone_number">Phone number*</string>
+    <string name="layout_profile">Profile</string>
+    <string name="layout_room">*Room/office</string>
+    <string name="layout_sample_money">1500 rubles</string>
+    <string name="layout_save_changes">Save changes</string>
+    <string name="layout_sender_code">SMS-code</string>
+    <string name="layout_sign_in">Sign in</string>
+    <string name="layout_surname">Surname</string>
+    <string name="layout_when_to_bring">When to deliver?</string>
+    <string name="layout_when_to_take">When to take?</string>
+    <string name="layout_where_to_bring">Where to bring? (Address)*</string>
+    <string name="layout_where_to_take">Where to take from? (Address)*</string>
+</resources>

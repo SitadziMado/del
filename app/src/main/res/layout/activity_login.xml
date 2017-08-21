@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:hint="Логин" />
+                android:hint="@string/layout_login" />
         </android.support.design.widget.TextInputLayout>
 
         <!--  Password Label -->
@@ -40,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:hint="Пароль" />
+                android:hint="@string/layout_password" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
@@ -50,7 +50,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
             android:padding="1dp"
-            android:text="Войти"
+            android:text="@string/layout_sign_in"
             style="@style/Widget.AppCompat.Button.Colored"
             android:fontFamily="sans-serif-medium"
             android:textSize="16sp" />
@@ -64,7 +64,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="... или зарегистрируйтесь"
+            android:text="@string/layout_or_register"
             android:gravity="center"
             android:textSize="16sp"/>
 

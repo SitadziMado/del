@@ -1,13 +1,13 @@
 <resources>
 
-    <string name="app_name">Del</string>
+    <string name="app_name" translatable="false">Del</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
     <string name="tools_item">Аккаунт</string>
     <string name="communicate_item">Контакты</string>
-    <string name="accaunt_item"></string>
+    <string name="accaunt_item" translatable="false"></string>
     <string name="about_item">О нас</string>
     <string name="face_item">Заказы и доставки</string>
     <string name="order_item">Создать заказ</string>
@@ -28,30 +28,34 @@
         <item>по залогу</item>
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="text_about_fragment">Копырин Максим Викторович\n
-Должность: Генеральный деректор\n
-Телефон: 89194709810\n
-Личный E-mail: kopyrin.mak@yandex.ru\n
-\nСимакова Алина Робертовна\n
-Должность: Глава отдела IT-разработок, главный бухгалтер\n
-Телефон: 89091149414\n
-Личный E-mail: jjmaectro@yandex.ru\n
-\nПолыгалов Денис Андреевич\n
-Должность: Глава PR-отдела\n
-Телефон: 89523296810\n
-\nТерлыч Никита Андреевич\n
-Должность: IT-разработчик (front-end)\n
-Телефон: 89617544428\n
-Личный E-mail: terlychnikita@gmail.com\n
-\nСунцев Максим Александрович\n
-Должность: IT-разработчик (back-end)\n
-Телефон: 89617544428\n
-Личный e-mail: sunmax1234@mail.ru
-    </string>
-    <string name="title_activity_login">Del</string>
+    <string name="text_about_fragment">
+        Копырин Максим Викторович\n
+        Должность: Генеральный директор\n
+        Телефон: 8-919-470-98-10\n
+        Личный e-mail: kopyrin.mak@yandex.ru\n\n
 
-    <!-- Strings related to login -->
+        Симакова Алина Робертовна\n
+        Должность: Глава отдела IT-разработок, главный бухгалтер\n
+        Телефон: 8-909-114-94-14\n
+        Личный e-mail: jjmaectro@yandex.ru\n\n
+
+        Полыгалов Денис Андреевич\n
+        Должность: Глава PR-отдела\n
+        Телефон: 8-952-329-68-10\n\n
+
+        Терлыч Никита Андреевич\n
+        Должность: IT-разработчик (front-end)\n
+        Телефон: 8-961-754-44-28\n
+        Личный e-mail: terlychnikita@gmail.com\n\n
+
+        Сунцев Максим Александрович\n
+        Должность: IT-разработчик (back-end)\n
+        Телефон: 8-961-754-44-28\n
+        Личный e-mail: sunmax1234@mail.ru
+    </string>
+    <string name="title_activity_login" translatable="false">Del</string>
+
+    <!-- СТроки, используемые внутри Activities -->
     <string name="title_activity_signup">Регистрация</string>
     <string name="menu_refresh">Обновить</string>
     <string name="action_settings">Обновить</string>
@@ -93,4 +97,56 @@
     <string name="accept_an_order">Подтвердите заказ</string>
     <string name="create">Создать</string>
     <string name="grams">%s г</string>
+
+    <!-- Строки, используемые компонентами разметки -->
+    <string name="layout_login">Логин</string>
+    <string name="layout_password">Пароль</string>
+    <string name="layout_sign_in">Войти</string>
+    <string name="layout_or_register">… или зарегистрируйтесь</string>
+    <string name="layout_e_mail" translatable="false">E-mail</string>
+    <string name="layout_name">Имя</string>
+    <string name="layout_surname">Фамилия</string>
+    <string name="layout_patronym">Отчество</string>
+    <string name="layout_phone">Номер телефона</string>
+    <string name="layout_about">О себе</string>
+    <string name="layout_create_account">Создать аккаунт</string>
+    <string name="layout_already_registered">Уже зарегистрированы? Войдите</string>
+    <string name="layout_profile">Профиль</string>
+    <string name="layout_initials">ФИО</string>
+    <string name="layout_sample_number" translatable="false">8 800 555 35 35</string>
+    <string name="layout_sample_e_mail" translatable="false">chintan@letsnurture.com</string>
+    <string name="layout_sample_money">1500 рублей</string>
+    <string name="layout_money">Деньги</string>
+    <string name="layout_map">Карта</string>
+    <string name="layout_owner_name">Имя владельца</string>
+    <string name="layout_card_number">Номер карты</string>
+    <string name="layout_card_valid_thru" translatable="false">VALID THRU</string>
+    <string name="layout_card_cvv" translatable="false">CVV</string>
+    <string name="layout_save_changes">Сохранить изменения</string>
+    <string name="layout_passport_serie">Серия</string>
+    <string name="layout_passport_number">Номер</string>
+    <string name="layout_passport_given_by">Кем выдан</string>
+    <string name="layout_passport_given_date">Дата выдачи</string>
+    <string name="layout_sender_code">код от получателя</string>
+    <string name="layout_feedback">Отзыв</string>
+    <string name="layout_ascending">возрастание</string>
+    <string name="layout_descending">убывание</string>
+    <string name="layout_available_orders">Доступные заказы</string>
+    <string name="layout_conditions">Условия заказа</string>
+    <string name="layout_describe_an_order">Опишите посылку*</string>
+    <string name="layout_how_much_does_it_cost">Сколько стоит груз?*</string>
+    <string name="layout_how_much_does_it_weigh">Сколько весит груз?</string>
+    <string name="layout_where_to_take">Откуда забрать? (Адрес)*</string>
+    <string name="layout_where_to_bring">Куда доставить? (Адрес)*</string>
+    <string name="layout_choose_a_day">Выберите день</string>
+    <string name="layout_when_to_take">Во сколько забрать</string>
+    <string name="layout_when_to_bring">Ко скольким доставить</string>
+    <string name="layout_phone_number">Номер телефона*</string>
+    <string name="layout_payment">Оплата:</string>
+    <string name="layout_create_an_order">Оформить заказ</string>
+    <string name="layout_entrance">Подъезд</string>
+    <string name="layout_code">Код домофона</string>
+    <string name="layout_floor">Этаж</string>
+    <string name="layout_room">*Квартира/офис</string>
+    <string name="layout_additional_phone_number">Запасной номер</string>
 </resources>
