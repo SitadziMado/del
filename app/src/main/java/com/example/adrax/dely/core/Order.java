@@ -37,6 +37,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
 
     }
 
+    @NonNull
     public static OrderList fromString(String jsonString, @NonNull User parent) {
         OrderList list = new OrderList();
         ArrayList<DynamicObject> objects = DynamicObject.fromString(jsonString);
@@ -103,27 +104,18 @@ public class Order extends DynamicObject implements Comparable<Order> {
         return sb.toString();
     }
 
-    public void post(@NonNull final InternetCallback<Boolean> callback) {
+    public void post(@NonNull final InternetCallback<String> callback) {
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, ORDER_URL, new InternetCallback<String>() {
             @Override
-            public void call(String s) {
-                Boolean result = Boolean.FALSE;
-
-                switch (User.requestStatusFromString(s)) {
-                    case ORDER_ERROR:
-                        LogHelper.error("Ошибка при отправлении заказа на сервер.");
-                        break;
-
-                    case ACCESS_ERROR:
-                        LogHelper.error("Ошибка доступа.");
-                        break;
-
-                    case ORDER_LOADED:
-                        result = Boolean.TRUE;
-                        break;
+            public void call(Result<String> s) {
+                if (s.isSuccessful()) {
+                    s.setMessage("Заказ оформлен!");
+                } else {
+                    // ToDo: возможно, убрать
+                    s.setMessage("Ошибка при оформлении заказа.");
                 }
 
-                callback.call(result);
+                callback.call(s);
             }
         });
 
@@ -149,41 +141,31 @@ public class Order extends DynamicObject implements Comparable<Order> {
         );
     }
 
-    public void cancel(@NonNull final InternetCallback<Boolean> callback) {
+    public void cancel(@NonNull final InternetCallback<String> callback) {
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, CANCEL_URL, new InternetCallback<String>() {
             @Override
-            public void call(String s) {
-                callback.call(Boolean.FALSE);
+            public void call(Result<String> s) {
+                callback.call(s);
             }
         });
 
         task.execute();
     }
 
-    public void start(@NonNull final InternetCallback<Boolean> callback) {
+    public void start(@NonNull final InternetCallback<String> callback) {
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, START_URL, new InternetCallback<String>() {
             @Override
-            public void call(String s) {
-                Boolean result = Boolean.FALSE;
-                switch (User.requestStatusFromString(s)) {
-                    case ORDER_BUSY:
-                        LogHelper.error("Заказ уже начат.");
-                        break;
-
-                    case ORDER_TOO_MANY:
-                        LogHelper.error("Слишком много начатых заказов.");
-                        break;
-
-                    case ORDER_STARTED:
-                        result = Boolean.TRUE;
-                        break;
+            public void call(Result<String> s) {
+                if (s.isSuccessful()) {
+                    s.setMessage("Доставка начата!");
+                } else {
+                    // ToDo: возможно, убрать
+                    s.setMessage("Ошибка при начале заказа.");
                 }
 
-                callback.call(result);
+                callback.call(s);
             }
         });
-
-        // assert m_parent != null;
 
         task.execute(
                 HASH, getStringProp(HASH),
@@ -194,23 +176,18 @@ public class Order extends DynamicObject implements Comparable<Order> {
 
     public void finish(
             @NonNull String smsCode,
-            @NonNull final InternetCallback<Boolean> callback
+            @NonNull final InternetCallback<String> callback
     ) {
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, FINISH_URL, new InternetCallback<String>() {
             @Override
-            public void call(String s) {
-                Boolean result = Boolean.FALSE;
-                switch (User.requestStatusFromString(s)) {
-                    case ORDER_OK:
-                        result = Boolean.TRUE;
-                        break;
-
-                    case ORDER_ERROR:
-                        LogHelper.error("Ошибка при завершении заказа");
-                        break;
+            public void call(Result<String> s) {
+                if (s.isSuccessful()) {
+                    s.setMessage("Доставка завершена!");
+                } else {
+                    s.setMessage("Ошибка при завершении заказа.");
                 }
 
-                callback.call(result);
+                callback.call(s);
             }
         });
 
@@ -250,8 +227,15 @@ public class Order extends DynamicObject implements Comparable<Order> {
     public void status(@NonNull final InternetCallback<OrderStatus> callback) {
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, STATUS_URL, new InternetCallback<String>() {
             @Override
-            public void call(String s) {
-                callback.call(statusFromString(s));
+            public void call(Result<String> s) {
+                callback.call(
+                        new Result<OrderStatus>(
+                                s,
+                                Result.statusFromString(
+                                        s.getData()
+                                )
+                        )
+                );
             }
         });
 
@@ -264,20 +248,13 @@ public class Order extends DynamicObject implements Comparable<Order> {
     public void feedback(
             @NonNull Integer rating,
             @NonNull String text,
-            @NonNull final InternetCallback<Boolean> callback
+            @NonNull final InternetCallback<String> callback
     ) {
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, FEEDBACK_URL, new InternetCallback<String>() {
             @Override
-            public void call(String s) {
-                Boolean result = Boolean.FALSE;
-
-                switch (User.requestStatusFromString(s)) {
-                    case ORDER_OK:
-                        result = Boolean.TRUE;
-                        break;
-
-                    default:
-                        break;
+            public void call(Result<String> result) {
+                if (result.isSuccessful()) {
+                    result.setMessage("Спасибо за отзыв!");
                 }
 
                 callback.call(result);
@@ -299,33 +276,6 @@ public class Order extends DynamicObject implements Comparable<Order> {
         return thisDate.compareTo(rhsDate);
     }
 
-    private static OrderStatus statusFromString(String statusString) {
-        if (statusString == null) {
-            statusString = "";
-        }
-
-        switch (statusString.toLowerCase()) {
-            case User.WAITING:
-                return OrderStatus.WAITING;
-
-            case User.DELIVERING:
-                return OrderStatus.DELIVERING;
-
-            case User.DELIVERED:
-                return OrderStatus.DELIVERED;
-
-            case User.DELIVERY_DONE:
-                return OrderStatus.DELIVERY_DONE;
-
-            case User.ERROR:
-                return OrderStatus.ERROR;
-
-            default:
-                LogHelper.error("Неизвестный статус заказа.");
-                return OrderStatus.ERROR;
-        }
-    }
-
     private void appendFieldValue(
             @NonNull StringBuilder sb,
             @NonNull String header,
@@ -342,7 +292,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
     private void setupSpecialProps(@NonNull User parent) {
         setProp(PARENT, parent);
         setStringProp(HASH, parent.getHash());
-        setProp(STATUS, statusFromString(getStringProp(STATUS)));
+        setProp(STATUS, Result.statusFromString(getStringProp(STATUS)));
     }
 
     private static final String ORDER_URL = "http://adrax.pythonanywhere.com/load_delys";

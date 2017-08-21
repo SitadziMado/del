@@ -5,9 +5,6 @@ import android.support.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 /**
  * Создан Максимом Сунцевым 18.08.2017.
  */
@@ -31,20 +28,26 @@ public class GoogleMapsHelper {
                 DISTANCE_URL,
                 new InternetCallback<String>() {
             @Override
-            public void call(String result) {
+            public void call(Result<String> result) {
                 double distance = -1.;
 
                 try {
-                    JSONObject response = new JSONObject(result);
+                    JSONObject response = new JSONObject(result.getData());
                     distance = response.getJSONArray("routes")
                             .getJSONObject(0).getJSONArray("legs")
                             .getJSONObject(0)
                             .getJSONObject("distance").getDouble("value");
+
+                    result.setMessage("Успешно подсчитано расстояние!");
+                    result.setSuccessful(true);
                 } catch (JSONException e) {
-                    LogHelper.error("Не удалось рассчитать дистанцию.");
+                    String msg;
+                    result.setMessage(msg = "Не удалось рассчитать растояние, проверьте правильность адреса.");
+                    result.setSuccessful(false);
+                    LogHelper.error(msg);
                 }
 
-                callback.call(distance);
+                callback.call(new Result<>(result, distance));
             }
         });
 

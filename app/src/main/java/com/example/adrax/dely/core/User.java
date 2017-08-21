@@ -24,7 +24,7 @@ public class User {
             @NonNull String username,
             @NonNull String password,
             @NonNull String mail,
-            @NonNull final InternetCallback<Boolean> callback
+            @NonNull final InternetCallback<String> callback
     ) {
         register(
                 username,
@@ -48,32 +48,9 @@ public class User {
             @NonNull String middleName,
             @NonNull String number,
             @NonNull String about,
-            @NonNull final InternetCallback<Boolean> callback
+            @NonNull final InternetCallback<String> callback
     ) {
-        InternetTask task = new InternetTask(InternetTask.METHOD_POST, REGISTER_URL, new InternetCallback<String>() {
-            @Override
-            public void call(String s) {
-                Boolean result = Boolean.FALSE;
-
-                switch (requestStatusFromString(s)) {
-                    case LOGIN_REGISTERED:
-                        result = Boolean.TRUE;
-                        break;
-
-                    case LOGIN_ALREADY_TAKEN:
-                        LogHelper.error("Логин занят.");
-                        // result = Boolean.FALSE;
-                        break;
-
-                    default:
-                        LogHelper.error("Неизвестный код возврата при регистрации.");
-                        // result = Boolean.FALSE;
-                        break;
-                }
-
-                callback.call(result);
-            }
-        });
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, REGISTER_URL, callback);
 
         task.execute(
                 USERNAME, username,
@@ -95,32 +72,20 @@ public class User {
     ) {
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, LOGIN_URL, new InternetCallback<String>() {
             @Override
-            public void call(String s) {
-                User user = null;
-                switch (requestStatusFromString(s)) {
-                    case INCORRECT_AUTHORIZATION_DATA:
-                        LogHelper.error("Некорректные данные авторизации.");
-                        break;
+            public void call(Result<String> s) {
+                User user;
 
-                    case SERVER_PROBLEMS:
-                        LogHelper.error("Проблемы с сервером.");
-                        break;
+                if (s.isSuccessful()) {
+                    user = fromString(s.getData());
 
-                    case REQUEST_INCORRECT:
-                        LogHelper.error("Некорректный запрос.");
-                        break;
-
-                    case OTHER:
-                        user = User.fromString(s);
-                        break;
-                }
-
-                // Пишем хэш.
-                if (user != null) {
+                    // Пишем хэш.
                     storeHash(context, user.getHash());
+                } else {
+                    user = null;
                 }
 
-                callback.call(user);
+                // Оставляем статус и сообщение, меняем инфу на пользователя.
+                callback.call(new Result<>(s, user));
             }
         });
 
@@ -136,34 +101,23 @@ public class User {
     ) {
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, RESTORE_URL, new InternetCallback<String>() {
             @Override
-            public void call(String s) {
-                User user = null;
-                switch (requestStatusFromString(s)) {
-                    case INCORRECT_AUTHORIZATION_DATA:
-                        LogHelper.error("Некорректные данные авторизации.");
-                        break;
+            public void call(Result<String> s) {
+                User user;
 
-                    case SERVER_PROBLEMS:
-                        LogHelper.error("Проблемы с сервером.");
-                        break;
-
-                    case REQUEST_INCORRECT:
-                        LogHelper.error("Некорректный запрос.");
-                        break;
-
-                    case OTHER:
-                        user = User.fromString(s);
-                        break;
+                if (s.isSuccessful()) {
+                    user = fromString(s.getData());
+                } else {
+                    user = null;
                 }
 
-                callback.call(user);
+                callback.call(new Result<>(s, user));
             }
         });
 
         String restoredHash = restoreHash(context);
 
         if (restoredHash.equals("none")) {
-            callback.call(null);
+            callback.call(new Result<User>(Boolean.FALSE, null));
         } else {
             task.execute(HASH, restoreHash(context));
         }
@@ -229,35 +183,9 @@ public class User {
 
     public void logout(
             @NonNull final Activity context,
-            @NonNull final InternetCallback<Boolean> callback
+            @NonNull final InternetCallback<String> callback
     ) {
-        InternetTask task = new InternetTask(InternetTask.METHOD_POST, LOGOUT_URL, new InternetCallback<String>() {
-            @Override
-            public void call(String s) {
-                Boolean result = Boolean.FALSE;
-
-                switch (requestStatusFromString(s)) {
-                    case ORDER_OK:
-                        storeHash(context, "none");
-                        result = Boolean.TRUE;
-                        break;
-
-                    case ORDER_ERROR:
-                        LogHelper.error("Ошибка сервера.");
-                        break;
-
-                    case ACCESS_ERROR:
-                        LogHelper.error("Ошибка доступа.");
-                        break;
-
-                    default:
-                        LogHelper.error("При выходе из аккаунта произошла ошибка.");
-                        break;
-                }
-
-                callback.call(result);
-            }
-        });
+        InternetTask task = new InternetTask(InternetTask.METHOD_POST, LOGOUT_URL, callback);
 
         task.execute(HASH, m_hash);
     }
@@ -266,15 +194,16 @@ public class User {
         final User user = this;
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, SYNC_URL, new InternetCallback<String>() {
             @Override
-            public void call(String s) {
-                OrderList orders = new OrderList();
-                if (!s.equals("404")) {
-                    orders = Order.fromString(s, user);
+            public void call(Result<String> s) {
+                OrderList orders;
+
+                if (s.isSuccessful()) {
+                    orders = Order.fromString(s.getData(), user);
                 } else {
-                    LogHelper.error("При синхронизации заказов произошла ошибка.");
+                    orders = new OrderList();
                 }
 
-                callback.call(orders);
+                callback.call(new Result<>(s, orders));
             }
         });
 
@@ -285,18 +214,16 @@ public class User {
         final User user = this;
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, CURRENT_DELIVERY_URL, new InternetCallback<String>() {
             @Override
-            public void call(String s) {
-                OrderList orders = new OrderList();
-                if (!s.equals(ERROR)) {
-                    orders = Order.fromString(s, user);
-                    if (orders == null) {
-                        orders = new OrderList();
-                    }
+            public void call(Result<String> s) {
+                OrderList orders;
+
+                if (s.isSuccessful()) {
+                    orders = Order.fromString(s.getData(), user);
                 } else {
-                    LogHelper.error("При запросе текущих доставки произошла ошибка.");
+                    orders = new OrderList();
                 }
 
-                callback.call(orders);
+                callback.call(new Result<>(s, orders));
             }
         });
 
@@ -307,18 +234,16 @@ public class User {
         final User user = this;
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, CURRENT_ORDERS_URL, new InternetCallback<String>() {
             @Override
-            public void call(String s) {
-                OrderList orders = new OrderList();
-                if (!s.equals(ERROR)) {
-                    orders = Order.fromString(s, user);
-                    if (orders == null) {
-                        orders = new OrderList();
-                    }
+            public void call(Result<String> s) {
+                OrderList orders;
+
+                if (s.isSuccessful()) {
+                    orders = Order.fromString(s.getData(), user);
                 } else {
-                    LogHelper.error("При запросе текущих заказов произошла ошибка.");
+                    orders = new OrderList();
                 }
 
-                callback.call(orders);
+                callback.call(new Result<>(s, orders));
             }
         });
 
@@ -331,24 +256,20 @@ public class User {
             @NonNull String given,
             @NonNull String date,
             Boolean isMale,
-            @NonNull final InternetCallback<Boolean> callback
+            @NonNull final InternetCallback<String> callback
     ) {
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, ADD_PASSPORT_URL, new InternetCallback<String>() {
             @Override
-            public void call(String s) {
-                Boolean result = Boolean.FALSE;
-
-                switch (requestStatusFromString(s)) {
-                    case ORDER_OK:
-                        result = Boolean.TRUE;
-                        break;
-
-                    default:
-                        LogHelper.error("При загрузке паспорта произошла ошибка.");
-                        break;
+            public void call(Result<String> s) {
+                if (s.isSuccessful()) {
+                    s.setMessage("Паспорт загружен!");
+                } else {
+                    String msg = "При загрузке паспорта произошла ошибка.";
+                    s.setMessage(msg);
+                    LogHelper.error(msg);
                 }
 
-                callback.call(result);
+                callback.call(s);
             }
         });
 
@@ -366,23 +287,19 @@ public class User {
             @NonNull String cardNumber,
             @NonNull String cardValid,
             @NonNull String cardOwner,
-            @NonNull final InternetCallback<Boolean> callback) {
+            @NonNull final InternetCallback<String> callback) {
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, ADD_CARD_URL, new InternetCallback<String>() {
             @Override
-            public void call(String s) {
-                Boolean result = Boolean.FALSE;
-
-                switch (requestStatusFromString(s)) {
-                    case ORDER_OK:
-                        result = Boolean.TRUE;
-                        break;
-
-                    default:
-                        LogHelper.error("При загрузке данных кредитной карточки произошла ошибка.");
-                        break;
+            public void call(Result<String> s) {
+                if (s.isSuccessful()) {
+                    s.setMessage("Данные кредитной карточки загружены!");
+                } else {
+                    String msg = "При загрузке данных кредитной карточки произошла ошибка.";
+                    s.setMessage(msg);
+                    LogHelper.error(msg);
                 }
 
-                callback.call(result);
+                callback.call(s);
             }
         });
 
@@ -394,84 +311,32 @@ public class User {
         );
     }
 
-    public void syncInfo(@Nullable final InternetCallback<Boolean> callback) {
+    public void syncInfo(@Nullable final InternetCallback<String> callback) {
         final User me = this;
-
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, USER_INFO_URL, new InternetCallback<String>() {
             @Override
-            public void call(String s) {
-                Boolean result = Boolean.TRUE;
+            public void call(Result<String> s) {
+                if (s.isSuccessful()) {
+                    User temp = fromString(s.getData());
 
-                switch (requestStatusFromString(s)) {
-                    case ORDER_ERROR:
-                        result = Boolean.FALSE;
-                        break;
-
-                    default:
-                        // DynamicObject obj = new DynamicObject(s);
-                        User temp = fromString(s);
-
-                        me.setAbout(temp.getAbout());
-                        me.setMail(temp.getMail());
-                        me.setMiddleName(temp.getMiddleName());
-                        me.setMoney(temp.getMoney());
-                        me.setName(temp.getName());
-                        me.setPhone(temp.getPhone());
-                        me.setSurname(temp.getSurname());
-
-                        break;
+                    me.setAbout(temp.getAbout());
+                    me.setMail(temp.getMail());
+                    me.setMiddleName(temp.getMiddleName());
+                    me.setMoney(temp.getMoney());
+                    me.setName(temp.getName());
+                    me.setPhone(temp.getPhone());
+                    me.setSurname(temp.getSurname());
+                } else {
+                    s.setMessage("При синхронизации информации произошла ошибка.");
                 }
 
                 if (callback != null) {
-                    callback.call(result);
+                    callback.call(s);
                 }
             }
         });
 
         task.execute(HASH, m_hash);
-    }
-
-    static RequestStatus requestStatusFromString(@Nullable String status) {
-        if (status == null) {
-            status = "";
-        }
-
-        switch (status.toLowerCase())
-        {
-            case INCORRECT_AUTHORIZATION_DATA:
-                return RequestStatus.INCORRECT_AUTHORIZATION_DATA;
-            case SERVER_PROBLEMS:
-                return RequestStatus.SERVER_PROBLEMS;
-            case INCORRECT_REQUEST:
-                return RequestStatus.REQUEST_INCORRECT;
-            case LOGIN_REGISTERED:
-                return RequestStatus.LOGIN_REGISTERED;
-            case LOGIN_ALREADY_TAKEN:
-                return RequestStatus.LOGIN_ALREADY_TAKEN;
-            case LOADED:
-                return RequestStatus.ORDER_LOADED;
-            case ERROR:
-                return RequestStatus.ORDER_ERROR;
-            case STARTED:
-                return RequestStatus.ORDER_STARTED;
-            case BUSY:
-                return RequestStatus.ORDER_BUSY;
-            case TOO_MANY:
-                return RequestStatus.ORDER_TOO_MANY;
-            case OK:
-                return RequestStatus.ORDER_OK;
-            case NO_DATA:
-                return RequestStatus.ORDER_NO_DATA;
-            case ACCESS_ERROR:
-                return RequestStatus.ACCESS_ERROR;
-            case IO_ERROR:
-                return RequestStatus.IO_ERROR;
-            case URL_ERROR:
-                return RequestStatus.URL_ERROR;
-            default:
-                LogHelper.warn("Неизвестный код возврата с сервера.");
-                return RequestStatus.OTHER;
-        }
     }
 
     public String getAbout() {
@@ -561,31 +426,6 @@ public class User {
     private static final String ADD_CARD_URL = "http://adrax.pythonanywhere.com/add_card";
     private static final String USER_INFO_URL = "http://adrax.pythonanywhere.com/user_info";
     private static final String RESTORE_URL = "http://adrax.pythonanywhere.com/fast_login";
-
-    /// Константы авторизации
-    static final String INCORRECT_AUTHORIZATION_DATA = "incorrect_auth";    /** Некорректная инфа для авторизации */
-    static final String INCORRECT_REQUEST = "405";                          /** Тоже какая-то ошибка */
-    static final String SERVER_PROBLEMS = "login_error";                    /** Сервак гуфнулся... */
-
-    /// Константы регистрации
-    private static final String LOGIN_REGISTERED = "registered";            /** Регистрация прошла успешно */
-    private static final String LOGIN_ALREADY_TAKEN = "already_taken";      /** Логин занят */
-
-    /// Константы заказов
-    static final String LOADED = "loaded";		          /** Новый заказ успешно создан */
-    static final String ERROR = "server_error";           /** Ошибка отправки нового заказа на сервер */
-    static final String WAITING = "waiting";              /** Статусы заказов ниже */
-    static final String DELIVERING = "delivering";        /** В процессе... */
-    static final String DELIVERED = "delivered";          /** Вроде бы доставлено */
-    static final String DELIVERY_DONE = "delivery_done";  /** Абсолютный суккесс */
-    static final String STARTED = "delivery_started";     /** Всё хорошо, доставка началась */
-    static final String BUSY = "delivery_busy";           /** Пользователь - слоупок, рекомендуем обновиться до 10-ки */
-    static final String OK = "ok";                        /** Заказ успешно подтверждён (обеими сторонами) */
-    static final String TOO_MANY = "already_enough";      /** Только 1 заказ можно доставлять */
-    static final String NO_DATA = "nodata_error";
-    static final String ACCESS_ERROR = "access_error";
-    static final String IO_ERROR = "io_error";
-    static final String URL_ERROR = "url_error";
 
     static final String ID = "dely_id";
     static final String SMS_CODE = "sms_code";

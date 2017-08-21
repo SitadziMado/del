@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.LogHelper;
+import com.example.adrax.dely.core.Result;
 import com.example.adrax.dely.core.User;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -64,10 +65,11 @@ public class LoginActivity extends AppCompatActivity {
 
         User.restoreLastSession(this, new InternetCallback<User>() {
             @Override
-            public void call(User result) {
+            public void call(Result<User> result) {
                 progressDialog.dismiss();
 
-                if ((user = result) != null) {
+                if (result.isSuccessful()) {
+                    user = result.getData();
                     onLoginSuccess();
                 } else {
                     LogHelper.warn("Невозможно автоматически перезайти в систему.");
@@ -154,8 +156,9 @@ public class LoginActivity extends AppCompatActivity {
         if (user == null) {
             User.login(this, email, password, new InternetCallback<User>() {
                 @Override
-                public void call(User result) {
-                    if ((user = result) != null) {
+                public void call(Result<User> result) {
+                    if (result.isSuccessful() != null) {
+                        user = result.getData();
                         onLoginSuccess();
                     } else {
                         onLoginFailed();

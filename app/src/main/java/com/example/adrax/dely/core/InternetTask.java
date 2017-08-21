@@ -2,7 +2,6 @@ package com.example.adrax.dely.core;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -70,10 +69,10 @@ class InternetTask extends AsyncTask<String, Void, String> {
             }
         } catch (MalformedURLException e) {
             LogHelper.error(m_address + " некорректен.");
-            result = User.URL_ERROR;
+            result = Result.URL_ERROR;
         } catch (IOException e) {
             LogHelper.error("Ошибка соединения с " + m_address + ".");
-            result = User.IO_ERROR;
+            result = Result.IO_ERROR;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -86,7 +85,7 @@ class InternetTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        m_callback.call(s);
+        m_callback.call(new Result<>(s, s));
     }
 
     private String readStream(InputStream in)

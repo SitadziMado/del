@@ -3,7 +3,6 @@ package com.example.adrax.dely;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Patterns;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.adrax.dely.core.InternetCallback;
+import com.example.adrax.dely.core.Result;
 import com.example.adrax.dely.core.User;
 
 import java.io.UnsupportedEncodingException;
@@ -84,7 +84,7 @@ public class SignupActivity extends AppCompatActivity {
         Log.d(TAG, "Signup");
 
         if (!validate()) {
-            onSignupFailed();
+            onSignupFailed("Проверьте правильность введенной информации.");
             return;
         }
 /// костыль -----------------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ public class SignupActivity extends AppCompatActivity {
         final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Creating Account...");
+        progressDialog.setMessage("Создается аккаунт...");
         progressDialog.show();
 
         final String name = _nameText.getText().toString();
@@ -118,15 +118,17 @@ public class SignupActivity extends AppCompatActivity {
                 midname,
                 selnum,
                 about,
-                new InternetCallback<Boolean>() {
+                new InternetCallback<String>() {
             @Override
-            public void call(Boolean result) {
-                if (result) {
+            public void call(Result<String> result) {
+                progressDialog.dismiss();
+
+                if (result.isSuccessful()) {
                     onSignupSuccess();
                 } else {
-                    onSignupFailed();
+                    onSignupFailed(result.getMessage());
                 }
-                progressDialog.dismiss();
+
             }
         });
 
@@ -167,12 +169,12 @@ public class SignupActivity extends AppCompatActivity {
         SignupActivity.this.startActivity(myIntent);
     }
 
-    public void onSignupFailed() {
+    public void onSignupFailed(String message) {
         Toast.makeText(
                 getBaseContext(),
-                "Регистрация неудачна, возможно, логин уже занят.",
-                Toast.LENGTH_LONG)
-                .show();
+                message, //"Регистрация неудачна, возможно, логин уже занят.",
+                Toast.LENGTH_LONG
+        ).show();
 
         _signupButton.setEnabled(true);
     }
@@ -185,21 +187,21 @@ public class SignupActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
 
         if (name.isEmpty() || name.length() < 3) {
-            _nameText.setError("at least 3 characters");
+            _nameText.setError("как минимум 3 знака");
             valid = false;
         } else {
             _nameText.setError(null);
         }
 
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid email address");
+            _emailText.setError("введите корректный адрес почты");
             valid = false;
         } else {
             _emailText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+            _passwordText.setError("введите от 4 до 10 буквенно-цифровых знаков");
             valid = false;
         } else {
             _passwordText.setError(null);

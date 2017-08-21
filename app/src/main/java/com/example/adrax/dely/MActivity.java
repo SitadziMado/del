@@ -22,6 +22,7 @@ import com.example.adrax.dely.core.LogHelper;
 import com.example.adrax.dely.core.Order;
 import com.example.adrax.dely.core.OrderList;
 import com.example.adrax.dely.core.OrderStatus;
+import com.example.adrax.dely.core.Result;
 import com.example.adrax.dely.fragments.FragmentAbout;
 import com.example.adrax.dely.fragments.FragmentFace;
 import com.example.adrax.dely.fragments.FragmentGet;
@@ -139,9 +140,9 @@ public class MActivity extends AppCompatActivity
     public static void updateOrders() {
         user.syncOrders(new InternetCallback<OrderList>() {
             @Override
-            public void call(OrderList result) {
+            public void call(Result<OrderList> result) {
                 synchronized (ordersLock) {
-                    orders = result;
+                    orders = result.getData();
                     sorted_orders = orders.clone();
                 }
             }
@@ -149,10 +150,15 @@ public class MActivity extends AppCompatActivity
     }
 
     public void updateUserData() {
-        user.syncInfo(new InternetCallback<Boolean>() {
+        user.syncInfo(new InternetCallback<String>() {
             @Override
-            public void call(Boolean result) {
+            public void call(Result<String> result) {
                 // Сделай что-то с результатом.
+                /* if (result.isSuccessful()) {
+                    // Действия при успехе.
+                } else {
+                    // Действия при неудаче.
+                } */
             }
         });
     }
@@ -163,26 +169,26 @@ public class MActivity extends AppCompatActivity
     public static void updateFace() {
         user.currentOrders(new InternetCallback<OrderList>() {
             @Override
-            public void call(OrderList orders) {
+            public void call(Result<OrderList> result) {
                 synchronized (faceOrdersLock) {
-                    face_orders = orders;
+                    face_orders = result.getData();
                 }
             }
         });
 
         user.currentDelivery(new InternetCallback<OrderList>() {
             @Override
-            public void call(OrderList orders) {
+            public void call(Result<OrderList> result) {
                 synchronized (faceDeliveryLock) {
                     // ToDo: доставок может быть > 1.
-                    face_delivery = orders.firstOrDefault();
+                    face_delivery = result.getData().firstOrDefault();
 
                     if (face_delivery != null) {
                         face_delivery.status(new InternetCallback<OrderStatus>() {
                             @Override
-                            public void call(OrderStatus orderStatus) {
-                                if (orderStatus != OrderStatus.DELIVERED &&
-                                        orderStatus != OrderStatus.DELIVERY_DONE) {
+                            public void call(Result<OrderStatus> result) {
+                                if (result.getData() != OrderStatus.DELIVERED &&
+                                        result.getData() != OrderStatus.DELIVERY_DONE) {
                                     face_deliver_text = face_delivery.toString();
                                 } else {
                                     face_deliver_text = "На данный момент нет активных заказов";
@@ -248,11 +254,7 @@ public class MActivity extends AppCompatActivity
                 } else {
                     LogHelper.warn("При обновлении не были загружены данные с сервера.");
                 }
-                Toast.makeText(
-                        getApplicationContext(),
-                        "Информация обновлена!",
-                        Toast.LENGTH_LONG)
-                        .show();
+
                 return true;
             case android.R.id.home: // we get back here
 

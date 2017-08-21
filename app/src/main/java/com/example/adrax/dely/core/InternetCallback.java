@@ -1,5 +1,5 @@
 package com.example.adrax.dely.core;
 
-public interface InternetCallback<TResult> {
-    void call(TResult result);
+public interface InternetCallback<TData> {
+    void call(Result<TData> result);
 }

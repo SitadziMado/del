@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.adrax.dely.core.InternetCallback;
+import com.example.adrax.dely.core.Result;
 
 import static com.example.adrax.dely.LoginActivity.user;
 
@@ -92,22 +93,22 @@ public class ProfileActivity extends AppCompatActivity {
                 user.addCreditCard(card_number.getText().toString(),
                         card_valid.getText().toString(),
                         card_owner.getText().toString(),
-                        new InternetCallback<Boolean>() {
+                        new InternetCallback<String>() {
                             @Override
-                            public void call(Boolean result) {
-                                if (result) {
+                            public void call(Result<String> result) {
+                                // if (result.isSuccessful()) {
                                     Toast.makeText(
                                             getApplicationContext(),
-                                            "Сохранено",
+                                            result.getMessage(),
                                             Toast.LENGTH_LONG
                                     ).show();
-                                } else {
+                                /* } else {
                                     Toast.makeText(
                                             getApplicationContext(),
                                             "Ошибка при обработке данных",
                                             Toast.LENGTH_LONG
                                     ).show();
-                                }
+                                } */
                             }
                         });
             }
@@ -123,22 +124,22 @@ public class ProfileActivity extends AppCompatActivity {
                         passport_given.getText().toString(),
                         passport_date.getText().toString(),
                         true,
-                        new InternetCallback<Boolean>() {
+                        new InternetCallback<String>() {
                             @Override
-                            public void call(Boolean result) {
-                                if (result) {
+                            public void call(Result<String> result) {
+                                // if (result.isSuccessful()) {
                                     Toast.makeText(
                                             getApplicationContext(),
-                                            "Сохранено",
+                                            result.getMessage(),
                                             Toast.LENGTH_LONG
                                     ).show();
-                                } else {
+                                /* } else {
                                     Toast.makeText(
                                             getApplicationContext(),
                                             "Ошибка при обработке данных",
                                             Toast.LENGTH_LONG
                                     ).show();
-                                }
+                                } */
                             }
                         });
             }
@@ -196,11 +197,11 @@ public class ProfileActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_logout:
-                user.logout(this, new InternetCallback<Boolean>() {
+                user.logout(this, new InternetCallback<String>() {
                     @Override
-                    public void call(Boolean result) {
+                    public void call(Result<String> result) {
                         // ToDo: сделать действия по завершению текущего сеанса.
-                        if (result) {
+                        if (result.isSuccessful()) {
                             setResult(RESULT_OK, new Intent("ok"));
                             finish();
                         } else {

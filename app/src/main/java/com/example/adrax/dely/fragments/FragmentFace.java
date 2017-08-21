@@ -20,6 +20,7 @@ import com.example.adrax.dely.MActivity;
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.OrderStatus;
+import com.example.adrax.dely.core.Result;
 
 import static com.example.adrax.dely.MActivity.face_deliver_text;
 import static com.example.adrax.dely.MActivity.face_delivery;
@@ -57,7 +58,7 @@ public class FragmentFace extends Fragment {
     public View onCreateView(
             LayoutInflater inflater,
             ViewGroup container,
-            Bundle savedInstanceState) {
+            final Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_face, container, false);
 
         mContext = this.getActivity();
@@ -92,28 +93,23 @@ public class FragmentFace extends Fragment {
                 //if(user.orderStart(selected_id))
                 // user.orderFinish(Integer.parseInt(face_delivery.getId()));
                 //RunFeedbackDialog();
-                face_delivery.finish(text_code.getText().toString(), new InternetCallback<Boolean>() {
+                face_delivery.finish(text_code.getText().toString(), new InternetCallback<String>() {
                     @Override
-                    public void call(Boolean result) {
-                        if (result) {
-                            Toast.makeText(
-                                    getActivity(),
-                                    "Доставка завершена!",
-                                    Toast.LENGTH_LONG
-                            ).show();
+                    public void call(Result<String> result) {
+                        Toast.makeText(
+                                getActivity(),
+                                result.getMessage(),
+                                Toast.LENGTH_LONG
+                        ).show();
+
+                        if (result.isSuccessful()) {
                             RunFeedbackDialog();
-                        } else {
-                            Toast.makeText(
-                                    getActivity(),
-                                    "Произошла ошибка при завершении заказа.",
-                                    Toast.LENGTH_LONG
-                            ).show();
                         }
 
                         face_delivery.status(new InternetCallback<OrderStatus>() {
                             @Override
-                            public void call(OrderStatus orderStatus) {
-                                switch (orderStatus) {
+                            public void call(Result<OrderStatus> result) {
+                                switch (result.getData()) {
                                     case DELIVERY_DONE:
                                     case DELIVERED:
                                         btn_finish.setVisibility(View.GONE);
@@ -184,13 +180,12 @@ public class FragmentFace extends Fragment {
         int rating = data.getIntExtra("rating",0);
         //new Rating(rating, feedback)
         face_delivery.feedback( rating, feedback,
-                new InternetCallback<Boolean>() {
+                new InternetCallback<String>() {
                     @Override
-                    public void call(Boolean result) {
-                        if (result)
+                    public void call(Result<String> result) {
                         Toast.makeText(
                                 getActivity(),
-                                "Спасибо за отзыв!",
+                                result.getMessage(),
                                 Toast.LENGTH_LONG
                         ).show();
                     }
@@ -217,8 +212,8 @@ public class FragmentFace extends Fragment {
         {
             face_delivery.status(new InternetCallback<OrderStatus>() {
                 @Override
-                public void call(OrderStatus orderStatus) {
-                    switch (orderStatus) {
+                public void call(Result<OrderStatus> result) {
+                    switch (result.getData()) {
                         case DELIVERY_DONE:
                         case DELIVERED:
                             text_code.setVisibility(View.GONE);

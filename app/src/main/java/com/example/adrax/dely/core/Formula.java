@@ -51,10 +51,11 @@ public class Formula {
             distanceIndex = 4;
         }
 
-        return
-                m_pricesMatrix[distanceIndex][weightIndex] *
+        return Math.ceil(
+                m_pricesMatrix[weightIndex][distanceIndex] *
                 m_warrantyOnCost *
-                m_warrantyOnRepayment;
+                m_warrantyOnRepayment
+        );
     }
 
     private final Double[][] m_pricesMatrix = {

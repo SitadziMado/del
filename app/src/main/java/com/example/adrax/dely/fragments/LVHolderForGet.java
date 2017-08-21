@@ -13,6 +13,7 @@ import android.widget.ToggleButton;
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
+import com.example.adrax.dely.core.Result;
 
 import static com.example.adrax.dely.LoginActivity.user;
 import static com.example.adrax.dely.MActivity.face_delivery;
@@ -80,22 +81,18 @@ public final class LVHolderForGet extends RecyclerView.ViewHolder {
             {
                 if (face_delivery == null) {
                     new Order(user, Order.ID, orders.get(Integer.parseInt(tvId)).getStringProp(Order.ID)).start(
-                            new InternetCallback<Boolean>() {
+                            new InternetCallback<String>() {
                                 @Override
-                                public void call(Boolean result) {
-                                    if (result) {
+                                public void call(Result<String> result) {
+                                    if (result.isSuccessful()) {
                                         updateOrders();
                                         updateFace();
-                                        Toast.makeText(mContext,
-                                                "Доставка началась!",
-                                                Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(
-                                                mContext,
-                                                "Не удалось начать заказ, возможно, он уже начат.",
-                                                Toast.LENGTH_LONG
-                                        ).show();
                                     }
+
+                                    Toast.makeText(mContext,
+                                            result.getMessage(),
+                                            Toast.LENGTH_LONG
+                                    ).show();
                                 }
                             });
 

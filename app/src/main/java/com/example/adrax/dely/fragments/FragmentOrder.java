@@ -19,26 +19,16 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.Formula;
 import com.example.adrax.dely.core.GoogleMapsHelper;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
+import com.example.adrax.dely.core.Result;
 
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -249,18 +239,15 @@ public class FragmentOrder extends Fragment {
                 "Пермь," + _toText.getText().toString(),
                 new InternetCallback<Double>() {
                     @Override
-                    public void call(Double distance) {
-                        if (distance > 0.) {
+                    public void call(Result<Double> result) {
+                        if (result.isSuccessful()) {
+                            Double distance = result.getData();
                             me.distance = distance.toString();
                             _distanceView.setText(distance + "м");
                             me.createOrderDialog();
                         } else {
-                            _distanceView.setText(
-                                    "Не удалось рассчитать растояние, проверьте правильность адреса"
-                            );
-                            _payView.setText(
-                                    "Не удалось рассчитать растояние, проверьте правильность адреса"
-                            );
+                            _distanceView.setText(result.getMessage());
+                            _payView.setText(result.getMessage());
                         }
                     }
                 }
@@ -337,18 +324,12 @@ public class FragmentOrder extends Fragment {
                     Order.BRING_TIME, bringTime
             );
 
-            order.post(new InternetCallback<Boolean>() {
+            order.post(new InternetCallback<String>() {
                 @Override
-                public void call(Boolean result) {
-                    if (result) {
+                public void call(Result<String> result) {
+                    if (result.isSuccessful()) {
                         updateOrders();
                         updateFace();
-
-                        Toast.makeText(
-                                getActivity(),
-                                "Заказ оформлен!",
-                                Toast.LENGTH_LONG
-                        ).show();
 
                         _fromText.setText("");
                         _toText.setText("");
@@ -362,13 +343,13 @@ public class FragmentOrder extends Fragment {
                         _descriptionText.setText("");
                         _distanceView.setText("Расстояние: ");
                         _payView.setText("Оплата: ");
-                    } else {
-                        Toast.makeText(
-                                getActivity(),
-                                "Произошла ошибка при оформлении заказа.",
-                                Toast.LENGTH_LONG
-                        ).show();
                     }
+
+                    Toast.makeText(
+                            getActivity(),
+                            result.getMessage(),
+                            Toast.LENGTH_LONG
+                    ).show();
                 }
             });
         }

@@ -16,5 +16,5 @@ public enum RequestStatus {
     ORDER_NO_DATA,
     ACCESS_ERROR,
     IO_ERROR,
-    URL_ERROR,
+    URL_ERROR, SYNC_ERROR,
 }
