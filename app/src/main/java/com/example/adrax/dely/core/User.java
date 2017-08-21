@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.example.adrax.dely.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -262,9 +264,9 @@ public class User {
             @Override
             public void call(Result<String> s) {
                 if (s.isSuccessful()) {
-                    s.setMessage("Паспорт загружен!");
+                    s.setMessage(App.getContext().getString(R.string.core_passport_loaded));
                 } else {
-                    String msg = "При загрузке паспорта произошла ошибка.";
+                    String msg = App.getContext().getString(R.string.core_passport_error);
                     s.setMessage(msg);
                     LogHelper.error(msg);
                 }
@@ -292,9 +294,9 @@ public class User {
             @Override
             public void call(Result<String> s) {
                 if (s.isSuccessful()) {
-                    s.setMessage("Данные кредитной карточки загружены!");
+                    s.setMessage(App.getContext().getString(R.string.core_card_loaded));
                 } else {
-                    String msg = "При загрузке данных кредитной карточки произошла ошибка.";
+                    String msg = App.getContext().getString(R.string.core_card_error);
                     s.setMessage(msg);
                     LogHelper.error(msg);
                 }
@@ -327,7 +329,7 @@ public class User {
                     me.setPhone(temp.getPhone());
                     me.setSurname(temp.getSurname());
                 } else {
-                    s.setMessage("При синхронизации информации произошла ошибка.");
+                    // s.setMessage(App.getContext().getString(R.string.core_sync_error));
                 }
 
                 if (callback != null) {

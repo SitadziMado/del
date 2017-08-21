@@ -2,6 +2,8 @@ package com.example.adrax.dely.core;
 
 import android.support.annotation.NonNull;
 
+import com.example.adrax.dely.R;
+
 import java.util.ArrayList;
 
 public class Order extends DynamicObject implements Comparable<Order> {
@@ -56,12 +58,12 @@ public class Order extends DynamicObject implements Comparable<Order> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        appendFieldValue(sb, "Название: ", DESCRIPTION);
-        appendFieldValue(sb, "Откуда: ", FROM);
-        appendFieldValue(sb, "Куда: ", TO);
-        appendFieldValue(sb, "Заказчик: ", CUSTOMER);
-        appendFieldValue(sb, "Номер телефона: ", PHONE);
-        appendFieldValue(sb, "Оплата: ", PAYMENT);
+        appendFieldValue(sb, App.getContext().getString(R.string.order_name), DESCRIPTION);
+        appendFieldValue(sb, App.getContext().getString(R.string.order_from), FROM);
+        appendFieldValue(sb, App.getContext().getString(R.string.order_to), TO);
+        appendFieldValue(sb, App.getContext().getString(R.string.order_customer), CUSTOMER);
+        appendFieldValue(sb, App.getContext().getString(R.string.order_phone), PHONE);
+        appendFieldValue(sb, App.getContext().getString(R.string.payment), PAYMENT);
 
         String cost = getStringProp(COST);
         String weight = getStringProp(WEIGHT);
@@ -71,34 +73,46 @@ public class Order extends DynamicObject implements Comparable<Order> {
         String floor = getStringProp(FLOOR);
 
         if (cost != null && !cost.equals("")) {
-            sb.append("Аванс: ")
-                    .append(cost)
-                    .append("руб. \n");
+            appendFieldValue(
+                    sb,
+                    App.getContext().getString(R.string.order_cost),
+                    String.format(App.getContext().getString(R.string.currency_text), cost)
+            );
         }
         if (weight != null && !weight.equals("")) {
-            sb.append("Вес: ")
-                    .append(weight)
-                    .append("\n");
+            appendFieldValue(
+                    sb,
+                    App.getContext().getString(R.string.order_weight),
+                    String.format(App.getContext().getString(R.string.grams), weight)
+            );
         }
         if (size != null && !size.equals("")) {
-            sb.append("Размер: ")
-                    .append(size)
-                    .append("\n");
+            appendFieldValue(
+                    sb,
+                    App.getContext().getString(R.string.order_size),
+                    size
+            );
         }
-        if (code !=null && !code.equals("")) {
-            sb.append("Код домофона: ")
-                    .append(code)
-                    .append("\n");
+        if (code != null && !code.equals("")) {
+            appendFieldValue(
+                    sb,
+                    App.getContext().getString(R.string.order_code),
+                    code
+            );
         }
         if (entrance != null && !entrance.equals("")) {
-            sb.append("Подъезд: ")
-                    .append(entrance)
-                    .append("\n");
+            appendFieldValue(
+                    sb,
+                    App.getContext().getString(R.string.order_entrance),
+                    entrance
+            );
         }
         if (floor != null && !floor.equals("")) {
-            sb.append("Этаж: ")
-                    .append(floor)
-                    .append("\n");
+            appendFieldValue(
+                    sb,
+                    App.getContext().getString(R.string.order_floor),
+                    floor
+            );
         }
 
         return sb.toString();
@@ -109,10 +123,10 @@ public class Order extends DynamicObject implements Comparable<Order> {
             @Override
             public void call(Result<String> s) {
                 if (s.isSuccessful()) {
-                    s.setMessage("Заказ оформлен!");
+                    s.setMessage(App.getContext().getString(R.string.core_order_posted));
                 } else {
                     // ToDo: возможно, убрать
-                    s.setMessage("Ошибка при оформлении заказа.");
+                    s.setMessage(App.getContext().getString(R.string.core_error_posting_an_order));
                 }
 
                 callback.call(s);
@@ -157,10 +171,10 @@ public class Order extends DynamicObject implements Comparable<Order> {
             @Override
             public void call(Result<String> s) {
                 if (s.isSuccessful()) {
-                    s.setMessage("Доставка начата!");
+                    // s.setMessage(App.getContext().getString(R.string.core_order_started));
                 } else {
                     // ToDo: возможно, убрать
-                    s.setMessage("Ошибка при начале заказа.");
+                    s.setMessage(App.getContext().getString(R.string.core_error_starting_an_order));
                 }
 
                 callback.call(s);
@@ -182,9 +196,9 @@ public class Order extends DynamicObject implements Comparable<Order> {
             @Override
             public void call(Result<String> s) {
                 if (s.isSuccessful()) {
-                    s.setMessage("Доставка завершена!");
+                    s.setMessage(App.getContext().getString(R.string.core_order_finished));
                 } else {
-                    s.setMessage("Ошибка при завершении заказа.");
+                    s.setMessage(App.getContext().getString(R.string.core_error_finishing_an_order));
                 }
 
                 callback.call(s);

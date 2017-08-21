@@ -15,7 +15,7 @@ import android.support.v4.app.NotificationCompat;
 import com.example.adrax.dely.R;
 
 /**
- * Created by Максим on 30.07.2017.
+ * Создано Максимом Сунцевым 30.07.2017.
  */
 
 public class NotificationHelper {

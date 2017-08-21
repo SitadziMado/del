@@ -55,7 +55,7 @@
     </string>
     <string name="title_activity_login" translatable="false">Del</string>
 
-    <!-- СТроки, используемые внутри Activities -->
+    <!-- Строки, используемые внутри Activities -->
     <string name="title_activity_signup">Регистрация</string>
     <string name="menu_refresh">Обновить</string>
     <string name="action_settings">Обновить</string>
@@ -72,13 +72,6 @@
     <string name="name_constraint">как минимум 3 знака</string>
     <string name="email_constraint">введите корректный адрес почты</string>
     <string name="password_constraint">введите от 4 до 10 буквенно-цифровых знаков</string>
-    <string name="order_name">Название: %s</string>
-    <string name="order_from">Откуда: %s</string>
-    <string name="order_to">Куда: %s</string>
-    <string name="order_customer">Заказчик: %s</string>
-    <string name="order_phone">Номер телефона: %s</string>
-    <string name="meters_text">%s м</string>
-    <string name="order_cost">Аванс: %s</string>
     <string name="leave_feedback">Оставьте отзыв</string>
     <string name="send">Отправить</string>
     <string name="back">Назад</string>
@@ -149,4 +142,48 @@
     <string name="layout_floor">Этаж</string>
     <string name="layout_room">*Квартира/офис</string>
     <string name="layout_additional_phone_number">Запасной номер</string>
+
+    <!-- Строки заказов -->
+    <string name="order_name">Название: %s</string>
+    <string name="order_from">Откуда: %s</string>
+    <string name="order_to">Куда: %s</string>
+    <string name="order_customer">Заказчик: %s</string>
+    <string name="order_phone">Номер телефона: %s</string>
+    <string name="meters_text">%s м</string>
+    <string name="order_cost">Аванс: %s</string>
+    <string name="order_weight">Вес: %s</string>
+    <string name="order_size">Размер: %s</string>
+    <string name="order_code">Код домофона: %s</string>
+    <string name="order_entrance">Подъезд:</string>
+    <string name="order_floor">Этаж:</string>
+
+    <!-- Строки, используемые в back-end'е -->
+    <string name="core_distance_calculated_successfully">Успешно подсчитано расстояние!</string>
+    <string name="core_unavailable_to_calculate_distance">Не удалось рассчитать растояние, проверьте правильность адреса.</string>
+    <string name="core_order_posted">Заказ оформлен!</string>
+    <string name="core_error_posting_an_order">Ошибка при оформлении заказа.</string>
+    <string name="core_order_started">Доставка начата!</string>
+    <string name="core_error_starting_an_order">Ошибка при начале заказа.</string>
+    <string name="core_order_finished">Доставка завершена!</string>
+    <string name="core_error_finishing_an_order">Ошибка при завершении заказа.</string>
+    <string name="core_created_successfully">Объект успешно создан.</string>
+    <string name="core_incorrect_authorization_data">Некорректные данные для авторизации.</string>
+    <string name="core_server_problems">Проблемы с сервером.</string>
+    <string name="core_incorrect_request">Некорректный запрос.</string>
+    <string name="core_sign_up_successful">Регистрация прошла успешно.</string>
+    <string name="core_already_taken">Имя пользователя уже занято.</string>
+    <string name="core_way_too_many">Слишком много доставок.</string>
+    <string name="core_order_busy">Похоже, заказ уже начат.</string>
+    <string name="core_ok">Действие успешно.</string>
+    <string name="core_error">Произошла ошибка.</string>
+    <string name="core_no_data">Отсутствует информация для представления.</string>
+    <string name="core_access_error">Ошибка доступа.</string>
+    <string name="core_io_error">Ошибка ввода-вывода, возможно, остутствуют один или несколько параметров запроса.</string>
+    <string name="core_url_error">Некорректный URL-адрес запроса.</string>
+    <string name="core_sync_error">При синхронизации заказов произошла ошибка.</string>
+    <string name="core_unknown">Неизвестный код статуса.</string>
+    <string name="core_passport_loaded">Паспорт загружен!</string>
+    <string name="core_passport_error">При загрузке паспорта произошла ошибка.</string>
+    <string name="core_card_loaded">Данные кредитной карточки загружены!</string>
+    <string name="core_card_error">При загрузке данных кредитной карточки произошла ошибка.</string>
 </resources>

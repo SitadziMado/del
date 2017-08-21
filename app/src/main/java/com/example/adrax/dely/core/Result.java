@@ -2,6 +2,8 @@ package com.example.adrax.dely.core;
 
 import android.support.annotation.Nullable;
 
+import com.example.adrax.dely.R;
+
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -56,59 +58,58 @@ public class Result<TData> {
     public static String getDefaultMessage(RequestStatus status) {
         switch (status) {
             case OTHER:
-                return "Объект успешно создан.";
+                return App.getContext().getString(R.string.core_created_successfully);
                 
             case INCORRECT_AUTHORIZATION_DATA:
-                return "Некорректные данные для авторизации.";
+                return App.getContext().getString(R.string.core_incorrect_authorization_data);
                 
             case SERVER_PROBLEMS:
-                return "Проблемы с сервером.";
+                return App.getContext().getString(R.string.core_server_problems);
                 
             case REQUEST_INCORRECT:
-                return "Некорректный запрос.";
+                return App.getContext().getString(R.string.core_incorrect_request);
                 
             case LOGIN_REGISTERED:
-                return "Регистрация прошла успешно.";
+                return App.getContext().getString(R.string.core_sign_up_successful);
                 
             case LOGIN_ALREADY_TAKEN:
-                return "Имя пользователя уже занято.";
+                return App.getContext().getString(R.string.core_already_taken);
                 
             case ORDER_LOADED:
-                return "Заказ оформлен.";
+                return App.getContext().getString(R.string.core_order_posted);
                 
             case ORDER_TOO_MANY:
-                return "Слишком много доставок.";
+                return App.getContext().getString(R.string.core_way_too_many);
                 
             case ORDER_STARTED:
-                return "Заказ начат.";
+                return App.getContext().getString(R.string.core_order_started);
                 
             case ORDER_BUSY:
-                return "Похоже, заказ уже начат.";
+                return App.getContext().getString(R.string.core_order_busy);
 
             case ORDER_OK:
-                return "Действие успешно.";
+                return App.getContext().getString(R.string.core_ok);
 
             case ORDER_ERROR:
-                return "Произошла ошибка.";
+                return App.getContext().getString(R.string.core_error);
 
             case ORDER_NO_DATA:
-                return "Отсутствует информация для представления.";
+                return App.getContext().getString(R.string.core_no_data);
 
             case ACCESS_ERROR:
-                return "Ошибка доступа.";
+                return App.getContext().getString(R.string.core_access_error);
 
             case IO_ERROR:
-                return "Ошибка ввода-вывода, возможно, " +
-                        "остутствуют один или несколько параметров запроса.";
+                return App.getContext().getString(R.string.core_io_error);
 
             case URL_ERROR:
-                return "Некорректный URL-адрес запроса.";
+                return App.getContext().getString(R.string.core_url_error);
 
             case SYNC_ERROR:
-                return "При синхронизации заказов произошла ошибка.";
+                return App.getContext().getString(R.string.core_sync_error);
 
             default:
-                return "Неизвестный код статуса.";
+                return App.getContext().getString(R.string.core_unknown);
         }
     }
 

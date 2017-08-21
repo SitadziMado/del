@@ -1,6 +1,9 @@
 package com.example.adrax.dely.core;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+
+import com.example.adrax.dely.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,11 +41,11 @@ public class GoogleMapsHelper {
                             .getJSONObject(0)
                             .getJSONObject("distance").getDouble("value");
 
-                    result.setMessage("Успешно подсчитано расстояние!");
+                    result.setMessage(App.getContext().getString(R.string.core_distance_calculated_successfully));
                     result.setSuccessful(true);
                 } catch (JSONException e) {
                     String msg;
-                    result.setMessage(msg = "Не удалось рассчитать растояние, проверьте правильность адреса.");
+                    result.setMessage(msg = App.getContext().getString(R.string.core_unavailable_to_calculate_distance));
                     result.setSuccessful(false);
                     LogHelper.error(msg);
                 }
