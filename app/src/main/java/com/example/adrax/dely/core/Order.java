@@ -246,8 +246,7 @@ public class Order extends DynamicObject implements Comparable<Order> {
     }
 
     public void feedback(
-            @NonNull Integer rating,
-            @NonNull String text,
+            @NonNull Rating rating,
             @NonNull final InternetCallback<String> callback
     ) {
         InternetTask task = new InternetTask(InternetTask.METHOD_POST, FEEDBACK_URL, new InternetCallback<String>() {
@@ -263,8 +262,8 @@ public class Order extends DynamicObject implements Comparable<Order> {
 
         task.execute(
                 HASH, getStringProp(HASH),
-                TEXT, text,
-                RATING, rating.toString(),
+                TEXT, rating.getFeedback(),
+                RATING, rating.getStars().toString(),
                 "delivery_id", getStringProp(ID)
         );
     }

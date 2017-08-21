@@ -25,6 +25,7 @@ import com.example.adrax.dely.core.GoogleMapsHelper;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
 import com.example.adrax.dely.core.Result;
+import com.example.adrax.dely.core.ToastHelper;
 
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
@@ -345,11 +346,7 @@ public class FragmentOrder extends Fragment {
                         _payView.setText("Оплата: ");
                     }
 
-                    Toast.makeText(
-                            getActivity(),
-                            result.getMessage(),
-                            Toast.LENGTH_LONG
-                    ).show();
+                    ToastHelper.createToast(getActivity(), result.getMessage());
                 }
             });
         }

@@ -10,10 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Result;
+import com.example.adrax.dely.core.ToastHelper;
 import com.example.adrax.dely.core.User;
 
 import java.io.UnsupportedEncodingException;
@@ -55,7 +55,6 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
-
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,12 +169,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void onSignupFailed(String message) {
-        Toast.makeText(
-                getBaseContext(),
-                message, //"Регистрация неудачна, возможно, логин уже занят.",
-                Toast.LENGTH_LONG
-        ).show();
-
+        ToastHelper.createToast(getBaseContext(), message);
         _signupButton.setEnabled(true);
     }
 

@@ -46,7 +46,9 @@
 Личный E-mail: terlychnikita@gmail.com\n
 \nСунцев Максим Александрович\n
 Должность: IT-разработчик (back-end)\n
-Телефон: 89617544428</string>
+Телефон: 89617544428\n
+Личный e-mail: sunmax1234@mail.ru
+    </string>
     <string name="title_activity_login">Del</string>
 
     <!-- Strings related to login -->
@@ -63,4 +65,5 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="tvMakeOrder">Оформление заказа</string>
     <string name="action_logout">Выйти</string>
+    <string name="no_orders_available">На данный момент нет активных заказов</string>
 </resources>

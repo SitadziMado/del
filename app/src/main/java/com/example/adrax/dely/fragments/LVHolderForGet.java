@@ -14,6 +14,7 @@ import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Order;
 import com.example.adrax.dely.core.Result;
+import com.example.adrax.dely.core.ToastHelper;
 
 import static com.example.adrax.dely.LoginActivity.user;
 import static com.example.adrax.dely.MActivity.face_delivery;
@@ -89,19 +90,12 @@ public final class LVHolderForGet extends RecyclerView.ViewHolder {
                                         updateFace();
                                     }
 
-                                    Toast.makeText(mContext,
-                                            result.getMessage(),
-                                            Toast.LENGTH_LONG
-                                    ).show();
+                                    ToastHelper.createToast(mContext, result.getMessage());
                                 }
                             });
 
                 } else {
-                    Toast.makeText(
-                            mContext,
-                            "У вас уже есть активная доставка!",
-                            Toast.LENGTH_LONG
-                    ).show();
+                    ToastHelper.createToast(mContext, "У вас уже есть активная доставка!");
                 }
             }
 

@@ -10,11 +10,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.LogHelper;
 import com.example.adrax.dely.core.Result;
+import com.example.adrax.dely.core.ToastHelper;
 import com.example.adrax.dely.core.User;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -188,8 +188,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
+        ToastHelper.createToast(getBaseContext(), "Login failed");
         _loginButton.setEnabled(true);
     }
 

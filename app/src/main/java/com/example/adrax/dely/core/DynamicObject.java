@@ -77,9 +77,7 @@ class DynamicObject {
         if (m_props.containsKey(name)) {
             return m_props.get(name);
         } else {
-            LogHelper.error(
-                    "Свойства `" + propName + "` не существует."
-            );
+            LogHelper.error("Свойства `" + propName + "` не существует.");
             return null;
         }
     }

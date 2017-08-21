@@ -12,10 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.Result;
+import com.example.adrax.dely.core.ToastHelper;
 
 import static com.example.adrax.dely.LoginActivity.user;
 
@@ -97,11 +97,7 @@ public class ProfileActivity extends AppCompatActivity {
                             @Override
                             public void call(Result<String> result) {
                                 // if (result.isSuccessful()) {
-                                    Toast.makeText(
-                                            getApplicationContext(),
-                                            result.getMessage(),
-                                            Toast.LENGTH_LONG
-                                    ).show();
+                                ToastHelper.createToast(getApplicationContext(), result.getMessage());
                                 /* } else {
                                     Toast.makeText(
                                             getApplicationContext(),
@@ -128,11 +124,7 @@ public class ProfileActivity extends AppCompatActivity {
                             @Override
                             public void call(Result<String> result) {
                                 // if (result.isSuccessful()) {
-                                    Toast.makeText(
-                                            getApplicationContext(),
-                                            result.getMessage(),
-                                            Toast.LENGTH_LONG
-                                    ).show();
+                                    ToastHelper.createToast(getApplicationContext(), result.getMessage());
                                 /* } else {
                                     Toast.makeText(
                                             getApplicationContext(),

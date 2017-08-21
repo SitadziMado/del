@@ -20,7 +20,9 @@ import com.example.adrax.dely.MActivity;
 import com.example.adrax.dely.R;
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.OrderStatus;
+import com.example.adrax.dely.core.Rating;
 import com.example.adrax.dely.core.Result;
+import com.example.adrax.dely.core.ToastHelper;
 
 import static com.example.adrax.dely.MActivity.face_deliver_text;
 import static com.example.adrax.dely.MActivity.face_delivery;
@@ -96,11 +98,7 @@ public class FragmentFace extends Fragment {
                 face_delivery.finish(text_code.getText().toString(), new InternetCallback<String>() {
                     @Override
                     public void call(Result<String> result) {
-                        Toast.makeText(
-                                getActivity(),
-                                result.getMessage(),
-                                Toast.LENGTH_LONG
-                        ).show();
+                        ToastHelper.createToast(mContext, result.getMessage());
 
                         if (result.isSuccessful()) {
                             RunFeedbackDialog();
@@ -179,15 +177,12 @@ public class FragmentFace extends Fragment {
         String feedback = data.getStringExtra("feedback");
         int rating = data.getIntExtra("rating",0);
         //new Rating(rating, feedback)
-        face_delivery.feedback( rating, feedback,
+        face_delivery.feedback(
+                new Rating(rating, feedback),
                 new InternetCallback<String>() {
                     @Override
                     public void call(Result<String> result) {
-                        Toast.makeText(
-                                getActivity(),
-                                result.getMessage(),
-                                Toast.LENGTH_LONG
-                        ).show();
+                        ToastHelper.createToast(mContext, result.getMessage());
                     }
                 }
         );
@@ -197,6 +192,7 @@ public class FragmentFace extends Fragment {
         if (mContext == null) {
             return;
         }
+
         if (mContext instanceof MActivity) {
             MActivity feeds = (MActivity) mContext;
             feeds.showFragmentGet();

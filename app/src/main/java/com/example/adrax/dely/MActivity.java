@@ -15,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.adrax.dely.core.InternetCallback;
 import com.example.adrax.dely.core.LogHelper;
@@ -27,6 +26,8 @@ import com.example.adrax.dely.fragments.FragmentAbout;
 import com.example.adrax.dely.fragments.FragmentFace;
 import com.example.adrax.dely.fragments.FragmentGet;
 import com.example.adrax.dely.fragments.FragmentOrder;
+
+import butterknife.Bind;
 
 import static com.example.adrax.dely.LoginActivity.user;
 
@@ -55,7 +56,7 @@ public class MActivity extends AppCompatActivity
     private static final Object faceDeliveryLock = new Object();
     private static final Object faceOrdersLock = new Object();
 
-    public static String face_deliver_text = "На данный момент нет активных заказов"; // Текст окна заказчика в щачле
+    public static String face_deliver_text; // Текст окна заказчика в щачле
 
     Context this_context;
 
@@ -64,6 +65,9 @@ public class MActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        face_deliver_text = getString(R.string.no_orders_available);
+
         setContentView(R.layout.activity_navigation_view);
 
         // ToolBar
