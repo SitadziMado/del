@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Попытка авторегистрации...");
+        progressDialog.setMessage(getString(R.string.restore_attempt));
         progressDialog.show();
 
         User.restoreLastSession(this, new InternetCallback<User>() {
@@ -147,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Авторизация...");
+        progressDialog.setMessage(getString(R.string.authorizing));
         progressDialog.show();
 
         final String email = _emailText.getText().toString();
@@ -188,7 +188,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginFailed() {
-        ToastHelper.createToast(getBaseContext(), "Login failed");
+        ToastHelper.createToast(getBaseContext(), getString(R.string.login_failed));
         _loginButton.setEnabled(true);
     }
 
@@ -199,7 +199,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 20) {
-            _passwordText.setError("between 4 and 20 alphanumeric characters");
+            _passwordText.setError(getString(R.string.input_constraint));
             valid = false;
         } else {
             _passwordText.setError(null);
@@ -245,7 +245,7 @@ public class LoginActivity extends AppCompatActivity {
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage("Загрузка...");
+            mProgressDialog.setMessage(getString(R.string.loading));
             mProgressDialog.setIndeterminate(true);
         }
 
@@ -270,7 +270,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        LogHelper.debug("handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();

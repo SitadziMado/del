@@ -72,13 +72,13 @@ public class OrderDialog extends DialogFragment {
         numText = (TextView) content.findViewById(R.id.tvPhoneNumber);
 
         builder.setView(content)
-                .setTitle("Подтвердите заказ")
-                .setPositiveButton("Создать", new DialogInterface.OnClickListener() {
+                .setTitle(R.string.accept_an_order)
+                .setPositiveButton(R.string.create, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         getTargetFragment().onActivityResult(getTargetRequestCode(), 1, new Intent("done"));
                     }
                 })
-                .setNegativeButton("Назад", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                     }
@@ -86,12 +86,12 @@ public class OrderDialog extends DialogFragment {
 
         fromText.setText(from);
         toText.setText(to);
-        costText.setText(cost + "руб");
+        costText.setText(String.format(getString(R.string.currency_text), cost));
         timeTakeText.setText(timeTake);
         timeBringText.setText(timeBring);
-        paymentText.setText(payment + "руб");
+        paymentText.setText(String.format(getString(R.string.currency_text), payment));
         descriptionText.setText(description);
-        weightText.setText(weight + "гр");
+        weightText.setText(String.format(getString(R.string.grams), weight));
         numText.setText(num);
 
         // Create the AlertDialog object and return it

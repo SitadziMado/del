@@ -95,7 +95,7 @@ public final class LVHolderForGet extends RecyclerView.ViewHolder {
                             });
 
                 } else {
-                    ToastHelper.createToast(mContext, "У вас уже есть активная доставка!");
+                    ToastHelper.createToast(mContext, mContext.getString(R.string.alredy_have_a_delivery));
                 }
             }
 

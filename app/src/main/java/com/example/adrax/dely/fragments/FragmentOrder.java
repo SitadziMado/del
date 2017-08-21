@@ -118,9 +118,17 @@ public class FragmentOrder extends Fragment {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         // An item was selected. You can retrieve the selected item using
                         // parent.getItemAtPosition(pos)
-                        weight_ = _spinnerWeight.getSelectedItem().toString().substring(3,_spinnerWeight.getSelectedItem().toString().lastIndexOf("г"));
+                        weight_ = _spinnerWeight
+                                .getSelectedItem()
+                                .toString()
+                                .substring(
+                                        3,
+                                        _spinnerWeight.getSelectedItem()
+                                                .toString()
+                                                .lastIndexOf("г")
+                                );
 
-                        if (weight_.length()<3) {
+                        if (weight_.length() < 3) {
                             weight_ += "000";
                         }
                     }
@@ -214,6 +222,7 @@ public class FragmentOrder extends Fragment {
         return root;
     }
 
+    // ToDo: интернационализировать.
     private void setChosenDay() {
         String myFormat = "d MMM yyyy";
         //SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -244,7 +253,7 @@ public class FragmentOrder extends Fragment {
                         if (result.isSuccessful()) {
                             Double distance = result.getData();
                             me.distance = distance.toString();
-                            _distanceView.setText(distance + "м");
+                            _distanceView.setText(String.format(getString(R.string.meters_text), distance.toString()));
                             me.createOrderDialog();
                         } else {
                             _distanceView.setText(result.getMessage());
@@ -256,10 +265,13 @@ public class FragmentOrder extends Fragment {
     }
 
     private void createOrderDialog() {
-        money = Formula.getDefault().calculate(
-                Double.parseDouble(weight_),
-                Double.parseDouble(distance)
-        ).toString() + "руб.";
+        money = String.format(
+                getString(R.string.currency_text),
+                Formula.getDefault().calculate(
+                                Double.parseDouble(weight_),
+                                Double.parseDouble(distance)
+                        ).toString()
+        );
 
         _payView.setText(money);
 
@@ -342,8 +354,8 @@ public class FragmentOrder extends Fragment {
                         _numText.setText("");
                         _recText.setText("");
                         _descriptionText.setText("");
-                        _distanceView.setText("Расстояние: ");
-                        _payView.setText("Оплата: ");
+                        _distanceView.setText(R.string.distance);
+                        _payView.setText(R.string.payment);
                     }
 
                     ToastHelper.createToast(getActivity(), result.getMessage());
@@ -362,28 +374,28 @@ public class FragmentOrder extends Fragment {
         boolean valid = true;
 
         if (description.isEmpty()) {
-            _descriptionText.setError("Назовите посылку, например, в соответствии с содержимым");
+            _descriptionText.setError(getString(R.string.name_an_order));
             valid = false;
         } else {
             _descriptionText.setError(null);
         }
 
         if (from.isEmpty()) {
-            _fromText.setError("Откуда взять посылку?");
+            _fromText.setError(getString(R.string.where_to_take));
             valid = false;
         } else {
             _fromText.setError(null);
         }
 
         if (to.isEmpty()) {
-            _toText.setError("Куда доставить посылку?");
+            _toText.setError(getString(R.string.where_to_bring));
             valid = false;
         } else {
             _toText.setError(null);
         }
 
         if (num.isEmpty() || num.length() != 11) {
-            _numText.setError("Некорректный номер телефона");
+            _numText.setError(getString(R.string.incorrect_phone));
             valid = false;
         } else {
             _numText.setError(null);

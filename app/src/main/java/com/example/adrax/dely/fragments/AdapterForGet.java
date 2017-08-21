@@ -33,17 +33,17 @@ public class AdapterForGet extends RecyclerView.Adapter<LVHolderForGet> {
             //Получаем элемент набора данных для заполнения
             Order cur = sorted_orders.get(i);
 
-            newViewHolder.tvDescription.setText(cur.getStringProp(Order.DESCRIPTION));
-            newViewHolder.tvFrom.setText("От: " + cur.getStringProp(Order.FROM));
+            newViewHolder.tvDescription.setText(String.format(mContext.getString(R.string.order_name), cur.getStringProp(Order.DESCRIPTION)));
+            newViewHolder.tvFrom.setText(String.format(mContext.getString(R.string.order_from), cur.getStringProp(Order.FROM)));
             newViewHolder.tvId = Integer.toString(i);
-            newViewHolder.tvTo.setText("До: " + cur.getStringProp(Order.TO));
+            newViewHolder.tvTo.setText(String.format(mContext.getString(R.string.order_to), cur.getStringProp(Order.TO)));
             newViewHolder.tvTimeTake.setText(cur.getStringProp(Order.TAKE_TIME));
             newViewHolder.tvTimeBring.setText(cur.getStringProp(Order.BRING_TIME));
-            newViewHolder.tvCustomer.setText("Заказчик: " + cur.getStringProp(Order.CUSTOMER));
-            newViewHolder.tvPhoneNumber.setText("Номер телефона: " + cur.getStringProp(Order.PHONE));
-            newViewHolder.tvCost.setText("Аванс: " + cur.getStringProp(Order.COST));
-            newViewHolder.tvPayment.setText(cur.getStringProp(Order.PAYMENT) + "руб.");
-            newViewHolder.tvDistance.setText(cur.getStringProp(Order.DISTANCE) + "м");
+            newViewHolder.tvCustomer.setText(String.format(mContext.getString(R.string.order_customer), cur.getStringProp(Order.CUSTOMER)));
+            newViewHolder.tvPhoneNumber.setText(String.format(mContext.getString(R.string.order_phone), cur.getStringProp(Order.PHONE)));
+            newViewHolder.tvCost.setText(String.format(mContext.getString(R.string.order_cost), cur.getStringProp(Order.COST)));
+            newViewHolder.tvPayment.setText(String.format(mContext.getString(R.string.currency_text), cur.getStringProp(Order.PAYMENT)));
+            newViewHolder.tvDistance.setText(String.format(mContext.getString(R.string.meters_text), cur.getStringProp(Order.DISTANCE)));
         } else {
             // ToDo: Show picture of emptiness
         }

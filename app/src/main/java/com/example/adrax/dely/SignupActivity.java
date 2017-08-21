@@ -83,7 +83,7 @@ public class SignupActivity extends AppCompatActivity {
         Log.d(TAG, "Signup");
 
         if (!validate()) {
-            onSignupFailed("Проверьте правильность введенной информации.");
+            onSignupFailed(getString(R.string.check_info_validity));
             return;
         }
 /// костыль -----------------------------------------------------------------------------------------
@@ -95,7 +95,7 @@ public class SignupActivity extends AppCompatActivity {
         final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Создается аккаунт...");
+        progressDialog.setMessage(getString(R.string.creating_account));
         progressDialog.show();
 
         final String name = _nameText.getText().toString();
@@ -181,21 +181,21 @@ public class SignupActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
 
         if (name.isEmpty() || name.length() < 3) {
-            _nameText.setError("как минимум 3 знака");
+            _nameText.setError(getString(R.string.name_constraint));
             valid = false;
         } else {
             _nameText.setError(null);
         }
 
         if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("введите корректный адрес почты");
+            _emailText.setError(getString(R.string.email_constraint));
             valid = false;
         } else {
             _emailText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("введите от 4 до 10 буквенно-цифровых знаков");
+            _passwordText.setError(getString(R.string.password_constraint));
             valid = false;
         } else {
             _passwordText.setError(null);

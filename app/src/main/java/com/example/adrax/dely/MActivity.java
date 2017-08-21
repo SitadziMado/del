@@ -56,6 +56,7 @@ public class MActivity extends AppCompatActivity
     private static final Object faceDeliveryLock = new Object();
     private static final Object faceOrdersLock = new Object();
 
+    private static String noOrdersAvailable;
     public static String face_deliver_text; // Текст окна заказчика в щачле
 
     Context this_context;
@@ -66,7 +67,8 @@ public class MActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        face_deliver_text = getString(R.string.no_orders_available);
+        noOrdersAvailable = getString(R.string.no_orders_available);
+        face_deliver_text = noOrdersAvailable;
 
         setContentView(R.layout.activity_navigation_view);
 
@@ -80,8 +82,15 @@ public class MActivity extends AppCompatActivity
         // Fragments Drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this,
+                drawer,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
+        );
+
         drawer.addDrawerListener(toggle);
+
         // Listener which helps to close Fragment correctly, in time
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -195,7 +204,7 @@ public class MActivity extends AppCompatActivity
                                         result.getData() != OrderStatus.DELIVERY_DONE) {
                                     face_deliver_text = face_delivery.toString();
                                 } else {
-                                    face_deliver_text = "На данный момент нет активных заказов";
+                                    face_deliver_text = noOrdersAvailable;
                                 }
                             }
                         });

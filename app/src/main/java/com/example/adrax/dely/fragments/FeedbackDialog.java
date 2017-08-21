@@ -55,8 +55,8 @@ public class FeedbackDialog extends DialogFragment {
         ratingBar = (RatingBar) content.findViewById(R.id.ratingBar);
 
         builder.setView(content)
-                .setTitle("Оставьте отзыв")
-                .setPositiveButton("Отправить", new DialogInterface.OnClickListener() {
+                .setTitle(R.string.leave_feedback)
+                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = new Intent();
                         intent.putExtra("feedback",feedbackText.getText().toString());
@@ -64,7 +64,7 @@ public class FeedbackDialog extends DialogFragment {
                         getTargetFragment().onActivityResult(getTargetRequestCode(),SEND_CODE, intent);
                     }
                 })
-                .setNegativeButton("Назад", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
                     }

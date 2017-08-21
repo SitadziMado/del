@@ -139,9 +139,9 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     void writeUserInfo() {
-        lvName.setText(user.getSurname() +" "+user.getName() + " " + user.getMiddleName());
+        lvName.setText(String.format("%s %s %s", user.getSurname(), user.getName(), user.getMiddleName()));
         lvMail.setText(user.getMail());
-        lvMoney.setText(user.getMoney() + " руб.");
+        lvMoney.setText(String.format(getString(R.string.currency_text), user.getMoney()));
         lvNumber.setText(user.getPhone());
         lvLogin.setText(user.getLogin());
 

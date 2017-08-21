@@ -71,15 +71,15 @@ public class FragmentFace extends Fragment {
         face_tab.setup();
         TabHost.TabSpec ts = face_tab.newTabSpec("ftab1");
         ts.setContent(R.id.ftab1);
-        ts.setIndicator("Доставки");
+        ts.setIndicator(getString(R.string.deliveries));
         face_tab.addTab(ts);
         ts = face_tab.newTabSpec("ftab2");
         ts.setContent(R.id.ftab2);
-        ts.setIndicator("Заказы");
+        ts.setIndicator(getString(R.string.orders));
         face_tab.addTab(ts);
         ts = face_tab.newTabSpec("ftab3");
         ts.setContent(R.id.ftab3);
-        ts.setIndicator("История");
+        ts.setIndicator(getString(R.string.history));
         face_tab.addTab(ts);
         face_tab.getTabWidget().getChildAt(2).setVisibility(View.GONE);
 
@@ -112,7 +112,7 @@ public class FragmentFace extends Fragment {
                                     case DELIVERED:
                                         btn_finish.setVisibility(View.GONE);
                                         text_code.setVisibility(View.GONE);
-                                        face_deliver_text_view.setText("Готово");
+                                        face_deliver_text_view.setText(R.string.done);
                                         break;
                                     default:
                                         btn_finish.setVisibility(View.VISIBLE);
@@ -156,7 +156,7 @@ public class FragmentFace extends Fragment {
                 // Start the Signup activity
                 //Intent intent = new Intent(getActivity(), SignupActivity.class);
                 //startActivityForResult(intent, REQUEST_SIGNUP);
-                if (face_deliver_text_view.getText() == "Начните новую доставку!") {
+                if (face_deliver_text_view.getText() == getString(R.string.start_an_order)) {
                     switchFragment();
                 }
             }
@@ -175,7 +175,7 @@ public class FragmentFace extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         String feedback = data.getStringExtra("feedback");
-        int rating = data.getIntExtra("rating",0);
+        int rating = data.getIntExtra("rating", 0);
         //new Rating(rating, feedback)
         face_delivery.feedback(
                 new Rating(rating, feedback),
